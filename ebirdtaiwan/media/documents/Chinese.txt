@@ -1,0 +1,9 @@
+pycharm打中文會出事...
+
+土地面積計算工具
+
+
+# Run 'python3 -m venv ./venv'
+# Cwd /home/even/KV/kbuild/.buildozer
+Error: Command '['/home/even/KV/kbuild/.buildozer/venv/bin/python3', '-Im', 'ensurepip', '--upgrade', '--default-pip']' returned non-zero exit status 1.
+

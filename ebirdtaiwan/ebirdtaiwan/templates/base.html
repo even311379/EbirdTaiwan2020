@@ -28,7 +28,8 @@
 
     </head>
 
-    <body class="{% block body_class %}{% endblock %}">
+    {% comment %} <body class="{% block body_class %}{% endblock %}"> {% endcomment %}
+    <body class="container">
         {% wagtailuserbar %}
 
         {% block content %}{% endblock %}

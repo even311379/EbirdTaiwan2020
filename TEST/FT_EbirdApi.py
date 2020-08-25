@@ -1,9 +1,14 @@
 #feature test for ebird api
 # Can I get access to what I want...
 
-from ebird.api import get_observations, get_checklist
+from ebird.api import Client
+import time
+import datetime
 
 api_key = 'o1rng64r9e2b'
+locale = 'zh'
+client = Client(api_key, locale)
+
 
 region_codes = [
     'TW-TPE', #台北
@@ -27,12 +32,50 @@ region_codes = [
     'TW-LIE', #連江
 ]
 
-records = get_observations(api_key, region_codes[6], back=3)
+'''
+records = client.get_observations(region_codes[6])
 
 print(len(records))
 print('********************')
-r0 = records[0]
-print(f'Check list: {r0["subId"]}')
+print(records[0])
+print(f'Check list: {records[0]["subId"]}')
 print('*****************************************************')
-checklist = get_checklist(api_key, r0['subId'])
+checklist = client.get_checklist(records[0]['subId'])
+# time.sleep(3)
 print(checklist)
+for k in checklist:
+    print(k)
+
+print('*****************************************************')
+print('Can "get_visits" give me eaiser data to parse?')
+'''
+# records = client.get_visits(region_codes[6], date=datetime.date.today()-datetime.timedelta(days=1))
+
+# hooray~~ I can use 'TW'
+'''
+records = client.get_visits('TW', date=datetime.date.today()-datetime.timedelta(days=1))
+print(records)
+print('********************TODAY*********************************')
+records = client.get_visits('TW', date=datetime.date.today())
+print(records[0])
+print(records[1])
+'''
+# import pandas as pd
+
+# birdcode_ref = pd.read_csv('../helper_files/eBird_Taxonomy_v2019.csv')
+# birdcname_ref = pd.read_csv('')
+
+
+checklist0 = client.get_checklist('S72361033')
+checklist1 = client.get_checklist('S72339493')
+print('**********************')
+for i in checklist0:
+    print(i)
+print('**********************')
+print(checklist0)
+
+# ask the day question
+'''
+upload data time and obs data time?
+
+'''

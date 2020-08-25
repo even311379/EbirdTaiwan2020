@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     # 'channels', # for "live state" skip it for now....
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +64,11 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
 
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
-    'django_plotly_dash.middleware.BaseMiddleware',    
+
+    'django_plotly_dash.middleware.BaseMiddleware',
+    'django_plotly_dash.middleware.ExternalRedirectionMiddleware',   
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'ebirdtaiwan.urls'
@@ -139,6 +144,10 @@ USE_TZ = True
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
+    'django_plotly_dash.finders.DashAssetFinder',
+    'django_plotly_dash.finders.DashComponentFinder',
+    'django_plotly_dash.finders.DashAppDirectoryFinder',
 ]
 
 STATICFILES_DIRS = [
@@ -183,3 +192,19 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 #     },
 # }
 
+
+PLOTLY_COMPONENTS = [
+
+    # Common components
+    'dash_core_components',
+    'dash_html_components',
+    'dash_renderer',
+
+    # django-plotly-dash components
+    'dpd_components',
+    # static support if serving local assets
+    'dpd_static_support',
+
+    # Other components, as needed
+    'dash_bootstrap_components',
+]

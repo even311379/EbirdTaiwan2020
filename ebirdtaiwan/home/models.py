@@ -18,3 +18,6 @@ class HomePage(Page):
         FieldPanel('Title'),
         StreamFieldPanel('body'),
     ]
+
+class PageFolder(Page):
+    pass

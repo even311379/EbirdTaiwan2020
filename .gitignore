@@ -134,3 +134,6 @@ dmypy.json
 # this project specific
 
 ebirdtaiwan/static
+passwords.py
+geckodriver
+geckodriver.log
