@@ -69,7 +69,10 @@ def AllCheckListDashDT(date):
     for checklist in checklists:
         CLID.append(checklist['subId'])
         userName.append(checklist['userDisplayName'])
-        obsDT.append(f'{checklist["obsDt"]} {checklist["obsTime"]}')
+        if 'obsTime' in checklist:
+            obsDT.append(f'{checklist["obsDt"]} {checklist["obsTime"]}')
+        else:
+            obsDT.append(f'{checklist["obsDt"]} unknown time')
         if checklist['loc']['subnational1Code'] not in region_codes:
             county.append(f"??? {checklist['loc']['subnational1Code']}")
         else: 
