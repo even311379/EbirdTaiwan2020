@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -6,8 +8,15 @@ import re
 
 import passwords
 
-driver = webdriver.Firefox()
+options = Options()
+options.headless = True
 
+driver = webdriver.Firefox(options=options)
+
+driver.get('https://stackoverflow.com/questions/46753393/how-to-make-firefox-headless-programmatically-in-selenium-with-python')
+print(driver.title)
+driver.close()
+'''
 driver.get('https://secure.birds.cornell.edu/cassso/login?')
 ele_n = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.NAME, "username")))
 
@@ -38,3 +47,4 @@ old_password_file = re.sub("ebird_api_key = '(.*?)'", f"ebird_api_key = '{new_ap
 with open('automation/passwords.py', 'w+') as f:
     f.write(old_password_file)
 
+'''
