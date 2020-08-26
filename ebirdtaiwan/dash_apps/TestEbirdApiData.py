@@ -7,6 +7,8 @@ from django_plotly_dash import DjangoDash
 import dash_bootstrap_components as dbc
 import dash_table
 
+import plotly.graph_objs as go
+
 from ebird.api import Client
 import pandas as pd
 '''
@@ -21,6 +23,7 @@ sys.path.append(os.path.abspath('../'))
 from automation import passwords
 import datetime
 
+mapbox_access_token = 'pk.eyJ1IjoiZXZlbjMxMTM3OSIsImEiOiJjamFydGVtOHk0bHo1MnFyejhneGowaG1sIn0.gyK3haF84TD-oxioghabsQ'
 
 region_codes = {
     'TW-TPE' : '台北',
@@ -51,9 +54,15 @@ There is no need to copy their data to my data base,
  just query their data is well enough
 '''
 
+df_checklist = ''
+
+
 client = Client(passwords.ebird_api_key, 'zh')
 
 def AllCheckListDashDT(date):
+    
+    global df_checklist
+
     checklists = client.get_visits('TW', date=date)
     if len(checklists) == 0:
         return html.H3(f'No data in this date: {date}')
@@ -81,8 +90,9 @@ def AllCheckListDashDT(date):
         lat.append(checklist['loc']['lat'])     
         lng.append(checklist['loc']['lng'])
 
-    df = pd.DataFrame(dict(上傳清單ID=CLID,上傳使用者=userName, 紀錄日期時間=obsDT, 縣市=county,
-        地點名稱=locName, 緯度=lat, 經度=lng))
+    df_checklist = pd.DataFrame(dict(上傳清單ID=CLID,上傳使用者=userName, 紀錄日期時間=obsDT, 縣市=county, 地點名稱=locName, 緯度=lat, 經度=lng))
+
+    df = df_checklist
 
     output_table = dash_table.DataTable(
         #id = table_id,
@@ -122,7 +132,7 @@ def BirdCodeToBirdCName(codestr):
 def CheckListDetailDashDT(CID):
     checklist = client.get_checklist(CID)
     if len(checklist['obs']) == 0:
-        return html.H3(f'No data in this Checklist: {CID}')
+        return html.H3(f'No data in this Checklist: {CID}'), html.H3(f'No data in this Checklist: {CID}')
     
     SpeciesCName = []
     howManyAtleast = []
@@ -159,7 +169,16 @@ def CheckListDetailDashDT(CID):
                     'height':'500px'
                 }
     )
-    return output_table
+
+    lat = df_checklist.loc[df_checklist['上傳清單ID']==CID]['緯度'].iloc[0]
+    lng = df_checklist.loc[df_checklist['上傳清單ID']==CID]['經度'].iloc[0]
+
+    mapdata = [go.Scattermapbox(lat=[lat], lon=[lng],mode='markers',marker={'size':36,'symbol':'star'})]
+    layout = go.Layout(autosize=True, hovermode='closest',mapbox=dict(accesstoken=mapbox_access_token,center=dict(lat=lat,lon=lng),pitch=0,zoom=12,style='outdoors'))
+
+    output_map = dcc.Graph(figure = dict(data=mapdata, layout=layout), style={'height':'600px'})
+
+    return output_table, output_map
 
 app = DjangoDash(
     'TestEbirdApiData', 
@@ -202,6 +221,7 @@ app.layout = dbc.Container([
     ),
     html.Br(),
     html.Div('資料尚未顯現',id='DetailTable'),
+    html.Div('地圖尚未顯現',id='Map')
 
 ])
 
@@ -228,14 +248,18 @@ def show_datatable1(nc, date):
     return AllCheckListDashDT(date)
 
 @app.callback(
-    Output('DetailTable', 'children'),
+    [Output('DetailTable', 'children'),
+    Output('Map','children')],
     [Input('Btn2', 'n_clicks')],
     [State('ClInput','value')]
 )
 def show_datatable2(nc, CLID):
     if CLID=="":
-        return "資料尚未顯現"
+        return "資料尚未顯現","資料尚未顯現"   
     return CheckListDetailDashDT(CLID)
+
+
+
 
 
 # if __name__ == '__main__':
