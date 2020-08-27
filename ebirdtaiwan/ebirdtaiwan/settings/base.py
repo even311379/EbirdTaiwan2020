@@ -181,7 +181,7 @@ WAGTAIL_SITE_NAME = "ebirdtaiwan"
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-BASE_URL = 'http://example.com'
+# BASE_URL = 'http://example.com'
 
 
 # dash-plotly setup
@@ -220,6 +220,7 @@ PLOTLY_COMPONENTS = [
 
 
 # Email server setup
+
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'

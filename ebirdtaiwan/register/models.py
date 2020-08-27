@@ -34,7 +34,7 @@ class JoinData(models.Model):
 
 
 def RandomValidationCode():
-    c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*'
+    c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
     s = ''
     for i in range(20):
         s+=random.choice(c)
@@ -92,7 +92,7 @@ class RegisterPage(Page):
                 validation_code = validation_code,
             )            
             NewJoinData.save()
-            vu = request.get_host()+self.url+'?validation_code='+validation_code
+            vu = 'https://' + request.get_host()+self.url+'?validation_code='+validation_code
             send_validation_email(email = email, validation_url = vu, ebirdID = ebirdid)
             '''
             save files to data base
