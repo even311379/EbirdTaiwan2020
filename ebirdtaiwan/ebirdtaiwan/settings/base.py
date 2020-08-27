@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
+
+# print(sys.path)
+sys.path.append(os.path.abspath('../')) 
+
+from automation import passwords
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -25,9 +31,12 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 INSTALLED_APPS = [
     'home',
-    'search',
+    'winter',
+    'register',
+
 
     'wagtail.contrib.forms',
+    'wagtail.contrib.modeladmin',
     'wagtail.contrib.redirects',
     'wagtail.embeds',
     'wagtail.sites',
@@ -129,7 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Taipei'
 
 USE_I18N = True
 
@@ -208,3 +217,13 @@ PLOTLY_COMPONENTS = [
     # Other components, as needed
     'dash_bootstrap_components',
 ]
+
+
+# Email server setup
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = passwords.mailserver_account
+EMAIL_HOST_PASSWORD = passwords.mailserver_password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

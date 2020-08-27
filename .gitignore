@@ -138,3 +138,4 @@ passwords.py
 geckodriver
 geckodriver.log
 ebirdtaiwan/ebirdtaiwan/settings/dev.py
+migrations/

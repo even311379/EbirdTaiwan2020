@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+{% load wagtailcore_tags %}
+{% block content %}
+
+{% if validation_pass %}
+{{ page.thank_you_text|richtext }}
+{% else %}
+<h1> leave this poor site alone, hackers </h1>
+{% endif %}
+
+
+{% endblock content %}
