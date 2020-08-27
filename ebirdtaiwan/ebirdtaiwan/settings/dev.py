@@ -7,7 +7,7 @@ DEBUG = False
 SECRET_KEY = 'czg!6epa5e&%+611hcflpd!%q^fl04t&azs^y5nub2sn)1^z4y'
 
 # SECURITY WARNING: define the correct hosts in production!
-ALLOWED_HOSTS = ['ebirdtaiwan.com'] 
+ALLOWED_HOSTS = ['*'] 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -16,5 +16,3 @@ try:
     from .local import *
 except ImportError:
     pass
-
-'123456'
