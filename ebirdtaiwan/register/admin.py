@@ -1,3 +1,5 @@
+from django.contrib import admin
+
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
 from .models import JoinData
 
@@ -12,3 +14,9 @@ class JoinDataAdmin(ModelAdmin):
 
 
 modeladmin_register(JoinDataAdmin)
+
+class JoinDataDAdmin(admin.ModelAdmin):
+    list_display = ('ebirdid', 'email','password','team','register_time','is_valid')
+    list_filter = ('team', 'register_time')
+    
+admin.site.register(JoinData, JoinDataDAdmin)
