@@ -186,11 +186,15 @@ app = DjangoDash(
 )   # replaces dash.Dash
 # app = dash.Dash()
 
+# edit dash_wrapper.py 275
+# "update_title = None" can only work if I modify things there
+
+app_date = datetime.date.today() - datetime.timedelta(days=2)
 
 dropdown = dbc.DropdownMenu(
     label="挑選日期",
     children=[
-        dbc.DropdownMenuItem((datetime.date.today()-datetime.timedelta(days=i)).strftime("%Y-%m-%d"), id=f"{i}_days_back")         
+        dbc.DropdownMenuItem((app_date-datetime.timedelta(days=i)).strftime("%Y-%m-%d"), id=f"{i}_days_back")         
         for i in range(14)
     ], id='Dlabel'
 )
@@ -221,7 +225,12 @@ app.layout = dbc.Container([
     ),
     html.Br(),
     html.Div('資料尚未顯現',id='DetailTable'),
-    html.Div('地圖尚未顯現',id='Map')
+    html.Div('地圖尚未顯現',id='Map'),
+    dcc.Interval(
+        id='tick',
+        interval=5*1000,
+        n_intervals = 0
+    )
 
 ])
 
@@ -258,9 +267,21 @@ def show_datatable2(nc, CLID):
         return "資料尚未顯現","資料尚未顯現"   
     return CheckListDetailDashDT(CLID)
 
+@app.callback(Output('Dlabel', 'children'),
+              [Input('tick', 'n_intervals')],
+              [State('Dlabel', 'children')])
+def update_metrics(n, unchanged):
 
-
-
+    global app_date
+    if datetime.date.today() != app_date:
+        app_date = datetime.date.today()
+        print('date changed')
+        return [
+        dbc.DropdownMenuItem((app_date-datetime.timedelta(days=i)).strftime("%Y-%m-%d"), id=f"{i}_days_back")         
+        for i in range(14)
+    ]
+    
+    return unchanged
 
 # if __name__ == '__main__':
 #     app.run_server(debug=True)
