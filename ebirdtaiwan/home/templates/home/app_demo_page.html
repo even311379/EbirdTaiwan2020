@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static plotly_dash %}
+{% block body_class %}container{% endblock %}
+
+{% block extra_css %}    
+{% endblock extra_css %}
+
+{% block content %}
+
+<br>
+<h1>{{ page.Title }}</h1>
+<br>
+<hr>
+{% for block in page.body %}
+{% if block.block_type == 'heading' %}
+<hr>
+<h2> {{ block.value }} </h2>
+<hr>
+{% elif block.block_type == 'dash_graph_id'%}
+<hr>
+
+{% plotly_direct name=block.value%}
+
+<hr>
+
+{% else %}
+<div class="block-{{ block.block_type }}">
+            {{ block }}
+</div>
+{% endif%}
+
+{% endfor %}
+
+{% endblock content %}

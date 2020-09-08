@@ -184,21 +184,11 @@ app = DjangoDash(
     'TestEbirdApiData', 
     add_bootstrap_links=True, 
 )   # replaces dash.Dash
+
 # app = dash.Dash()
 
 # edit dash_wrapper.py 275
 # "update_title = None" can only work if I modify things there
-
-app_date = datetime.date.today() - datetime.timedelta(days=2)
-
-dropdown = dbc.DropdownMenu(
-    label="挑選日期",
-    children=[
-        dbc.DropdownMenuItem((app_date-datetime.timedelta(days=i)).strftime("%Y-%m-%d"), id=f"{i}_days_back")         
-        for i in range(14)
-    ], id='Dlabel'
-)
-
 
 app.layout = dbc.Container([
     html.Br(),
@@ -206,13 +196,19 @@ app.layout = dbc.Container([
     html.P('從日期獲得全台灣的checklists，目前先開放兩個禮拜內的日期挑選，實際上要撈那一天都可以。'),
     html.Br(),    
     dbc.Row(
-        [dbc.Col(dropdown, width=6),
+        [dbc.Col(dbc.DropdownMenu(
+            label="挑選日期",
+            children=[
+                dbc.DropdownMenuItem((datetime.date.today()-datetime.timedelta(days=i)).strftime("%Y-%m-%d"), id=f"{i}_days_back")         
+                for i in range(14)
+            ], id='Dlabel'
+        ), width=6),
         dbc.Col(dbc.Button("出現吧～資料～",id='Btn1',color="danger"), width=6)
         ]
     ),
     html.Br(),
     html.Div('資料尚未顯現', id='ChecklistTable'),
-    html.Div('',id='CacheDate',style="display:none"),
+    html.Div(children='',id='CacheDate',style=dict(display="none")),
     html.Br(),
     html.H3('資料表二'),
     html.P('從checklist的ID獲得詳細的紀錄，需要輸入上面資料表的上傳清單ID才能看到你要的資料。'),
@@ -224,13 +220,10 @@ app.layout = dbc.Container([
         ]
     ),
     html.Br(),
+    html.H3(id='test'),
     html.Div('資料尚未顯現',id='DetailTable'),
     html.Div('地圖尚未顯現',id='Map'),
-    dcc.Interval(
-        id='tick',
-        interval=5*1000,
-        n_intervals = 0
-    )
+    dcc.Location(id='url', refresh=True)
 
 ])
 
@@ -252,7 +245,7 @@ def SyncDateState(n0,n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12,n13):
     [State('CacheDate','children')]
 )
 def show_datatable1(nc, date):
-    if date=="":
+    if not date:
         return "資料尚未顯現"
     return AllCheckListDashDT(date)
 
@@ -263,25 +256,20 @@ def show_datatable1(nc, date):
     [State('ClInput','value')]
 )
 def show_datatable2(nc, CLID):
-    if CLID=="":
-        return "資料尚未顯現","資料尚未顯現"   
+    if not CLID:
+        return "資料尚未顯現","資料尚未顯現"
     return CheckListDetailDashDT(CLID)
 
-@app.callback(Output('Dlabel', 'children'),
-              [Input('tick', 'n_intervals')],
-              [State('Dlabel', 'children')])
-def update_metrics(n, unchanged):
-
-    global app_date
-    if datetime.date.today() != app_date:
-        app_date = datetime.date.today()
-        print('date changed')
-        return [
-        dbc.DropdownMenuItem((app_date-datetime.timedelta(days=i)).strftime("%Y-%m-%d"), id=f"{i}_days_back")         
+@app.callback(
+    Output('Dlabel', 'children'),    
+    [Input('url', 'pathname')]
+)
+def page_load(pathname):
+    return [
+        dbc.DropdownMenuItem((datetime.date.today()-datetime.timedelta(days=i)).strftime("%Y-%m-%d"), id=f"{i}_days_back")         
         for i in range(14)
-    ]
-    
-    return unchanged
+    ], pathname
 
-# if __name__ == '__main__':
-#     app.run_server(debug=True)
+
+if __name__ == '__main__':
+    app.run_server(debug=True)

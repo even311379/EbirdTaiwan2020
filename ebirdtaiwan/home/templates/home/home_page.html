@@ -1,34 +1,33 @@
 {% extends "base.html" %}
-{% load static plotly_dash %}
-{% block body_class %}template-homepage{% endblock %}
+{% load static plotly_dash wagtailimages_tags %}
 
-{% block extra_css %}
+{% block body_class %}container-fluid{% endblock %}
+
+{% block extra_css %}    
+ <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
 {% endblock extra_css %}
 
 {% block content %}
 
-<br>
-<h1>{{ page.Title }}</h1>
-<br>
-<hr>
-{% for block in page.body %}
-{% if block.block_type == 'heading' %}
-<hr>
-<h2> {{ block.value }} </h2>
-<hr>
-{% elif block.block_type == 'dash_graph_id'%}
-<hr>
+{% plotly_direct name=page.dash_grah_id %}
 
-{% plotly_direct name=block.value%}
+<div class="row fixed-bottom w-75 mx-auto h-75" style="z-index:2 !important">
+    <div  class="col-4">
+    {% image page.team1_icon width-400 %}
+    <H3>隊名A</H3>
+    </div>
 
-<hr>
+    <div  class="col-4">
+    {% image page.team1_icon width-400 %}
+    <H3>隊名B</H3>
+    </div>
 
-{% else %}
-<div class="block-{{ block.block_type }}">
-            {{ block }}
+    <div  class="col-4">
+    {% image page.team1_icon width-400 %}
+    <H3>隊名C</H3>
+    </div>
 </div>
-{% endif%}
 
-{% endfor %}
+<div class="bg-shape fixed-bottom"></div>
 
 {% endblock content %}

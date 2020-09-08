@@ -174,6 +174,11 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+'''
+Use nginx to server static for production mode...
+'''
+
+
 
 # Wagtail settings
 

@@ -18,21 +18,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/ebirdtaiwan.css' %}">
+        {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'css/ebirdtaiwan.css' %}"> {% endcomment %}
+        <link href="{% static 'css/ebirdtaiwan.css' %}" rel="stylesheet">
+      
         <!-- CSS only -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet"> 
         {% block extra_css %}
             {# Override this in templates to add extra stylesheets #}
         {% endblock %}
         {%load plotly_dash%}
         {% plotly_header %}        
-
+        <style>
+            *{font-family: 'Noto Sans TC';}
+        </style>
     </head>
 
-    {% comment %} <body class="{% block body_class %}{% endblock %}"> {% endcomment %}
-    <body class="container">
-        {% comment %} {% wagtailuserbar %} {% endcomment %}
+    <body class="{% block body_class %}{% endblock %}">
 
         {% block content %}{% endblock %}
 
