@@ -11,23 +11,31 @@
 
 {% plotly_direct name=page.dash_grah_id %}
 
-<div class="row fixed-bottom w-75 mx-auto h-75" style="z-index:2 !important">
+<p class="home_title">e<font style="color: #000">Bird</font>&nbsp;Taiwan</p>
+
+<div class="row fixed-bottom w-50 mx-auto pb-5" style="z-index:2 !important">
     <div  class="col-4">
-    {% image page.team1_icon width-400 %}
-    <H3>隊名A</H3>
+    {% image page.team1_icon width-200 %}
+    <H3>{{ page.team1_name }}</H3>
     </div>
 
     <div  class="col-4">
-    {% image page.team1_icon width-400 %}
-    <H3>隊名B</H3>
+    {% image page.team2_icon width-200 %}
+    <H3>{{ page.team2_name }}</H3>
     </div>
 
     <div  class="col-4">
-    {% image page.team1_icon width-400 %}
-    <H3>隊名C</H3>
+    {% image page.team3_icon width-200 %}
+    <H3>{{ page.team3_name }}</H3>
     </div>
 </div>
 
+<div class="home_icon1">
+{% image page.corporation_icon1 max-140x140 %}
+</div>
+<div class="home_icon2">
+{% image page.corporation_icon2 max-140x140 %}
+</div>
 <div class="bg-shape fixed-bottom"></div>
 
 {% endblock content %}

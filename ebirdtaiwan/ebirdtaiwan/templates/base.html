@@ -1,49 +1,108 @@
-{% load static wagtailuserbar %}
+{% load static wagtailuserbar plotly_dash%}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>
-            {% block title %}
-                {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
-            {% endblock %}
-            {% block title_suffix %}
-                {% with self.get_site.site_name as site_name %}
-                    {% if site_name %}- {{ site_name }}{% endif %}
-                {% endwith %}
-            {% endblock %}
-        </title>
-        <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        {# Global stylesheets #}
-        {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'css/ebirdtaiwan.css' %}"> {% endcomment %}
-        <link href="{% static 'css/ebirdtaiwan.css' %}" rel="stylesheet">
-      
-        <!-- CSS only -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet"> 
-        {% block extra_css %}
-            {# Override this in templates to add extra stylesheets #}
+  <head>
+    <meta charset="utf-8" />
+    <title>
+        {% block title %} 
+            {% if self.seo_title %}
+                {{ self.seo_title }}
+            {% else %}
+                {{ self.title }}
+            {% endif %} 
+        {% endblock %} 
+        {% block title_suffix %} 
+            {% with self.get_site.site_name as site_name %} 
+                {% if site_name %} - {{ site_name }} {% endif %} 
+            {% endwith %} 
         {% endblock %}
-        {%load plotly_dash%}
-        {% plotly_header %}        
-        <style>
-            *{font-family: 'Noto Sans TC';}
-        </style>
-    </head>
+    </title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <body class="{% block body_class %}{% endblock %}">
+    {# Global stylesheets #} {% comment %}
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/ebirdtaiwan.css' %}"
+    />
+    {% endcomment %}
+    <link href="{% static 'css/ebirdtaiwan.css' %}" rel="stylesheet" />
 
-        {% block content %}{% endblock %}
+    <!-- CSS only -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap"
+      rel="stylesheet"
+    />
+     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500&display=swap" rel="stylesheet"> 
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+      integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+      crossorigin="anonymous"
+    />
 
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/ebirdtaiwan.js' %}"></script>
+    {% block extra_css %} 
+    {% comment %} {# Override this in templates to add extra stylesheets#}  {% endcomment %}
+    {% endblock %} 
+    
+    {% plotly_header %}
+    <style>
+      * {
+        font-family: "Noto Sans TC";
+      }
+    </style>
+  </head>
 
-        {% block extra_js %}
-            {# Override this in templates to add extra javascript #}
-        {% endblock %}
-    </body>
-    {% plotly_footer %}
+  <body class="{% block body_class %}{% endblock %}" onload="brython()">
+    <script type="text/python">
+    from browser import document
+
+    def openNav(ev):
+        document['menus'].style.width = "250px"
+        document['side_bar'].style.display = "none"
+        document['side_bar_close'].style.display = "block"
+        document['menu_content'].style.display = "block"
+        
+
+    def closeNav(ev):
+        document['menus'].style.width = "0px"
+        document['side_bar_close'].style.display = "none"
+        document['side_bar'].style.display = "block"
+        document['menu_content'].style.display = "none"
+
+
+    document['side_bar'].bind('click', openNav)
+    document['side_bar_close'].bind('click', closeNav)    
+
+    </script>
+    <div class="bar" id="side_bar"><i class="fas fa-bars fa-2x"></i></div>
+    <div class="bar" id="side_bar_close"><i class="fas fa-times fa-2x"></i></div>
+    <div class="bg-light border-right" id='menus'>
+      <div class="list-group list-group-flush" id="menu_content">
+        <a href="#" class="list-group-item list-group-item-action bg-light">活動辦法</a>
+        <a href="#" class="list-group-item list-group-item-action bg-light">隊伍介紹</a>
+        <a href="#" class="list-group-item list-group-item-action bg-light">資料</a>                
+      </div>
+    </div>
+
+    {% block content %}
+    {% endblock %} {# Global javascript #}
+  </body>
+
+    <script type="text/javascript" src="{% static 'js/ebirdtaiwan.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython_stdlib.min.js"></script>
+
+    {% block extra_js %} 
+    {% comment %} {# Override this in templates to add extra javascript #}  {% endcomment %}
+    {% endblock %}
+  {% plotly_footer %}
 </html>
