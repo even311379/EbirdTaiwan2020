@@ -13,29 +13,29 @@
 
 {% plotly_direct name=page.dash_grah_id %}
 
-<p class="home_title">e<font style="color: #000">Bird</font>&nbsp;Taiwan</p>
+<div id="home_title"> {% image page.title_icon max-350x100 %} </div>
 
 <div class="row fixed-bottom w-50 mx-auto pb-5" style="z-index:2 !important">
-    <div  class="col-4">
-    {% image page.team1_icon width-200 %}
-    <H3>{{ page.team1_name }}</H3>
+    <div class="col-4">
+        <div id='team1_icon'>{% image page.team1_icon original %} </div>
+        <H3>{{ page.team1_name }}</H3>
     </div>
 
-    <div  class="col-4">
-    {% image page.team2_icon width-200 %}
-    <H3>{{ page.team2_name }}</H3>
+    <div class="col-4">
+        <div id='team2_icon'>{% image page.team2_icon original %}</div>
+        <H3>{{ page.team2_name }}</H3>
     </div>
 
-    <div  class="col-4">
-    {% image page.team3_icon width-200 %}
-    <H3>{{ page.team3_name }}</H3>
+    <div class="col-4">
+        <div id='team3_icon'>{% image page.team3_icon original %}</div>
+        <H3>{{ page.team3_name }}</H3>
     </div>
 </div>
 
-<div class="home_icon1">
+<div class="corporation_icon1">
 {% image page.corporation_icon1 max-140x140 %}
 </div>
-<div class="home_icon2">
+<div class="corporation_icon2">
 {% image page.corporation_icon2 max-140x140 %}
 </div>
 <div class="bg-shape fixed-bottom"></div>

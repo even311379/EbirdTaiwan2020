@@ -38,33 +38,28 @@
     z-index:3 !important;
 }
 
-.home_title {
+#home_title {
     position: absolute;
     left: 4vw;
     top: 4vh;
-    font-family: 'Noto Serif TC';
-    font-style: normal;
-    font-weight: bold;
-    font-size: 3rem;    
-    
-    color: #4CA800;
-
 }    
 
-.home_icon1{
+.corporation_icon1{
     position: absolute;
     bottom: 8vh;
     right: 5vh;
     width: 140px;
     height:140px;
+    z-index:5;
 }
 
-.home_icon2{
+.corporation_icon2{
     position: absolute;
     bottom: 8vh;
     right: 20vh;
     width: 140px;
     height:140px;
+    z-index:5;
 }
 
 #anim_region {
@@ -72,6 +67,15 @@
     top: 130px;
     position: relative;
     white-space:nowrap;
+    background: #fff;
+}
+
+.sentence_region {
+    display: block;
+    position: absolute;
+    background: #fff;
+    width: 100%;
+    height: 6.5rem;
 }
 
 .anim_letter {
@@ -80,6 +84,8 @@
     font-size: 5.5rem;
     text-align: center;
     color: #eee;
+    position: absolute;
+    background: #fff;
     /* transition: transform 2s ease-out; */
     /* transition: none; */
 }
@@ -90,4 +96,40 @@
     font-size: 5.5rem;
     text-align: center;
     color: #607B49;
+    position: absolute;
+    background: #fff;
 }
+
+#team1_icon, #team2_icon, #team3_icon {
+    transition: transform 0.5s ease-in-out;
+    transform-origin: bottom;
+}
+
+#team1_icon:hover, #team2_icon:hover, #team3_icon:hover{
+    transform: scale(1.2) translateY(-3rem);
+    cursor: pointer;
+}
+
+#team1_screen{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    top: 100vh;
+    right: 100vw;
+    background: rgb(0, 122, 51);
+    transition: top 0.5s ease-in, right 0.5s ease-in;
+    /* display:none; */
+}
+
+.team_screen_title{
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    padding-top: 30vh;
+}
+
+body {
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+  }

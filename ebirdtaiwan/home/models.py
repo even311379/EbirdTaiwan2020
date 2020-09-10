@@ -23,6 +23,15 @@ class AppDemoPage(Page):
 class HomePage(Page):
 
     dash_grah_id = models.CharField(blank=False ,max_length=255)
+
+    title_icon = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+
     team1_name = models.CharField(blank=True, max_length=10)
     team2_name = models.CharField(blank=True, max_length=10)
     team3_name = models.CharField(blank=True, max_length=10)
@@ -67,6 +76,7 @@ class HomePage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('dash_grah_id'),
+        ImageChooserPanel('title_icon'),
         MultiFieldPanel([
             FieldPanel('team1_name'),
             ImageChooserPanel('team1_icon'),
