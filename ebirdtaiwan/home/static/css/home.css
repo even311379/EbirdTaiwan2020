@@ -77,9 +77,9 @@
 .anim_letter {
     display:inline-block;
     width:5rem;
-    font-size: 5rem;
+    font-size: 5.5rem;
     text-align: center;
-    color: #888;
+    color: #eee;
     /* transition: transform 2s ease-out; */
     /* transition: none; */
 }
@@ -87,7 +87,7 @@
 .anim_changing_letter {
     display:inline-block;
     width:5rem;
-    font-size: 5rem;
+    font-size: 5.5rem;
     text-align: center;
-    color: #000;
+    color: #607B49;
 }
