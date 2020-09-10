@@ -66,3 +66,28 @@
     width: 140px;
     height:140px;
 }
+
+#anim_region {
+    transform: rotate(-4.29deg);
+    top: 130px;
+    position: relative;
+    white-space:nowrap;
+}
+
+.anim_letter {
+    display:inline-block;
+    width:5rem;
+    font-size: 5rem;
+    text-align: center;
+    color: #888;
+    /* transition: transform 2s ease-out; */
+    /* transition: none; */
+}
+
+.anim_changing_letter {
+    display:inline-block;
+    width:5rem;
+    font-size: 5rem;
+    text-align: center;
+    color: #000;
+}

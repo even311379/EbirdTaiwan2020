@@ -9,6 +9,8 @@
 
 {% block content %}
 
+<div id="anim_region"></div>
+
 {% plotly_direct name=page.dash_grah_id %}
 
 <p class="home_title">e<font style="color: #000">Bird</font>&nbsp;Taiwan</p>
@@ -37,5 +39,10 @@
 {% image page.corporation_icon2 max-140x140 %}
 </div>
 <div class="bg-shape fixed-bottom"></div>
+
+<script type="text/python">
+from app import anim_text
+
+</script>
 
 {% endblock content %}

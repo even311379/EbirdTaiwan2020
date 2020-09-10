@@ -80,7 +80,8 @@
 
 
     document['side_bar'].bind('click', openNav)
-    document['side_bar_close'].bind('click', closeNav)    
+    document['side_bar_close'].bind('click', closeNav) 
+
 
     </script>
     <div class="bar" id="side_bar"><i class="fas fa-bars fa-2x"></i></div>
@@ -98,9 +99,10 @@
   </body>
 
     <script type="text/javascript" src="{% static 'js/ebirdtaiwan.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython_stdlib.min.js"></script>
-
+    {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython_stdlib.min.js"></script> {% endcomment %}
+    <script type="text/javascript" src="{% static 'js/brython.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/brython_stdlib.js' %}"></script>
     {% block extra_js %} 
     {% comment %} {# Override this in templates to add extra javascript #}  {% endcomment %}
     {% endblock %}

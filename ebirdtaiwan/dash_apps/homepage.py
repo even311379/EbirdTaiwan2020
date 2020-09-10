@@ -121,9 +121,9 @@ app = DjangoDash(
 
 
 app.layout = html.Div([
-    html.Div([
-        html.Div([],id='bg_anim'),
-    ], id='bg-overlay'),
+    # html.Div([
+    #     html.Div([],id='bg_anim'),
+    # ], id='bg-overlay'),
     html.Div(id='bottom_bar'),
     dcc.Location(id='url', refresh=True),
     dcc.Interval(id='tick',interval=50,n_intervals=0),
@@ -143,26 +143,20 @@ def display_page(pathname):
     N_species_1 = 1
     N_species_2 = 1
     N_species_3 = 1
-    print('is g var reeset??', N_species_1)
-    # init_sb_content = [
-    #     html.Div(html.P('{team1_name}紀錄到(0種)', style={"color":"#fff"}),className="score_bar", style={"width":"33%","background":"red"}),
-    #     html.Div(html.P('{team2_name}紀錄到(0種)', style={"color":"#fff"}),className="score_bar", style={"width":"34%","background":"green"}),
-    #     html.Div(html.P('{team3_name}紀錄到(0種)', style={"color":"#fff"}),className="score_bar", style={"width":"33%","background":"blue"})
-    # ]
     return 0
-    # , init_sb_content
 
-@app.callback(
-    [Output('bg_anim', 'children'),
-    Output('tick', 'disabled')],
-    [Input('tick','n_intervals'),]
-)
-def text_animation(delta_time):
-    fin_ticks = 120    
-    if delta_time >= fin_ticks:
-        return TextAnimation(delta_time, fin_ticks), True
+
+# @app.callback(
+#     [Output('bg_anim', 'children'),
+#     Output('tick', 'disabled')],
+#     [Input('tick','n_intervals'),]
+# )
+# def text_animation(delta_time):
+#     fin_ticks = 120    
+#     if delta_time >= fin_ticks:
+#         return TextAnimation(delta_time, fin_ticks), True
     
-    return TextAnimation(delta_time, fin_ticks) , False
+#     return TextAnimation(delta_time, fin_ticks) , False
 
 @app.callback(
     Output('bottom_bar', 'children'),
