@@ -61,6 +61,8 @@ INSTALLED_APPS = [
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     # 'channels', # for "live state" skip it for now....
     'bootstrap4',
+
+    'wagtail_color_panel'
 ]
 
 MIDDLEWARE = [

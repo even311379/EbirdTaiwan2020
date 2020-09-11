@@ -28,17 +28,13 @@ N_species_3 = 9
 
 homepage_data = HomePage.objects.all()[0]
 
-for i in range(1,4):
-    code_string = f'''
-try:
-    team{i}_name = homepage_data.team{i}_name
-    team{i}_color = homepage_data.team{i}_color
-except:    
-    team{i}_name = '???'
-    team{i}_color = '#fff'
-        
-    '''
-    exec(code_string)
+team1_name = ''
+team2_name = ''
+team3_name = ''
+
+team1_color = '#fff'
+team2_color = '#fff'
+team3_color = '#fff'
 
 # app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP],update_title=None)
 app = DjangoDash(
@@ -66,6 +62,20 @@ def display_page(pathname):
     N_species_1 = 1
     N_species_2 = 1
     N_species_3 = 1
+
+    for i in range(1,4):
+        code_string = f'''
+    try:
+        team{i}_name = homepage_data.team{i}_name
+        team{i}_color = homepage_data.team{i}_color
+    except:    
+        team{i}_name = '???'
+        team{i}_color = '#fff'
+            
+        '''
+    exec(code_string)
+
+
     return 0
 
 
