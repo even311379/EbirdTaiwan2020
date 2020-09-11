@@ -25,6 +25,7 @@
     left: 0;    
     height: 5vh;
     width: 100vw;
+    z-index: 2;
 }
 
 /* .modebar{
@@ -103,33 +104,89 @@
 #team1_icon, #team2_icon, #team3_icon {
     transition: transform 0.5s ease-in-out;
     transform-origin: bottom;
+    animation-duration: 1.6s;
 }
 
-#team1_icon:hover, #team2_icon:hover, #team3_icon:hover{
+/* #team1_icon:hover, #team2_icon:hover, #team3_icon:hover{
     transform: scale(1.2) translateY(-3rem);
     cursor: pointer;
-}
+} */
 
-#team1_screen{
+#team1_screen, #team2_screen, #team3_screen{
     position: absolute;
     width: 100vw;
     height: 100vh;
-    z-index: 10;
+    z-index: 10;    
+    transition: top 0.2s ease-in, right 0.2s ease-in;   
+}
+
+#team1_screen{
     top: 100vh;
     right: 100vw;
-    background: rgb(0, 122, 51);
-    transition: top 0.5s ease-in, right 0.5s ease-in;
-    /* display:none; */
+}
+
+#team2_screen{
+    top: 100vh;
+    left: 0;    
+}
+
+#team3_screen{
+    top: 100vh;
+    left: 100vw;
+}
+
+#back_home_icon1, #back_home_icon2, #back_home_icon3 {
+    position: absolute;
+    top: 5rem;
+    right: 5rem;
+    transition: transform 0.3s ease-in-out;
+}
+
+#back_home_icon1:hover, #back_home_icon2:hover, #back_home_icon3:hover {
+    transform:scale(2);
+}
+
+.join_btn {
+    display: block !important;
+    width:20%;
+    bottom: 5rem;
+    margin: auto;
 }
 
 .team_screen_title{
     text-align: center;
     color: white;
     font-weight: 600;
-    padding-top: 30vh;
+    padding: 5rem;
+}
+
+.welcome_content {
+    text-align: left;
+    color: #fff;
 }
 
 body {
     overflow-y: hidden; /* Hide vertical scrollbar */
     overflow-x: hidden; /* Hide horizontal scrollbar */
-  }
+}
+
+@keyframes icon1_drag_screen{
+    0% {transform: translate(0vw, 0vh);}
+    50% {transform: translate(-20vw, -30vh);}
+    75% {transform: translate(-40vw, 5vh);}
+    100% {transform: translate(60vw, -90vh);}
+}
+
+@keyframes icon2_drag_screen{
+    0% {transform: translate(0vw, 0vh);}
+    50% {transform: translate(0vw, -50vh);}
+    75% {transform: translate(0vw,  10vh);}
+    100% {transform: translate(0vw, -90vh);}
+}
+
+@keyframes icon3_drag_screen{
+    0% {transform: translate(0vw, 0vh);}
+    50% {transform: translate(20vw, -30vh);}
+    75% {transform: translate(40vw, 5vh);}
+    100% {transform: translate(-60vw, -90vh);}
+}

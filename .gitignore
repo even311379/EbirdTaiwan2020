@@ -137,6 +137,5 @@ ebirdtaiwan/static
 passwords.py
 geckodriver
 geckodriver.log
-ebirdtaiwan/ebirdtaiwan/settings/dev.py
-migrations/
+# ebirdtaiwan/ebirdtaiwan/settings/dev.py
 ebirdtaiwan/media

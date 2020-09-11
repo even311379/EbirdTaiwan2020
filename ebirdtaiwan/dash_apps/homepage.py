@@ -26,16 +26,19 @@ N_species_1 = 10
 N_species_2 = 15
 N_species_3 = 9
 
-try:
-    homepage_data = HomePage.objects.all()[0]
-    team1_name = homepage_data.team1_name
-    team2_name = homepage_data.team2_name
-    team3_name = homepage_data.team3_name
-except:    
-    team1_name = '???'
-    team2_name = '???'
-    team3_name = '???'
+homepage_data = HomePage.objects.all()[0]
 
+for i in range(1,4):
+    code_string = f'''
+try:
+    team{i}_name = homepage_data.team{i}_name
+    team{i}_color = homepage_data.team{i}_color
+except:    
+    team{i}_name = '???'
+    team{i}_color = '#fff'
+        
+    '''
+    exec(code_string)
 
 # app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP],update_title=None)
 app = DjangoDash(
@@ -98,9 +101,9 @@ def update_species_accumulation(delta_time):
     s2 = f'{team2_name}紀錄到({N_species_2}種)'
     s3 = f'{team3_name}紀錄到({N_species_3}種)'
     return [
-        html.Div(html.P(s1, style={"color":"#fff"}),className="score_bar", style={"width":f"{P[0]}%","background":"red"}),
-        html.Div(html.P(s2, style={"color":"#fff"}),className="score_bar", style={"width":f"{P[1]}%","background":"green","left":f"{P[0]}%"}),
-        html.Div(html.P(s3, style={"color":"#fff"}),className="score_bar", style={"width":f"{P[2]}%","background":"blue","left":f"{P[0]+P[1]}%"})
+        html.Div(html.P(s1, style={"color":"#fff"}),className="score_bar", style={"width":f"{P[0]}%","background":team1_color}),
+        html.Div(html.P(s2, style={"color":"#fff"}),className="score_bar", style={"width":f"{P[1]}%","background":team2_color,"left":f"{P[0]}%"}),
+        html.Div(html.P(s3, style={"color":"#fff"}),className="score_bar", style={"width":f"{P[2]}%","background":team3_color,"left":f"{P[0]+P[1]}%"})
     ]
     
     

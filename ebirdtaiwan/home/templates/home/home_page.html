@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static plotly_dash wagtailimages_tags %}
+{% load static plotly_dash wagtailimages_tags wagtailcore_tags %}
 
 {% block body_class %}container-fluid{% endblock %}
 
@@ -40,8 +40,36 @@
 </div>
 <div class="bg-shape fixed-bottom"></div>
 
+
+<div id='team1_screen' style="background:{{ page.team1_color}}">
+    <div class='container'>
+        <H1 class='team_screen_title'> {{ page.team1_welcome_title|default_if_none:"歡迎加入第一隊(默認)" }}</H1>
+        <div class='welcome_content'> {{ page.team1_welcome_content|richtext|default_if_none:"empty" }} </div>
+    </div>
+    <a class="btn btn-primary join_btn" href="{{ page.register_url|default_if_none:"/home" }}">加入</a>
+    <div id='back_home_icon1'><i class="fas fa-times fa-2x"></i></div>
+</div>
+
+<div id='team2_screen' style="background:{{ page.team2_color}}">
+    <div class='container'>
+        <H1 class='team_screen_title'> {{ page.team2_welcome_title|default_if_none:"歡迎加入第二隊(默認)" }}</H1>
+        <div class='welcome_content'> {{ page.team2_welcome_content|richtext|default_if_none:"empty" }} </div>
+    </div>
+    <a class="btn btn-primary join_btn" href="{{ page.register_url|default_if_none:"/home" }}">加入</a>
+    <div id='back_home_icon2'><i class="fas fa-times fa-2x"></i></div>
+</div>
+
+<div id='team3_screen' style="background:{{ page.team3_color}}">
+    <div class='container'>
+        <H1 class='team_screen_title'> {{ page.team3_welcome_title|default_if_none:"歡迎加入第三隊(默認)" }}</H1>
+        <div class='welcome_content'> {{ page.team3_welcome_content|richtext|default_if_none:"empty" }} </div>
+    </div>
+    <a class="btn btn-primary join_btn" href="{{ page.register_url|default_if_none:"/home" }}">加入</a>
+    <div id='back_home_icon3'><i class="fas fa-times fa-2x"></i></div>
+</div>
+
 <script type="text/python">
-from app import anim_text
+from app import home_logic
 
 </script>
 
