@@ -45,23 +45,14 @@
     top: 4vh;
 }    
 
-.corporation_icon1{
+.corporation_logos{
     position: absolute;
-    bottom: 8vh;
-    right: 5vh;
-    width: 140px;
-    height:140px;
-    z-index:5;
+    bottom: 7vh;
+    width: 10vw;
+    z-index: 2;
+    left: 3vw;
 }
 
-.corporation_icon2{
-    position: absolute;
-    bottom: 8vh;
-    right: 20vh;
-    width: 140px;
-    height:140px;
-    z-index:5;
-}
 
 #anim_region {
     transform: rotate(-4.29deg);
@@ -100,6 +91,26 @@
     position: absolute;
     background: #fff;
 }
+
+
+/*
+* Banner images
+*/
+.banner {
+    position: absolute;
+    z-index: 2;
+    right: 5vw;
+    bottom: 10vh;
+    height: 80vh;
+
+}
+
+
+
+/* 
+* below no more need 
+*/
+
 
 #team1_icon, #team2_icon, #team3_icon {
     transition: transform 0.5s ease-in-out;

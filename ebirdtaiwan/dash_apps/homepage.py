@@ -28,10 +28,6 @@ N_species_3 = 9
 
 homepage_data = HomePage.objects.all()[0]
 
-team1_name = ''
-team2_name = ''
-team3_name = ''
-
 team1_color = '#fff'
 team2_color = '#fff'
 team3_color = '#fff'
@@ -58,20 +54,17 @@ app.layout = html.Div([
 def display_page(pathname):
     global N_species_1
     global N_species_2
-    global N_species_3
+    global N_species_3    
     N_species_1 = 1
     N_species_2 = 1
     N_species_3 = 1
 
     for i in range(1,4):
         code_string = f'''
-    try:
-        team{i}_name = homepage_data.team{i}_name
-        team{i}_color = homepage_data.team{i}_color
-    except:    
-        team{i}_name = '???'
-        team{i}_color = '#fff'
-            
+try:        
+    team{i}_color = homepage_data.team{i}_color
+except:            
+    team{i}_color = '#fff'            
         '''
     exec(code_string)
 
@@ -107,13 +100,14 @@ def update_species_accumulation(delta_time):
 
     # #still some special case 0 , 0, 100 may trigger this bug
 
-    s1 = f'{team1_name}紀錄到({N_species_1}種)'
-    s2 = f'{team2_name}紀錄到({N_species_2}種)'
-    s3 = f'{team3_name}紀錄到({N_species_3}種)'
+    team1_color = homepage_data.team1_color
+    team2_color = homepage_data.team2_color
+    team3_color = homepage_data.team3_color
+
     return [
-        html.Div(html.P(s1, style={"color":"#fff"}),className="score_bar", style={"width":f"{P[0]}%","background":team1_color}),
-        html.Div(html.P(s2, style={"color":"#fff"}),className="score_bar", style={"width":f"{P[1]}%","background":team2_color,"left":f"{P[0]}%"}),
-        html.Div(html.P(s3, style={"color":"#fff"}),className="score_bar", style={"width":f"{P[2]}%","background":team3_color,"left":f"{P[0]+P[1]}%"})
+        html.Div(className="score_bar", style={"width":f"{P[0]}%","background":team1_color}),
+        html.Div(className="score_bar", style={"width":f"{P[1]}%","background":team2_color,"left":f"{P[0]}%"}),
+        html.Div(className="score_bar", style={"width":f"{P[2]}%","background":team3_color,"left":f"{P[0]+P[1]}%"})
     ]
     
     

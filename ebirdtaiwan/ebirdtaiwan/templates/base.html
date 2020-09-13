@@ -1,4 +1,4 @@
-{% load static wagtailuserbar plotly_dash%}
+{% load static menu_tags plotly_dash%}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -66,7 +66,7 @@
     from browser import document
 
     def openNav(ev):
-        document['menus'].style.width = "250px"
+        document['menus'].style.width = "20vw"
         document['side_bar'].style.display = "none"
         document['side_bar_close'].style.display = "block"
         document['menu_content'].style.display = "block"
@@ -85,12 +85,30 @@
 
     </script>
     <div class="bar" id="side_bar"><i class="fas fa-bars fa-2x"></i></div>
-    <div class="bar" id="side_bar_close"><i class="fas fa-times fa-2x"></i></div>
-    <div class="bg-light border-right" id='menus'>
-      <div class="list-group list-group-flush" id="menu_content">
-        <a href="#" class="list-group-item list-group-item-action bg-light">活動辦法</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">隊伍介紹</a>
-        <a href="#" class="list-group-item list-group-item-action bg-light">資料</a>                
+    <div class="bar" id="side_bar_close"><i class="fas fa-arrow-right fa-3x"></i></div>
+    <div class="border-right" id='menus'>
+      <div class="menu_content" id="">
+      {% main_menu show_multiple_levels=True max_levels=2 apply_active_classes=False allow_repeating_parents=False template="menu.html" %}
+
+      {% comment %} {% for item in menu_items %}
+        <a href="{{ item.href }}" class="major_item">{{ item.text }}</a>                
+        {% if item.sub_menu %}
+            <a href="{{ sub_item.href }}" class="minor_item">{{ sub_item.text}}</a>
+        {% endif %}    
+      {% endfor %} {% endcomment %}
+
+
+        {% comment %} <a href="#" class="major_item">活動說明</a>
+        <a href="#" class="major_item">隊伍介紹</a>
+        <a href="#" class="major_item">各隊戰況</a>
+        <a href="#" class="minor_item">三對戰績比較</a>
+        <a href="#" class="minor_item">彩鷸隊成績</a>
+        <a href="#" class="minor_item">家燕隊成績</a>
+        <a href="#" class="minor_item">大冠鷲隊成績</a>
+        <a href="#" class="major_item">活動獎品</a>
+        <a href="#" class="major_item">猜鳥種 | 鳥隻數</a>
+        <a href="#" class="minor_item">我要猜</a>
+        <a href="#" class="major_item">歷年活動</a> {% endcomment %}
       </div>
     </div>
 

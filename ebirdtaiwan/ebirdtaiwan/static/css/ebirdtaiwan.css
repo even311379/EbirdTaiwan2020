@@ -12,7 +12,7 @@
 }
 
 .bar:hover {
-    color: rgb(0, 0, 0);
+    color: rgb(0, 0, 0) !important;
 }
 
 #side_bar {
@@ -24,8 +24,16 @@
 #side_bar_close {
     display: none;
     z-index: 6;
+    color: #fff;
+    position: absolute;
+    right: 16vw;
 }
 
+/* #right_close {
+    color: #fff;
+    position: absolute;
+    left: 1rem;
+} */
 
 #menus {
     position: fixed;
@@ -35,8 +43,33 @@
     height: 100vh;
     z-index: 4;
     transition: width 0.5s;
+    background: #8CB36C;
 }
 
-#menu_content {
+.menu_content {
     padding: 7.5rem 0 0 0;
+}
+
+.major_item {
+    background: transparent;
+    color: #fff;    
+    display: block;
+    padding: 0.5rem 0rem 0.5rem 2rem;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.minor_item {
+    background: transparent;
+    color: #fff;    
+    display: block;
+    padding: 0.3rem 0rem 0.3rem 4rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+
+.major_item:hover, .minor_item:hover {
+    background: rgba(0, 0, 0,0.05);
+    color: #fff; 
 }
