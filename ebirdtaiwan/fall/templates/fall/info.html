@@ -1,1 +1,16 @@
-{{ page.info_content }}
+{% extends "base.html" %}
+{% load static plotly_dash wagtailimages_tags wagtailcore_tags %}
+
+{% block body_class %}container-fluid{% endblock %}
+
+{% block extra_css %}    
+ <link rel="stylesheet" type="text/css" href="{% static 'css/fall.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+
+<div class='info_content'>{{ page.info_content | richtext}} </div>
+<img class='info_banner' src={% static 'img/home/home_banner.png' %} >
+<div class='left_shape'></div>
+<a class='fall_btn info_btn' href='/home'>活動獎品</a>
+{% endblock content %}

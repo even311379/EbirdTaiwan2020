@@ -1,0 +1,100 @@
+
+.left_shape {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-top: 100vh solid #ADD78A;
+    border-right: 10vw solid transparent;
+
+    width: 50vw;
+    z-index:-1;
+
+}
+
+.info_banner {
+    position: absolute;
+    right: 10vw;
+    bottom: 10vh;
+    top: 10vh;
+    height: 80vh;
+    z-index:2 !important;    
+    
+}
+
+.info_content {
+    position: absolute;
+    left: 5vw;
+    top: 15vh;
+    right: 60vw;    
+    /* overflow-wrap: anywhere;
+    z-index:0; */
+}
+
+
+.info_content h2 {
+    font-size: 36px;
+    line-height: 52px;
+    font-weight: bold;
+    padding-bottom: 3vh;
+}
+
+.info_content h4 {
+    font-weight: bold;
+    font-size: 24px;
+    padding-bottom: 3vh;
+
+}
+
+.info_content p {
+    font-size: 24px;
+    padding-bottom: 3vh;
+}
+
+.fall_btn{
+    text-align: center;
+    padding: 0.7rem 0;
+    font-size: 32px;
+    color: #fff;
+    font-weight: 600;
+    border: 2px solid #37760E;
+    box-sizing: border-box;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    border-radius: 4px;
+    
+}
+
+.fall_btn:hover {
+    background: rgba(0,0,0,0.2);
+    font-size: 36px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.info_btn {
+    position: absolute;
+    left: 5vw;
+    bottom: 10vh;
+    width: 22vw;    
+}
+
+/*
+TODO:　change responsive text size by vh or vw
+*/
+.prize_region {
+    position: absolute;
+    right: 5vw;
+    top: 20vh;
+}
+
+.prize_text{
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 29px;
+
+    /* identical to box height */
+
+    color: #2D3A4B;
+
+    text-shadow: 0px 4px 4px #E2EDF3;
+}
