@@ -39,11 +39,6 @@
     z-index:3 !important;
 }
 
-#home_title {
-    position: absolute;
-    left: 4vw;
-    top: 4vh;
-}    
 
 .corporation_logos{
     position: absolute;
@@ -104,7 +99,6 @@
     height: 80vh;
 
 }
-
 
 
 /* 

@@ -63,25 +63,28 @@
 
   <body class="{% block body_class %}{% endblock %}" onload="brython()">
     <script type="text/python">
-    from browser import document
+from browser import document
 
-    def openNav(ev):
-        document['menus'].style.width = "20vw"
-        document['side_bar'].style.display = "none"
-        document['side_bar_close'].style.display = "block"
-        document['menu_content'].style.display = "block"
-        
+def openNav(ev):
+    document['menus'].style.width = "20vw"
+    document['side_bar'].style.display = "none"
+    document['side_bar_close'].style.display = "block"
+    document['menu_content'].style.display = "block"
+    
 
-    def closeNav(ev):
-        document['menus'].style.width = "0px"
-        document['side_bar_close'].style.display = "none"
-        document['side_bar'].style.display = "block"
-        document['menu_content'].style.display = "none"
+def closeNav(ev):
+    document['menus'].style.width = "0px"
+    document['side_bar_close'].style.display = "none"
+    document['side_bar'].style.display = "block"
+    document['menu_content'].style.display = "none"
 
 
-    document['side_bar'].bind('click', openNav)
-    document['side_bar_close'].bind('click', closeNav) 
+document['side_bar'].bind('click', openNav)
+document['side_bar_close'].bind('click', closeNav) 
 
+
+if document.getElementById('no_menu'):
+    document['side_bar'].style.display = 'none'    
 
     </script>
     <div class="bar" id="side_bar"><i class="fas fa-bars fa-2x"></i></div>
@@ -89,26 +92,6 @@
     <div class="border-right" id='menus'>
       <div class="menu_content" id="">
       {% main_menu show_multiple_levels=True max_levels=2 apply_active_classes=False allow_repeating_parents=False template="menu.html" %}
-
-      {% comment %} {% for item in menu_items %}
-        <a href="{{ item.href }}" class="major_item">{{ item.text }}</a>                
-        {% if item.sub_menu %}
-            <a href="{{ sub_item.href }}" class="minor_item">{{ sub_item.text}}</a>
-        {% endif %}    
-      {% endfor %} {% endcomment %}
-
-
-        {% comment %} <a href="#" class="major_item">活動說明</a>
-        <a href="#" class="major_item">隊伍介紹</a>
-        <a href="#" class="major_item">各隊戰況</a>
-        <a href="#" class="minor_item">三對戰績比較</a>
-        <a href="#" class="minor_item">彩鷸隊成績</a>
-        <a href="#" class="minor_item">家燕隊成績</a>
-        <a href="#" class="minor_item">大冠鷲隊成績</a>
-        <a href="#" class="major_item">活動獎品</a>
-        <a href="#" class="major_item">猜鳥種 | 鳥隻數</a>
-        <a href="#" class="minor_item">我要猜</a>
-        <a href="#" class="major_item">歷年活動</a> {% endcomment %}
       </div>
     </div>
 
@@ -117,12 +100,9 @@
   </body>
 
     <script type="text/javascript" src="{% static 'js/ebirdtaiwan.js' %}"></script>
-    {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython_stdlib.min.js"></script> {% endcomment %}
     <script type="text/javascript" src="{% static 'js/brython.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/brython_stdlib.js' %}"></script>
-    {% block extra_js %} 
-    {% comment %} {# Override this in templates to add extra javascript #}  {% endcomment %}
+    {% block extra_js %}     
     {% endblock %}
   {% plotly_footer %}
 </html>

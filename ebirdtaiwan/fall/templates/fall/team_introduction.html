@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static plotly_dash wagtailimages_tags wagtailcore_tags %}
+
+{% block body_class %}container-fluid{% endblock %}
+
+{% block extra_css %}    
+ <link rel="stylesheet" type="text/css" href="{% static 'css/fall.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div id="home_title"> <img src={% static 'img/home/eBirdTaiwan.png' %}> </div>
+
+<div class='teams_region'>
+    <div class='row'>
+        <div class='col-4'>
+        <div class='team_name'>彩鷸隊</div>
+        <div class='team_icon align-bottom'><img src={% static 'img/fall/farmbird.png' %}></div>
+        <div class='team_description'>{{ page.team_left_description }}</div>
+        </div>
+        <div class='col-4'>
+        <div class='team_name'>家燕隊</div>
+        <div class='team_icon align-bottom'><img src={% static 'img/fall/citybird.png' %}></div>
+        <div class='team_description'>{{ page.team_middle_description }}</div>
+        </div>
+        <div class='col-4'>
+        <div class='team_name'>大冠鷲隊</div>
+        <div class='team_icon action-workflow-statusalign-bottom'><img src={% static 'img/fall/forestbird.png' %}></div>
+        <div class='team_description'>{{ page.team_right_description }}</div>
+        </div>
+    </div>
+</div>
+<a class='fall_btn teams_btn' href='/signup'>選擇隊伍</a>
+<div class='bottom_rect'></div>
+{% endblock content %}

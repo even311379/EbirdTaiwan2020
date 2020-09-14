@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static plotly_dash wagtailimages_tags wagtailcore_tags %}
+
+{% block body_class %}container-fluid{% endblock %}
+
+{% block extra_css %}    
+ <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+ <link rel="stylesheet" type="text/css" href="{% static 'css/fall.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+
+{% plotly_direct name=page.dash_board_name %}
+
+{% endblock content %}

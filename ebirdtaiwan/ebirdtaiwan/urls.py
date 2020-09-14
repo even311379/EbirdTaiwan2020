@@ -8,7 +8,6 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 # from search import views as search_views
 from dash_apps import TestEbirdApiData, ChoroplethAnimationDemo, homepage
-
 urlpatterns = [
     path('django-admin/', admin.site.urls),
 

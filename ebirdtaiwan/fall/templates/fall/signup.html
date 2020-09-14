@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block extra_css %}    
+ <link rel="stylesheet" type="text/css" href="{% static 'css/fall.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+
+<div class='green_background'>
+<div class='container'>
+    <div class='signup_container'>
+        <form action="{% pageurl page %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="UserID">eBird公開顯示名稱</label>
+                <input type="text" class="form-control" id="UserID" name="ebirdid" placeholder="eBird公開顯示名稱" required=True>
+            </div>
+            <div class="form-group">
+                <label for="TeamSelect">選擇隊伍</label>
+                <select class="form-control" id="TeamSelect" name="team" required=True>
+                <option>彩鷸隊</option>
+                <option>家燕隊</option>
+                <option>大冠鷲隊</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="InputEmail">連絡信箱</label>
+                <input type="email" class="form-control" id="InputEmail" placeholder="連絡信箱" name="email" required=True>
+            </div>
+            <button type="submit" class="fall_btn signup_btn01">提交並開始比賽!</button>
+        </form>
+        <div class='row'>
+            <div class='col col-5'><a class='fall_btn signup_btn02'>忘記公開顯示帳號</a></div>
+            <div class='col col-2'></div>
+            <div class='col col-5'><a class='fall_btn signup_btn02' href='https://secure.birds.cornell.edu/cassso/account/create?'>創建新帳號</a></div>        
+        </div>
+    </div>
+    <div class='error_message'>{{ error_message }}</div>
+    <a class='close_to_home' href='/'><i class='fas fa-times fa-3x'></i></a>
+    <div id='no_menu' style='display:none'></div>
+</div></div>
+
+{% endblock content %}

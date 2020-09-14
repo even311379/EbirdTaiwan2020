@@ -5,7 +5,11 @@ from wagtail.core.fields import RichTextField
 from wagtail.admin.edit_handlers import FieldPanel
 
 from wagtailmenus.models import MenuPage
-# Create your models here.
+
+from django.shortcuts import render
+from django.core.mail import EmailMessage
+from django.template.loader import get_template
+from automation import passwords
 
 class Info(Page):
 
@@ -26,16 +30,80 @@ class Reward(Page):
 
 class TeamIntroduction(Page):
 
-    reward_content = RichTextField(blank=True, help_text='各隊伍介紹')
+    team_left_description = models.CharField(blank=True, max_length=100, help_text='彩鷸隊')
+    team_middle_description = models.CharField(blank=True, max_length=100, help_text='家燕隊')
+    team_right_description = models.CharField(blank=True, max_length=100, help_text='大冠鷲隊')
 
     content_panels = Page.content_panels + [
-        FieldPanel('reward_content', classname='full')
+        FieldPanel('team_left_description'),
+        FieldPanel('team_middle_description'),
+        FieldPanel('team_right_description')
     ]
 
-class DashBoard(MenuPage):
+class Dashboard(MenuPage):
 
     dash_board_name = models.CharField(max_length=30, blank=False, help_text="DON'tT TOUCH this")
 
     content_panels = Page.content_panels + [
         FieldPanel('dash_board_name', classname='full')
     ]
+
+
+class SignupData(models.Model):
+
+    team_choice = [
+        ('彩鷸隊', '彩鷸隊' ),
+        ('家燕隊', '家燕隊' ),
+        ('大冠鷲隊', '大冠鷲隊' ),
+    ]
+
+    ebirdid = models.CharField(max_length=50)
+    team = models.CharField(max_length=6, choices=team_choice, default='彩鷸隊')
+    email = models.EmailField(max_length=100)    
+    signup_time = models.DateTimeField(auto_now_add=True)    
+
+
+def send_validation_email(email, team, ebirdid):
+    t = get_template('fall/welcome_email.html')
+    content = t.render(locals())
+    msg = EmailMessage(
+        '認證ebirdTaiwn 秋季挑戰賽帳號',
+        content,
+        passwords.mailserver_account,
+        [email]
+    )
+    msg.content_subtype = 'html'
+    try:
+        msg.send()
+    except Exception as e:
+        print(e)
+
+
+class SignupPage(Page):
+
+    def serve(self, request):
+
+        if request.method == 'POST':            
+            ebirdid = request.POST.get('ebirdid', None)
+            team = request.POST.get('team', None)            
+            email = request.POST.get('email', None)            
+            if (len(SignupData.objects.filter(ebirdid=ebirdid)) > 0):
+                return render(request, 'fall/signup.html', {'page': self, 'error_message': '這個eBird公開顯示名稱已經註冊了！'})
+            if (len(SignupData.objects.filter(email=email)) > 0):
+                return render(request, 'fall/signup.html', {'page': self, 'error_message': '這個email註冊過了！'})
+
+            send_validation_email(email = email, team = team, ebirdid = ebirdid)
+            '''
+            TODO: add email valid check before add data
+            '''
+            NewSignupData = SignupData(
+                ebirdid=ebirdid,
+                team = team,
+                email=email,                
+            )            
+            NewSignupData.save()
+            
+            return render(request, 'fall/thankyou.html', {'page': self, 'ebirdid':ebirdid, 'team':team})
+        else:
+            print('it is get...')
+            return render(request, 'fall/signup.html', {'page': self, 'error_message':'' })

@@ -65,7 +65,7 @@
 }
 
 .fall_btn:hover {
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2) !important;;
     font-size: 36px;
     color: #fff;
     text-decoration: none;
@@ -77,6 +77,8 @@
     bottom: 10vh;
     width: 22vw;    
 }
+
+/* prize page*/
 
 /*
 TODO:　change responsive text size by vh or vw
@@ -97,4 +99,130 @@ TODO:　change responsive text size by vh or vw
     color: #2D3A4B;
 
     text-shadow: 0px 4px 4px #E2EDF3;
+}
+
+/* teams page*/
+
+.teams_region{
+    position: absolute;
+    top: 15vh;
+    bottom: 35vh;
+    left:5vw;
+    right:5vw;
+    text-align:center;
+}
+
+.team_name {
+    font-size: 40px;
+    line-height: 58px;
+}
+
+.team_icon {
+    display:flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 35vh;
+    margin: 3vh;
+}
+
+.team_description {
+    font-size: 24px;
+    line-height: 35px;
+}
+.teams_btn{
+    color: #607B49;
+    position: absolute;
+    bottom: 15vh;
+    width: 20vw;
+    left: 40vw;
+}
+
+.bottom_rect {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 10vh;
+    width: 100vw;
+    background: #A4D386;
+}
+
+/* Signup page
+*/
+
+.signup_btn01, .signup_btn02 {    
+    height: 75%;
+    font-size: 26px !important;
+    border: 2px solid #E5E5E5 !important;
+    
+}
+
+.signup_btn01 {
+    width: 100%;
+    margin-top: 3vh;
+    line-height: 1;
+    margin-bottom: 2vh;
+    background: transparent !important;
+}
+
+.signup_btn02{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;    
+    color: #fff !important;
+    background: rgba(0,0,0,0.1) !important;
+}
+
+.signup_btn02:hover, .signup_btn02:hover {
+    cursor: pointer;
+    background: rgba(0,0,0,0.2)
+}
+
+.close_to_home{
+    color: #fff;
+    position: absolute;
+    top: 5vh;
+    right: 5vw;
+    z-index: 5;
+}
+
+.close_to_home:hover{
+    color: rgb(0, 0, 0) !important;
+}
+
+.signup_container{
+    position: relative;
+    top: 20vh;
+    width: 75%;
+    margin: auto;
+}
+
+.thankyou_banner {
+    position: absolute;
+    width: 25vw;
+    left: 23vw;
+    top: 30vh;
+}
+
+.thankyou_text{
+    color: white;
+    font-weight: 600;
+    font-size: 3vw;
+    position: absolute;
+    left: 52vw;
+    width: 25vw;
+    top: 30vh;
+    text-align: center;
+}
+.error_message {
+    position: absolute;
+    bottom: 10vh;
+    color: red;
+    margin: auto;
+    text-align: center;
+    width: 40vw;
+    left: 30vw;
+    font-size:1.8vw;
+    font-weight: 600;
 }

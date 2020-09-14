@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block extra_css %}    
+ <link rel="stylesheet" type="text/css" href="{% static 'css/fall.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+
+<div class='green_background'>
+
+    <img class='thankyou_banner' src={% static 'img/fall/farmbird.png' %}></img>
+    <div class='thankyou_text'>恭喜！{{ ebirdid }}<br>您已是{{ team }}成員<br>系統已寄發確認信<br>請開始比賽！</div>
+    <a class='close_to_home' href='/'><i class='fas fa-times fa-3x'></i></a>
+    <div id='no_menu' style='display:none'></div>
+</div>
+
+{% endblock content %}
