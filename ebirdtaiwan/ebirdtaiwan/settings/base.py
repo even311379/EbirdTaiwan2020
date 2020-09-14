@@ -15,9 +15,11 @@ import os
 import sys
 
 # print(sys.path)
-sys.path.append(os.path.abspath('../')) 
 
+sys.path.append(os.path.abspath('../')) 
 from automation import passwords
+
+# import passwords # TEST ONLY
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -229,7 +231,6 @@ PLOTLY_COMPONENTS = [
 
 
 # Email server setup
-
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'

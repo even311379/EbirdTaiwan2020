@@ -9,7 +9,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import get_template
 
 import random
-from automation import passwords
+# from automation import passwords
 
 
 class JoinData(models.Model):
