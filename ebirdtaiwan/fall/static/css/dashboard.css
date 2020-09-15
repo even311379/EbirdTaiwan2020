@@ -1,4 +1,40 @@
-/* .dash_btn01{
-    display
-} */
+.dashboard_container {
+    position: absolute;
+    left: 2.5vw;
+    width: 95vw;
+    top: 10vh;
+    bottom: 15vh;
+    /* background: blue; */
+}
 
+
+.single_team_card {
+    border: 3px solid #E5E5E5;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin:2vh 0;
+    height: 22.5vh;
+    display: inline-flex;
+    width: 100%;
+
+    /* background: green; */
+}
+
+.team_card_col {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.prgression_map {
+    height: 95%;
+    transform: translateY(2.5%);
+} 
+
+
+.team_card_col img {
+    max-width: 100%;
+    max-height: 100%;
+}
