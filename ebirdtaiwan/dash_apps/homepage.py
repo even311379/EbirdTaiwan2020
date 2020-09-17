@@ -114,3 +114,11 @@ def update_species_accumulation(delta_time):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
+
+'''
+
+    地圖顏色：
+1. 可以放底圖的話，設定黑色邊，不填色
+2. 不可放的話，設定黑色邊，家燕（2E92D3）、彩鷸（EF8018）、大冠鷲（FFF101）
+'''

@@ -11,6 +11,8 @@ from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from automation import passwords
 
+# import datetime
+
 class Info(Page):
 
     info_content = RichTextField(blank=True, help_text='秋季觀鳥競賽的活動說明')
@@ -111,6 +113,49 @@ class SignupPage(Page):
             return render(request, 'fall/signup.html', {'page': self, 'error_message':'' })
 
 
+class PredictionData(models.Model):
+    
+    participant_name = models.CharField(blank=False, max_length=40)
+    participant_email = models.EmailField(max_length=100)
+    guess_n_species = models.IntegerField(default=0)
+    guess_total_individual = models.IntegerField(default=0)
+    prediction_datetime = models.DateTimeField(auto_now=True, editable=False)
+
+    def __str__(self):
+        return self.participant_name + self.participant_email
+
+
+class SubmitPrediction(Page):
+
+
+    def serve(self, request):
+        if request.method == 'POST':
+            name = request.POST.get('participant_name', None)
+            print('????')
+            print(name)
+            email = request.POST.get('participant_email', None)            
+            gns = request.POST.get('guess_n_species', None)
+            gni = request.POST.get('guess_total_individual', None)  
+            
+            if (len(PredictionData.objects.filter(participant_email=email)) > 0):
+                return render(request, 'fall/prediction.html', {'page': self, 'error_message': '一個email只能進行一次預測'})
+
+            NewPredictionData = PredictionData(
+                participant_name = name,
+                participant_email = email,
+                guess_n_species = gns,
+                guess_total_individual = gni
+            )
+
+            NewPredictionData.save()
+
+            return render(request, 'fall/prediction_finish.html', {'page': self})
+        else:
+            return render(request, 'fall/prediction.html', {'page': self, 'error_message': ''})
+
+        
+
+
 '''
 Scraped data area
 '''
@@ -137,4 +182,4 @@ class SurveyObs(models.Model):
 
 
 
-# class Guess(models.Model):
+

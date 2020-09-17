@@ -11,6 +11,20 @@ import json
 import pandas as pd
 import numpy as np
 # from fall.models import 
+import plotly.express as px
+
+'''
+This is just the begining:
+
+1. sync real data to map and numbers
+2. update the map frame
+3. or... remove the map layout, it's so ugly now...
+4. design the hover info...
+
+'''
+
+
+
 
 DEMO_MODE = True
 
@@ -25,6 +39,8 @@ with open('../helper_files/TaiwanCounties_simple.geojson') as f:
     geoj = json.load(f)
 
 data = pd.read_csv('../helper_files/TaiwanCounties.csv')
+
+mapbox_access_token = 'pk.eyJ1IjoiZXZlbjMxMTM3OSIsImEiOiJjamFydGVtOHk0bHo1MnFyejhneGowaG1sIn0.gyK3haF84TD-oxioghabsQ'
 
 NorthTaiwan_geo = []
 for f in geoj['features']:
@@ -42,115 +58,42 @@ for k in range(len(geoj['features'])):
 
 # and insert id to df
 data['Name'] = RN
+data['winner'] = [random.choice(['A','B','C','E']) for i in range(len(data))]
 
-#create random data for test visual effect
-d0 = np.zeros(len(data))
-idx = np.arange(len(data))
-np.random.shuffle(idx)
 
-increment = np.append(np.random.randint(0,5,round(len(data)/4*3)),np.random.randint(3,8,round(len(data)/4)))
-increment = increment.take(idx, 0)
-d0 = np.vstack([d0,d0 + increment])
-for i in range(29):
-    increment = np.append(np.random.randint(0,5,round(len(data)/4*3)),np.random.randint(3,8,round(len(data)/4)))
-    increment = increment.take(idx, 0)
-    d0 = np.vstack([d0,d0[-1,:] + increment])
-    
-for i in range(d0.shape[0]):
-    data[f'Day{i}'] = d0[i,:]
+t = [random.choice(['123','456','789','555']) for i in range(len(data))]
 
-days = [f'Day{i}' for i in range(31)]
-
-cdata = go.Choroplethmapbox(
-    geojson=geoj,
-    locations = data['Name'],
-    customdata = data['Name'],
-    z = data['Day0'],
-    zmax = 150, # use these value to control color gradient
-    zmin = 0,
-    colorscale='Jet',
-    colorbar_title='上傳清單數量',
-    marker_opacity=0.5, # this can actually tune opacity
+area_map = px.choropleth_mapbox(data, geojson=geoj, color="winner",
+            locations="Name",center={"lat": 24.9839, "lon":121.65},
+            mapbox_style="stamen-terrain", zoom=10, hover_data=['Name'],custom_data=[data['Name']],
+            color_discrete_sequence=['#2E92D3','#EF8018','#FFF101', 'rgba(255,255,255,0)'],
+        )
+area_map.update_traces(
+    customdata=data['Name'].tolist(),
+    hovertemplate='''
+<b>%{customdata}</b><br><br>
+<b>隊伍一</b><br>
+清單數：物種數： 總隻數： <br>
+<b>隊伍一</b><br>
+清單數：物種數： 總隻數： <br>
+<b>隊伍一</b><br>
+清單數：物種數： 總隻數： 
+<extra></extra>
+  ''', 
     hoverlabel=dict(font=dict(size=18)),
-    name = '',
-    hovertemplate="%{customdata}<extra>已累積%{z}筆清單！</extra>" 
+    # showlegend=False,
+    marker=dict(line=dict(width=5,color='#000')),
 )
-
-clayout =go.Layout(
-    title_text = 'A good title',    
-    mapbox = dict(
-        center=dict(lat=23.97359, lon=120.979788),
-        style='carto-positron', # or 'white-bg' for empty bg
-        zoom = 6,
+area_map.update_layout(
+    mapbox = dict(        
+        accesstoken=mapbox_access_token,                        
+        pitch = 45,                
     ),
-    plot_bgcolor=None
+    margin={"r":0,"t":0,"l":0,"b":0},
+    dragmode="pan",
+    # this is a severe bug, dragmode = False should just remove drag, but its not working for me...  
 )
 
-clayout["updatemenus"] = [
-    dict(
-        type="buttons",
-        buttons=[
-            dict(
-                label="Play",
-                method="animate",
-                args=[None,dict(frame=dict(duration=1000,redraw=True),fromcurrent=False)]
-            ),
-            dict(
-                label="Pause",
-                method="animate",
-                args=[[None],dict(frame=dict(duration=0,redraw=True),mode="immediate")]
-            )],
-          direction="left",
-          pad={"r": 10, "t": 35},
-          showactive=False,
-          x=0.1,
-          xanchor="right",
-          y=0,
-          yanchor="top"
-    )
-]
-
-sliders_dict = dict(
-    active=len(days) - 1,
-    visible=True,
-    yanchor="top",
-    xanchor="left",
-    currentvalue=dict(
-        font=dict(size=20),
-        prefix="Date: ",
-        visible=True,
-        xanchor="right"),
-    pad=dict(b=10,t=10),
-    len=0.875,
-    x=0.125,
-    y=0,
-    steps=[]
-)
-
-fig_frames = []
-for day in days:
-    frame = go.Frame(
-        data=[go.Choroplethmapbox(
-            locations=data['Name'],
-            customdata = data['Name'],
-            z=data[day],)],
-         name=day)
-    fig_frames.append(frame)
-
-    slider_step = dict(
-        args=[[day],
-              dict(mode="immediate",
-                   frame=dict(duration=3000,redraw=True))
-             ],
-        method="animate",
-        label=day)
-    sliders_dict["steps"].append(slider_step)
-
-
-clayout['sliders']=[sliders_dict]
-fig = go.Figure(data = cdata, layout=clayout, frames=fig_frames)
-
-    
 
 app.layout = html.Div([
     dbc.Row([
@@ -162,8 +105,8 @@ app.layout = html.Div([
                     html.Div([html.Div('總上傳清單數：'),html.Div('400',className='ml-auto', id='team1_n_list')], className='d-flex w-75 pb-2'),
                     html.Div([html.Div('總上傳鳥種數:'),html.Div('544',className='ml-auto', id='team1_n_species')], className='d-flex w-75 pb-2'),
                     html.Div([html.Div('總上傳鳥隻數：'),html.Div('400',className='ml-auto', id='team1_n_count')], className='d-flex w-75'),
-                ], className='bg-success team_card_col')
-            ],className='bg-info single_team_card'),
+                ], className='team_card_col')
+            ],className='single_team_card'),
             html.Div([
                 html.Div(html.Img(src='/static/img/fall/citybird.png', className='px-3'),className='team_card_col'),
                 html.Div([
@@ -171,8 +114,8 @@ app.layout = html.Div([
                     html.Div([html.Div('總上傳清單數：'),html.Div('400',className='ml-auto', id='team2_n_list')], className='d-flex w-75 pb-2'),
                     html.Div([html.Div('總上傳鳥種數:'),html.Div('544',className='ml-auto', id='team2_n_species')], className='d-flex w-75 pb-2'),
                     html.Div([html.Div('總上傳鳥隻數：'),html.Div('400',className='ml-auto', id='team2_n_count')], className='d-flex w-75'),
-                ], className='bg-success team_card_col')
-            ],className='bg-info single_team_card'),
+                ], className='team_card_col')
+            ],className='single_team_card'),
             html.Div([
                 html.Div(html.Img(src='/static/img/fall/forestbird.png', className='px-3'),className='team_card_col'),
                 html.Div([
@@ -180,19 +123,19 @@ app.layout = html.Div([
                     html.Div([html.Div('總上傳清單數：'),html.Div('400',className='ml-auto', id='team3_n_list')], className='d-flex w-75 pb-2'),
                     html.Div([html.Div('總上傳鳥種數:'),html.Div('544',className='ml-auto', id='team3_n_species')], className='d-flex w-75 pb-2'),
                     html.Div([html.Div('總上傳鳥隻數：'),html.Div('400',className='ml-auto', id='team3_n_count')], className='d-flex w-75'),
-                ], className='bg-success team_card_col')
-            ],className='bg-info single_team_card'),           
+                ], className='team_card_col')
+            ],className='single_team_card'),           
         ],width=4),
         dbc.Col(
-            dcc.Graph(figure = fig, className='prgression_map'),
-            className='bg-secondary'
+            dcc.Graph(figure = area_map, className='prgression_map', config=dict(scrollZoom=False, displayModeBar=False)),
+            className=''
         ,width=8)
-    ], className='bg-primary'),
+    ], className=''),
     dcc.Interval(id='tick',interval=3000), # update things every 3 s for demo
     dcc.Location(id='url'),
     html.Div('',id='empty',style={'display':'none'})
     # dcc.Interval(id='tick',interval=150000), # update things every 150 s
-], className='bg-danger dashboard_container')
+], className='dashboard_container')
 
 
 demo_t1np = 12

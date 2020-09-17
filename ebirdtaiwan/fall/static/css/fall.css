@@ -69,6 +69,7 @@
     font-size: 36px;
     color: #fff;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .info_btn {
@@ -225,4 +226,14 @@ TODO:　change responsive text size by vh or vw
     left: 30vw;
     font-size:1.8vw;
     font-weight: 600;
+}
+
+/*
+* prediction page
+*/
+
+#page2{
+    top: -100vh;
+    transition: top 0.5s;
+    z-index: 10 !important;
 }

@@ -17,13 +17,13 @@
 
 #side_bar {
     display: block;
-    z-index: 5;
+    z-index: 1000;
 }
 
 
 #side_bar_close {
     display: none;
-    z-index: 6;
+    z-index: 810;
     color: #fff;
     position: absolute;
     right: 16vw;
@@ -41,7 +41,7 @@
     /* background: #346031; */
     width: 0px;
     height: 100vh;
-    z-index: 4;
+    z-index: 800;
     transition: width 0.5s;
     background: #8CB36C;
 }
@@ -83,7 +83,7 @@
 .green_background {
     position:absolute;
     top: 0;
-    bottom: 0;
+    height: 100vh;
     left: 0;
     right: 0;
     background: #A4D386;

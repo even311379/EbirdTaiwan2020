@@ -7,7 +7,8 @@ from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 # from search import views as search_views
-from dash_apps import TestEbirdApiData, ChoroplethAnimationDemo, homepage, TaipeiCompetition
+from dash_apps import TestEbirdApiData, ChoroplethAnimationDemo, homepage, TaipeiCompetition, \
+    TeamDashboard, EveryonesPrediction
 urlpatterns = [
     path('django-admin/', admin.site.urls),
 
