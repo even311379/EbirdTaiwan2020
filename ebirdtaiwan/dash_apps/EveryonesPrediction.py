@@ -178,7 +178,7 @@ app.layout = html.Div([
             html.Div(id='predict_table'),
         ], lg=6)
     ], className='h-100'),
-    html.A('我要猜',className='fall_btn teams_btn prediction_btn', href='/signup'),        
+    html.A('我要猜',className='fall_btn teams_btn prediction_btn', href='/make_prediction'),        
     dcc.Interval(id='tick',interval=1000), # update things every 3 s for demo
     dcc.Location(id='url'),
     html.Div('',id='empty',style={'display':'none'}),
