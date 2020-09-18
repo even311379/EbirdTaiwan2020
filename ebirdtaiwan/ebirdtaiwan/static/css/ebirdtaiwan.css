@@ -47,15 +47,15 @@
 }
 
 .menu_content {
-    padding: 7.5rem 0 0 0;
+    padding: 12vh 0 0 0;
 }
 
 .major_item {
     background: transparent;
     color: #fff;    
     display: block;
-    padding: 0.5rem 0rem 0.5rem 2rem;
-    font-size: 2rem;
+    padding: 0.5vw 0 0.5vw 3vw;
+    font-size: 1.8vw;
     font-weight: 600;
 }
 
@@ -63,8 +63,8 @@
     background: transparent;
     color: #fff;    
     display: block;
-    padding: 0.3rem 0rem 0.3rem 4rem;
-    font-size: 1.3rem;
+    padding: 0.3vw 0 0.3vw 5vw;
+    font-size: 1.3vw;
     font-weight: 600;
 }
 
@@ -102,4 +102,19 @@
 .green_background h4{
     color: #fff;
     font-size: 32px;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .major_item {
+        font-size: 5vw;
+    }
+
+    .minor_item {
+        font-size: 3vw;
+    }
+    #home_title {
+        width: 30vw;
+        height: auto;
+    }
 }

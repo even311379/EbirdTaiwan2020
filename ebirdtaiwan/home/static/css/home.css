@@ -46,12 +46,14 @@
     width: 10vw;
     z-index: 2;
     left: 3vw;
+    height: 8vh;
+    width: auto;
 }
 
 
 #anim_region {
     transform: rotate(-4.29deg);
-    top: 130px;
+    top: 15vh;
     position: relative;
     white-space:nowrap;
     background: #fff;
@@ -61,33 +63,33 @@
     display: block;
     position: absolute;
     background: #fff;
-    width: 100%;
-    height: 6.5rem;
+    width: 100vw;
+    height: 12vh;
+}
+
+.anim_letter, .anim_changing_letter {
+    display:inline-block;
+    width:4vw;
+    font-size: 5vw;
+    text-align: center;
+    position: absolute;
+    background: #fff;
 }
 
 .anim_letter {
-    display:inline-block;
-    width:5rem;
-    font-size: 5.5rem;
-    text-align: center;
     color: #eee;
-    position: absolute;
-    background: #fff;
-    /* transition: transform 2s ease-out; */
-    /* transition: none; */
 }
 
 .anim_changing_letter {
-    display:inline-block;
-    width:5rem;
-    font-size: 5.5rem;
-    text-align: center;
     color: #607B49;
-    position: absolute;
-    background: #fff;
 }
 
-
+.Ctitle {
+    top: 40vh;
+    z-index: -5;
+    width:5vw;
+    font-size: 5.5vw;
+}
 /*
 * Banner images
 */
@@ -97,7 +99,11 @@
     right: 5vw;
     bottom: 10vh;
     height: 80vh;
+    width: 40vw;
+}
 
+#banner_img {
+    display: none;
 }
 
 body {
@@ -105,97 +111,8 @@ body {
     overflow-x: hidden; /* Hide horizontal scrollbar */
 }
 
-/* 
-* below no more need 
-*/
-
-
-#team1_icon, #team2_icon, #team3_icon {
-    transition: transform 0.5s ease-in-out;
-    transform-origin: bottom;
-    animation-duration: 1.6s;
-}
-
-/* #team1_icon:hover, #team2_icon:hover, #team3_icon:hover{
-    transform: scale(1.2) translateY(-3rem);
-    cursor: pointer;
-} */
-
-#team1_screen, #team2_screen, #team3_screen{
+#mobile_region {
     position: absolute;
-    width: 100vw;
-    height: 100vh;
-    z-index: 10;    
-    transition: top 0.2s ease-in, right 0.2s ease-in;   
-}
-
-#team1_screen{
-    top: 100vh;
-    right: 100vw;
-}
-
-#team2_screen{
-    top: 100vh;
-    left: 0;    
-}
-
-#team3_screen{
-    top: 100vh;
-    left: 100vw;
-}
-
-#back_home_icon1, #back_home_icon2, #back_home_icon3 {
-    position: absolute;
-    top: 5rem;
-    right: 5rem;
-    transition: transform 0.3s ease-in-out;
-}
-
-#back_home_icon1:hover, #back_home_icon2:hover, #back_home_icon3:hover {
-    transform:scale(2);
-}
-
-.join_btn {
-    display: block !important;
-    width:20%;
-    bottom: 5rem;
-    margin: auto;
-}
-
-.team_screen_title{
+    top: 18vh;
     text-align: center;
-    color: white;
-    font-weight: 600;
-    padding: 5rem;
-}
-
-.welcome_content {
-    text-align: left;
-    color: #fff;
-}
-
-body {
-    overflow-y: hidden; /* Hide vertical scrollbar */
-    overflow-x: hidden; /* Hide horizontal scrollbar */
-}
-
-@keyframes icon1_drag_screen{
-    0% {transform: translate(0vw, 0vh);}
-    50% {transform: translate(-20vw, -30vh);}
-    75% {transform: translate(-40vw, 5vh);}
-    100% {transform: translate(60vw, -90vh);}
-}
-
-@keyframes icon2_drag_screen{
-    0% {transform: translate(0vw, 0vh);}
-    50% {transform: translate(0vw, -50vh);}
-    75% {transform: translate(0vw,  10vh);}
-    100% {transform: translate(0vw, -90vh);}
-}
-
-@keyframes icon3_drag_screen{
-    0% {transform: translate(0vw, 0vh);}
-    50% {transform: translate(20vw, -30vh);}
-    75% {transform: translate(40vw, 5vh);}
-    100% {transform: translate(-60vw, -90vh);}
 }

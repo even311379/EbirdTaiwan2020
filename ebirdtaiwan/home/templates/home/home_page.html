@@ -10,11 +10,10 @@
 {% block content %}
 
 <div id="anim_region"></div>
-
 {% plotly_direct name=page.dash_grah_id %}
 
-<div id="home_title"> <img src={% static 'img/home/eBirdTaiwan.png' %}> </div>
-<img class='banner' src={% static 'img/home/home_banner.png' %} >
+<img id="home_title" src={% static 'img/home/eBirdTaiwan.png' %}>
+<img id='banner_img' class='banner' src={% static 'img/home/home_banner.png' %} >
 
 <img class="corporation_logos" src={% static 'img/home/corporation_logos.png' %}>
 <div class="bg-shape fixed-bottom"></div>

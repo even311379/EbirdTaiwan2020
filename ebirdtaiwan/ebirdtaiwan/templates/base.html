@@ -66,7 +66,10 @@
 from browser import document, window
 
 def openNav(ev):
-    document['menus'].style.width = "20vw"
+    if window.innerWidth > 768:
+        document['menus'].style.width = "20vw"
+    else:
+        document['menus'].style.width = "40vw"
     document['side_bar'].style.display = "none"
     document['side_bar_close'].style.display = "block"
     document['menu_content'].style.display = "block"
@@ -89,7 +92,7 @@ if document.getElementById('no_menu'):
     <div class="bar" id="side_bar"><i class="fas fa-bars fa-2x"></i></div>
     <div class="bar" id="side_bar_close"><i class="fas fa-arrow-right fa-3x"></i></div>
     <div class="border-right" id='menus'>
-      <div class="menu_content" id="">
+      <div class="menu_content" id="menu_content">
       {% main_menu show_multiple_levels=True max_levels=2 apply_active_classes=False allow_repeating_parents=False template="menu.html" %}
       </div>
     </div>
