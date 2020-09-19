@@ -42,6 +42,7 @@
     <div class='mobile_title' style='padding-top: 12vh'>2020秋季臺北觀鳥大賽</div>
     <div class='mobile_title' style='color:#607B49;'>AUTUMN CHALLENGE</div>
     <div class='minfo_content'>{{ page.reward_content | richtext}} </div>
+    <div class='mbg_shape'></div>
 </div>
 
 <script type="text/python">
@@ -52,7 +53,7 @@ if window.innerWidth >= 768:
 
 if window.innerWidth < 768:    
     document['mprize_content'].style.display = 'block'    
-
+    document['mprize_content'].get(selector='b')[3].style.display = 'none'
 </script>
 
 {% endblock content %}

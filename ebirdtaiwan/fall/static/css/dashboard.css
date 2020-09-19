@@ -1,8 +1,3 @@
-/* .modebar {
-    display:none !important;
-} */
-
-
 /* 
  For "Three Teams"
 */
@@ -12,7 +7,6 @@
     width: 95vw;
     top: 10vh;
     bottom: 15vh;
-    /* background: blue; */
 }
 
 
@@ -25,7 +19,6 @@
     display: inline-flex;
     width: 100%;
 
-    /* background: green; */
 }
 
 .team_card_col {
@@ -50,10 +43,6 @@
 /*
  For single team
 */
-
-/* .team_map {
-    height: 37.5vh;
-} */
 
 .team_map .svg-container {
     height: 37.5vh;
@@ -84,8 +73,6 @@
 .bar_style {
     height: 27vh;
     width: 22.5vw;
-    /* width: 30vw; */
-    /* padding: 1rem 0; */
     display: block !important;
 }
 
@@ -94,10 +81,7 @@
     margin-bottom: 0.5rem
 }
 
-/* .svg-container {
-    width: 75vw !important;
-    height: 75vh !important;
-} */
+
 
 /*
 * for prediction page
@@ -113,4 +97,60 @@
     font-weight: 600;
     padding-top: 3vh;
     padding-bottom: 3vh;
+}
+
+
+/*
+* not yet page
+*/
+#wait01, #wait02, #wait03{
+    position: absolute;
+}
+
+#wait01{
+    transform: translateX(-15px);
+    top: 20vh;
+    width: 15vw;
+}
+
+#wait02{
+    z-index: -2;
+    left: 12vw;
+    bottom: 4vh;
+    height: 70vh;
+}
+
+#wait03{
+    right: 0;
+    bottom: 18vh;
+    width: 20vw;
+}
+#not_yet_title{
+    position: absolute;
+    left: 45vw;
+    top: 48vh;
+    font-weight: bolder;
+    font-size: 3.5vw;
+    color: #8CB26C;
+}
+
+
+@media only screen and (max-width: 768px) {
+    #wait01{
+        width: 45vw;
+    }
+    #wait02{
+        left: -20vw;
+        height: 60vh;
+    }
+    #wait03{
+        bottom: 12vh;
+        width: 60vw;
+    }
+
+    #not_yet_title{
+        left: 50vw;
+        top: 60vh;
+        font-size: 5.0vw;
+    }
 }

@@ -36,6 +36,7 @@
     font-size: 4.5vh;
     line-height: 5.5vh;
     padding-bottom: 3vh;
+    font-weight: bolder;
 }
 
 .info_content h4 {
@@ -317,6 +318,9 @@ img {
     transform: translateX(-15px);
     color: #fff;
     width: max-content;
+}
+#prize_content h4{
+    display:none;
 }
 
 .minfo_content h2 {
