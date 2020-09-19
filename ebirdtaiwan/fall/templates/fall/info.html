@@ -8,9 +8,34 @@
 {% endblock extra_css %}
 
 {% block content %}
+<div id='info_region' style='display:none'>
+    <div class='info_content'>{{ page.info_content | richtext}} </div>
+    <img class='info_banner' src={% static 'img/home/home_banner.png' %} >
+    <div class='left_shape'></div>
+    <a class='fall_btn info_btn' href='/prize'>活動獎品</a>
+</div>
 
-<div class='info_content'>{{ page.info_content | richtext}} </div>
-<img class='info_banner' src={% static 'img/home/home_banner.png' %} >
-<div class='left_shape'></div>
-<a class='fall_btn info_btn' href='/home'>活動獎品</a>
+<div id='minfo_region' style='display:none'>
+    <img id="home_title" src={% static 'img/home/eBirdTaiwan.png' %}>
+    <div class='mobile_title' style='padding-top: 12vh'>2020秋季臺北觀鳥大賽</div>
+    <div class='mobile_title' style='color:#607B49;'>AUTUMN CHALLENGE</div>
+    <div class='minfo_content'>{{ page.info_content | richtext}} </div>
+    <a class='minfo_btn' href='/prize'>活動獎品</a>
+    <div class='mbg_shape'></div>
+</div>
+
+
+<script type="text/python">
+from browser import window, document, html
+
+if window.innerWidth >= 768:
+    document['info_region'].style.display = 'block'
+
+if window.innerWidth < 768:    
+    document['minfo_region'].style.display = 'block'    
+    element = document["minfo_region"].get(selector="p")[0]    
+    element.insertBefore(html.A('我要選隊', Class='minfo_btn', href='/teams'), None)
+    # it works!! although it is inside <p> , ignore this, its no problem~~
+
+</script>
 {% endblock content %}

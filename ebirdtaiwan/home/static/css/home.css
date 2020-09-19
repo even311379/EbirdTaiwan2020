@@ -116,3 +116,10 @@ body {
     top: 18vh;
     text-align: center;
 }
+
+@media only screen and (max-width: 768px) {
+    .bg-shape {
+        border-top: 8vh solid transparent;
+        height: 25vh;
+    }
+}

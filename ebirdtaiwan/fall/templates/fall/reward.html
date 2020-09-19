@@ -9,6 +9,7 @@
 {% endblock extra_css %}
 
 {% block content %}
+<div id='prize_content' style='display:none'>
 <div class='info_content'>{{ page.reward_content | richtext}} </div>
 <div class='left_shape'></div>
 <div class='prize_region'>
@@ -34,4 +35,24 @@
         </div>
     </div>
 </div>
+</div>
+
+<div id='mprize_content' style='display:none'>
+    <img id="home_title" src={% static 'img/home/eBirdTaiwan.png' %}>
+    <div class='mobile_title' style='padding-top: 12vh'>2020秋季臺北觀鳥大賽</div>
+    <div class='mobile_title' style='color:#607B49;'>AUTUMN CHALLENGE</div>
+    <div class='minfo_content'>{{ page.reward_content | richtext}} </div>
+</div>
+
+<script type="text/python">
+from browser import window, document, html
+
+if window.innerWidth >= 768:
+    document['prize_content'].style.display = 'block'
+
+if window.innerWidth < 768:    
+    document['mprize_content'].style.display = 'block'    
+
+</script>
+
 {% endblock content %}

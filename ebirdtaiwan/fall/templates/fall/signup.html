@@ -30,11 +30,18 @@
             </div>
             <button type="submit" class="fall_btn signup_btn01">提交並開始比賽!</button>
         </form>
-        <div class='row'>
+        <div class='row' id='helper_region' style='display:none'>
             <div class='col col-5'><a class='fall_btn signup_btn02' id='help_id'>忘記公開顯示帳號</a></div>
             <div class='col col-2'></div>
             <div class='col col-5'><a class='fall_btn signup_btn02' href='https://secure.birds.cornell.edu/cassso/account/create?'>創建新帳號</a></div>        
         </div>
+
+        <p id='mhelper_region' style='display:none;text-align:center'>
+            <a id='mhelp_id'>忘記公開顯示帳號</a>
+            &nbsp;|&nbsp;
+            <a href='https://secure.birds.cornell.edu/cassso/account/create?'>創建新帳號</a>
+        </p>     
+
     </div>
     <div class='error_message'>{{ error_message }}</div>
     <a class='close_to_home' href='/'><i class='fas fa-times fa-3x'></i></a>
@@ -48,11 +55,18 @@ from browser.widgets.dialog import Dialog
 vw10 = int(window.innerWidth*2.5/100)
 vh10 = int(window.innerHeight*2.5/100)
 
+if window.innerWidth > 768:
+    document['helper_region'].style.display = 'flex'
+else:
+    document['mhelper_region'].style.display = 'block'
+
+
 def show_help(ev):
     d = Dialog("如何查看公開顯示帳號",top=vh10, left=vw10, ok_cancel=False)
     d.panel<=html.IMG(src='{% static 'img/fall/get_id_helper.png' %}', style={'width':'95vw'})
 
 
 document["help_id"].bind("click", show_help)
+document["mhelp_id"].bind("click", show_help)
 </script>
 {% endblock content %}

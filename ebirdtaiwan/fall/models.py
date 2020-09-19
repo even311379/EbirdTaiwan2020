@@ -68,7 +68,7 @@ class SignupData(models.Model):
         return self.ebirdid
 
 def send_validation_email(email, team, ebirdid):
-    t = get_template('fall/welcome_email.html')
+    t = get_template('fall/welcome_email_complex.html')
     content = t.render(locals())
     msg = EmailMessage(
         '歡迎加入ebirdTaiwan秋季挑戰賽',
@@ -138,7 +138,7 @@ class SubmitPrediction(Page):
             gni = request.POST.get('guess_total_individual', None)  
             
             if (len(PredictionData.objects.filter(participant_email=email)) > 0):
-                return render(request, 'fall/prediction.html', {'page': self, 'error_message': '一個email只能進行一次預測'})
+                return render(request, 'fall/prediction.html', {'page': self, 'error_message': '錯誤！一個email只能進行一次預測'})
 
             NewPredictionData = PredictionData(
                 participant_name = name,

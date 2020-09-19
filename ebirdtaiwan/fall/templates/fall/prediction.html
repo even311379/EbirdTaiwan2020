@@ -55,21 +55,18 @@
 <script type="text/python">
 from browser import document, html
 
-print('123456789')
-
 def next_screen(ev):
     if (document['open_name'].value != None) and \
         ('@' in document['open_email'].value):
         document['error_message'].text = ''
-        print('open name:')
+
         print(document['open_name'].value)
         document['hidden_name'].attrs['value'] = document['open_name'].value
-        print('hidden name:')
-        print(document['hidden_name'].value)
+
         document['hidden_email'].value = document['open_email'].value
         document['page2'].style.top = '0vh'
     else:
-        document['error_message'].text = 'something wrong'
+        document['error_message'].text = '欄位空白或email錯誤'
 
 document['next_btn'].bind('click',next_screen)
 
