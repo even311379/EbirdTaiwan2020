@@ -16,9 +16,15 @@ from automation import passwords
 class Info(Page):
 
     info_content = RichTextField(blank=True, help_text='秋季觀鳥競賽的活動說明')
+    choose_team_page = models.ForeignKey( Page,null=True,blank=True, \
+        on_delete=models.SET_NULL,related_name='+')
+    prize_page = models.ForeignKey( Page,null=True,blank=True, \
+        on_delete=models.SET_NULL,related_name='+')
 
     content_panels = Page.content_panels + [
         FieldPanel('info_content', classname='full'),
+        FieldPanel('choose_team_page'),
+        FieldPanel('prize_page'),
     ]
 
 class Reward(Page):
@@ -35,11 +41,13 @@ class TeamIntroduction(Page):
     team_left_description = models.CharField(blank=True, max_length=100, help_text='彩鷸隊')
     team_middle_description = models.CharField(blank=True, max_length=100, help_text='家燕隊')
     team_right_description = models.CharField(blank=True, max_length=100, help_text='大冠鷲隊')
-
+    signup_page = models.ForeignKey( Page,null=True,blank=True, \
+        on_delete=models.SET_NULL,related_name='+')
     content_panels = Page.content_panels + [
         FieldPanel('team_left_description'),
         FieldPanel('team_middle_description'),
-        FieldPanel('team_right_description')
+        FieldPanel('team_right_description'),
+        FieldPanel('signup_page')
     ]
 
 class Dashboard(MenuPage):

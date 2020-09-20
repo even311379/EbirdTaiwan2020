@@ -63,7 +63,10 @@
 
   <body class="{% block body_class %}{% endblock %}" onload="brython()">
     <script type="text/python">
-from browser import document, window
+from browser import document, window, timer
+
+def show_menu():
+    document['menu_content'].style.display = "block"
 
 def openNav(ev):
     if window.innerWidth > 768:
@@ -72,14 +75,14 @@ def openNav(ev):
         document['menus'].style.width = "40vw"
     document['side_bar'].style.display = "none"
     document['side_bar_close'].style.display = "block"
-    document['menu_content'].style.display = "block"
-    
+    #document['menu_content'].style.display = "block"
+    timer.set_timeout(show_menu, 400)
 
 def closeNav(ev):
     document['menus'].style.width = "0px"
     document['side_bar_close'].style.display = "none"
     document['side_bar'].style.display = "block"
-    document['menu_content'].style.display = "none"
+    document['menu_content'].style.display = "none"    
 
 document['side_bar'].bind('click', openNav)
 document['side_bar_close'].bind('click', closeNav) 
@@ -92,7 +95,7 @@ if document.getElementById('no_menu'):
     <div class="bar" id="side_bar"><i class="fas fa-bars fa-2x"></i></div>
     <div class="bar" id="side_bar_close"><i class="fas fa-arrow-right fa-3x"></i></div>
     <div class="border-right" id='menus'>
-      <div class="menu_content" id="menu_content">
+      <div class="menu_content" id="menu_content" style='display:none'>
       {% main_menu show_multiple_levels=True max_levels=2 apply_active_classes=False allow_repeating_parents=False template="menu.html" %}
       </div>
     </div>
