@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'fall',
     'register',
 
-
     'wagtail.contrib.forms',
     'wagtail.contrib.modeladmin',
     'wagtail.contrib.redirects',
@@ -65,7 +64,7 @@ INSTALLED_APPS = [
     'bootstrap4',
 
     'wagtail_color_panel',
-    'wagtailmenus'
+    'wagtailmenus',
 ]
 
 MIDDLEWARE = [

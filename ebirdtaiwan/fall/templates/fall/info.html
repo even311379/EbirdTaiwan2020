@@ -16,7 +16,7 @@
 </div>
 
 <div id='minfo_region' style='display:none'>
-    <img id="home_title" src={% static 'img/home/eBirdTaiwan.png' %}>
+    <img class="home_title" src={% static 'img/home/eBirdTaiwan.png' %}>
     <div class='mobile_title' style='padding-top: 12vh'>2020秋季臺北觀鳥大賽</div>
     <div class='mobile_title' style='color:#607B49;'>AUTUMN CHALLENGE</div>
     <div class='minfo_content'>{{ page.info_content | richtext}} </div>
@@ -35,8 +35,8 @@ if window.innerWidth < 768:
     document['minfo_region'].style.display = 'block'    
     element = document["minfo_region"].get(selector="div.minfo_content")[0]    
     element.insertBefore(html.A('我要選隊', Class='minfo_btn', href='/{{ page.choose_team_page.slug }}'), \
-     document["minfo_region"].get(selector="h4")[1])
-    # it works!! although it is inside <p> , ignore this, its no problem~~
+    document["minfo_region"].get(selector="h4")[1])
+
 
 </script>
 {% endblock content %}

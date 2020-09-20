@@ -24,7 +24,7 @@
     display: none;
     z-index: 810;
     color: #fff;
-    position: absolute;
+    position: fixed;
     right: 16vw;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .menu_content {
-    padding: 12vh 0 0 0;
+    padding: 15vh 0 0 0;
 }
 
 .major_item {
@@ -54,7 +54,7 @@
     color: #fff;    
     display: block;
     padding: 0.5vw 0 0.5vw 3vw;
-    font-size: 1.8vw;
+    font-size: 1.4vw;
     font-weight: 600;
 }
 
@@ -63,7 +63,7 @@
     color: #fff;    
     display: block;
     padding: 0.3vw 0 0.3vw 5vw;
-    font-size: 1.3vw;
+    font-size: 1.0vw;
     font-weight: 600;
 }
 
@@ -73,11 +73,11 @@
     color: #fff; 
 }
 
-#home_title {
+.home_title {
     position: absolute;
     left: 4vw;
     top: 4vh;
-    width: 20vw;
+    width: 25vw;
 }    
 
 .green_background {
@@ -92,7 +92,7 @@
 
 .green_background p, .green_background label{
     color: #fff;
-    font-size: 24px;
+    font-size: 1.25vw;
 }
 
 .green_background label{
@@ -101,19 +101,19 @@
 
 .green_background h4{
     color: #fff;
-    font-size: 32px;
+    font-size: 1.75vw;
 }
 
 
 @media only screen and (max-width: 768px) {
     .major_item {
-        font-size: 5vw;
+        font-size: 3.5vw;
     }
 
     .minor_item {
-        font-size: 3vw;
+        font-size: 2.5vw;
     }
-    #home_title {
+    .home_title {
         width: 60vw;
         height: auto;
     }
@@ -122,4 +122,16 @@
         line-height: 8vh;
     }
 
+    .green_background p, .green_background label{
+        color: #fff;
+        font-size: 5vw;
+    }
+
+    .green_background h4{
+        color: #fff;
+        font-size: 1.75vw;
+    }
+
 }
+
+

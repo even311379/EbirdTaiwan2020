@@ -10,39 +10,75 @@
 
 {% block content %}
 <div id='prize_content' style='display:none'>
-<div class='info_content'>{{ page.reward_content | richtext}} </div>
-<div class='left_shape'></div>
-<div class='prize_region'>
-    <div class='row'>
-        <div class='col-5'>
-        <img src={% static 'img/fall/owl_stick.png' %} style='width:15vw;height:auto'>
-        <div class='prize_text'>eBird Taiwan 貼紙</div>
+    <img class="home_title" src={% static 'img/home/eBirdTaiwan.png' %}>
+    <div class='info_content'>{{ page.reward_content | richtext}} </div>
+    <div class='left_shape'></div>
+    <div class='prize_region'>
+        <div class='row'>
+            <div class='col-5'>
+            <img src={% static 'img/fall/prize_top_left.png' %} style='width:15vw;height:auto'>
+            <div class='prize_text'>歐帝生2020望遠鏡5折折價卷*1</div>
+            </div>
+            <div class='col-7'>
+            <img src={% static 'img/fall/prize_top_right.png' %} style='width:25vw;height:auto'>
+            <div class='prize_text'>集集石虎號紗布巾</div>
+            </div>
         </div>
-        <div class='col-7'>
-        <img src={% static 'img/fall/tesri_prize.png' %} style='width:25vw;height:auto'>
-        <div class='prize_text'>里山動物別針 ｜ 集集石虎號紗布巾</div>
+        <br>
+        <div class='row'>
+            <div class='col-5'>
+            <img src={% static 'img/fall/prize_bottom_left.png' %} style='width:15vw;height:auto'>
+            <div class='prize_text'>里山動物磁鐵徽章</div>
+            </div>        
+            <div class='col-7'>
+            <img src={% static 'img/fall/prize_bottom_right.png' %} style='width:25vw;height:auto'>
+            <div class='prize_text'>2021台灣野鳥月曆</div>
+            </div>
         </div>
     </div>
-    <br>
-    <div class='row'>
-        <div class='col-5'>
-        <img src={% static 'img/fall/telescope.png' %} style='width:15vw;height:auto'>
-        <div class='prize_text'>歐帝生2019望遠鏡新品5折折價卷*1</div>
-        </div>        
-        <div class='col-7'>
-        <img src={% static 'img/fall/calendar.png' %} style='width:25vw;height:auto'>
-        <div class='prize_text'>台灣野鳥月曆</div>
-        </div>
-    </div>
-</div>
 </div>
 
 <div id='mprize_content' style='display:none'>
-    <img id="home_title" src={% static 'img/home/eBirdTaiwan.png' %}>
+    <img class="home_title" src={% static 'img/home/eBirdTaiwan.png' %}>
     <div class='mobile_title' style='padding-top: 12vh'>2020秋季臺北觀鳥大賽</div>
     <div class='mobile_title' style='color:#607B49;'>AUTUMN CHALLENGE</div>
     <div class='minfo_content'>{{ page.reward_content | richtext}} </div>
     <div class='mbg_shape'></div>
+</div>
+
+<div id="prize_carousel" class="carousel slide" data-ride="carousel" data-interval='false' style='display:none;margin-bottom: 5vh;'>
+  <ol class="carousel-indicators" id='prize_cindicator'>
+    <li data-target="#prize_carousel" data-slide-to="0" class="active" id='indicator0'></li>
+    <li data-target="#prize_carousel" data-slide-to="1" id='indicator1'></li>
+    <li data-target="#prize_carousel" data-slide-to="2" id='indicator2'></li>
+    <li data-target="#prize_carousel" data-slide-to="3" id='indicator3'></li>
+  </ol>
+  <div class="carousel-inner">
+    <div class="carousel-item active prize_carousel_item">
+      <img src={% static 'img/fall/prize_top_left.png' %} class="d-block prize_carousel_img">
+      <div class='prize_carousel_text'>歐帝生2020望遠鏡5折折價卷*1</div>      
+    </div>
+    <div class="carousel-item px-auto prize_carousel_item">
+      <img src={% static 'img/fall/prize_top_right.png' %} class="d-block prize_carousel_img">
+      <div class='prize_carousel_text'>集集石虎號紗布巾</div>
+    </div>
+    <div class="carousel-item px-auto prize_carousel_item">
+      <img src={% static 'img/fall/prize_bottom_left.png' %} class="d-block prize_carousel_img">
+      <div class='prize_carousel_text'>里山動物磁鐵徽章</div>
+    </div>
+    <div class="carousel-item px-auto prize_carousel_item">
+      <img src={% static 'img/fall/prize_bottom_right.png' %} class="d-block prize_carousel_img">
+      <div class='prize_carousel_text'>2021台灣野鳥月曆</div>
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#prize_carousel" role="button" data-slide="prev" id='carousel_prev'>
+    <span class="carousel-control-prev-icon" aria-hidden="true" style='color:#000'></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#prize_carousel" role="button" data-slide="next" id='carousel_next'>
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
 </div>
 
 <script type="text/python">
@@ -54,6 +90,15 @@ if window.innerWidth >= 768:
 if window.innerWidth < 768:    
     document['mprize_content'].style.display = 'block'    
     document['mprize_content'].get(selector='b')[3].style.display = 'none'
+    element = document["mprize_content"].get(selector="div.minfo_content")[0]    
+    element.insertBefore(document['prize_carousel'], document["mprize_content"].get(selector="h4")[1])
+    document['prize_carousel'].style.display = 'block'
 </script>
 
 {% endblock content %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+{% endblock extra_js %}

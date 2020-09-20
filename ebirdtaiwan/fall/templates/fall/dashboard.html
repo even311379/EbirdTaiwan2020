@@ -9,7 +9,7 @@
 {% endblock extra_css %}
 
 {% block content %}
-<div id="home_title"> <img src={% static 'img/home/eBirdTaiwan.png' %}> </div>
+<div class="home_title"> <img src={% static 'img/home/eBirdTaiwan.png' %}> </div>
 <div id='dashboard_content' style='display:none'>
     {% plotly_direct name=page.dash_board_name %}
 </div>

@@ -1,0 +1,40 @@
+.spcial-container {
+    position: absolute;
+    z-index: 2;
+    right: 3vw;
+    bottom: 5vh;
+    height: 80vh;
+	width: auto;
+	display: none;
+	/* transition: 0.5s; */
+}
+
+.spcial-container img {
+	width: 101%;
+	height: 100%;
+	background: transparent;
+	mask: url("raw_mask.png");
+	mask-size: 3000% 100%;
+	border: none;
+	/* color: #f00; */
+
+	/* animation: maskin 1.0s steps(29) forwards; */
+}
+
+.mas {
+	position: absolute;
+	color: #f00;
+	width: auto;
+	height: 80vh;
+	overflow: hidden;
+}
+
+@keyframes maskin {
+	from {
+		mask-position: 100% 0;
+	}
+
+	to {		
+		mask-position: 0 0;
+	}
+}

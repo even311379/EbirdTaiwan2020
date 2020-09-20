@@ -4,7 +4,8 @@
 {% block body_class %}container-fluid{% endblock %}
 
 {% block extra_css %}    
- <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/special.css' %}">
 {% endblock extra_css %}
 
 {% block content %}
@@ -12,10 +13,15 @@
 <div id="anim_region"></div>
 {% plotly_direct name=page.dash_grah_id %}
 
-<img id="home_title" src={% static 'img/home/eBirdTaiwan.png' %}>
-<img id='banner_img' class='banner' src={% static 'img/home/home_banner.png' %} >
+<img class="home_title" src={% static 'img/home/eBirdTaiwan.png' %}>
+{% comment %} <img id='banner_img' class='banner' src={% static 'img/home/home_banner.png' %} > {% endcomment %}
 
 <div id='logos'>主辦單位 ｜ <img src={% static 'img/home/corporation_logos.png' %}> &nbsp;&nbsp;&nbsp;&nbsp; 活動贊助 ｜ <img src={% static 'img/home/supporter_logos.png' %}>  </div>
+
+<div id='special_banner' class="spcial-container">
+    <span class="mas"></span>    
+    <img id='work' name="Hover" src={% static 'img/home/home_banner.png' %}> 
+</div>
 
 <div class="bg-shape fixed-bottom"></div>
 
