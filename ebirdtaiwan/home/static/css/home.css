@@ -40,16 +40,21 @@
 }
 
 
-.corporation_logos{
+#logos{
     position: absolute;
-    bottom: 7vh;
-    width: 10vw;
+    bottom: 3vh;
+    width: 20vw;
     z-index: 2;
     left: 3vw;
     height: 8vh;
     width: auto;
+    font-size: 1.2vw;
 }
 
+#logos img {
+    height: 3vw;
+    width: auto;
+}
 
 #anim_region {
     transform: rotate(-4.29deg);
@@ -120,6 +125,17 @@ body {
 @media only screen and (max-width: 768px) {
     .bg-shape {
         border-top: 8vh solid transparent;
-        height: 25vh;
+        height: 20vh;        
+    }
+    
+    #logos {
+        width: 90vw;
+        left: 5vw;
+        font-size: 3.5vw;
+        bottom: 1vh;
+    }
+
+    #logos img {
+        height: 7vw;
     }
 }

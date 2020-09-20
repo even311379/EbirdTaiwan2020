@@ -20,14 +20,8 @@
     </title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    {# Global stylesheets #} {% comment %}
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/ebirdtaiwan.css' %}"
-    />
-    {% endcomment %}
+    <link rel="icon" type="image/png" href="{% static 'img/home/favicon.ico' %}">
+    {# Global stylesheets #} 
     <link href="{% static 'css/ebirdtaiwan.css' %}" rel="stylesheet" />
 
     <!-- CSS only -->
@@ -97,6 +91,7 @@ if document.getElementById('no_menu'):
     <div class="border-right" id='menus'>
       <div class="menu_content" id="menu_content" style='display:none'>
       {% main_menu show_multiple_levels=True max_levels=2 apply_active_classes=False allow_repeating_parents=False template="menu.html" %}
+      <a href="https://www.wbst.org.tw/news/1013" class="major_item">關渡鳥類博覽會</a>
       </div>
     </div>
 

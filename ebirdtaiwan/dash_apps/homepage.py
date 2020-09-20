@@ -38,7 +38,7 @@ app = DjangoDash(
     add_bootstrap_links=True, 
 )   # replaces dash.Dash
 
-
+DISABLED = True
 
 app.layout = html.Div([
     html.Div(id='bottom_bar'),
@@ -71,7 +71,8 @@ except:
 
     return 0
 
-
+# DISABLE tick before it begins
+'''
 @app.callback(
     Output('bottom_bar', 'children'),
     [Input('bar_update','n_intervals')]
@@ -109,7 +110,7 @@ def update_species_accumulation(delta_time):
         html.Div(className="score_bar", style={"width":f"{P[1]}%","background":team2_color,"left":f"{P[0]}%"}),
         html.Div(className="score_bar", style={"width":f"{P[2]}%","background":team3_color,"left":f"{P[0]+P[1]}%"})
     ]
-    
+'''    
     
 
 if __name__ == '__main__':

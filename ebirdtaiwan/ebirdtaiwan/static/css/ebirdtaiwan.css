@@ -1,12 +1,11 @@
 .bar {
     position: fixed;
-    right: 2rem;
-    top: 2rem;
+    right: 4vw;
+    top: 4vw;
     width: 50px;
     height: 50px;
     text-align: center;
     color: rgb(145, 145, 145);
-    line-height: 65px;
     /* background: rgb(145, 145, 145); */
     /* border-radius: .25rem !important; */
 }
@@ -78,6 +77,7 @@
     position: absolute;
     left: 4vw;
     top: 4vh;
+    width: 20vw;
 }    
 
 .green_background {
@@ -114,7 +114,12 @@
         font-size: 3vw;
     }
     #home_title {
-        width: 30vw;
+        width: 60vw;
         height: auto;
     }
+
+    .bar {
+        line-height: 8vh;
+    }
+
 }
