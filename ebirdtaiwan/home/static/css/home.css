@@ -101,10 +101,10 @@
 .banner {
     position: absolute;
     z-index: 2;
-    right: 5vw;
-    bottom: 10vh;
+    right: 3vw;
+    bottom: 5vh;
     height: 80vh;
-    width: 40vw;
+    width: auto;
 }
 
 #banner_img {
