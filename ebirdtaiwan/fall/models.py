@@ -53,8 +53,10 @@ class TeamIntroduction(Page):
 class Dashboard(MenuPage):
 
     dash_board_name = models.CharField(max_length=30, blank=False, help_text="DON'tT TOUCH this")
-
+    IsDemoApp = models.BooleanField(default=True)
+    
     content_panels = Page.content_panels + [
+        FieldPanel('IsDemoApp'),
         FieldPanel('dash_board_name', classname='full')
     ]
 

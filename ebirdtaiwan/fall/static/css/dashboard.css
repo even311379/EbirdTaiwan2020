@@ -1,3 +1,15 @@
+/*
+For all dashboard setting
+*/
+
+ /* remove the "loading..." text when initializing app  
+    can thist work??
+ */
+._dash-loading {
+    display: none;
+    /* text-indent: -9999em; */
+}
+
 /* 
  For "Three Teams"
 */

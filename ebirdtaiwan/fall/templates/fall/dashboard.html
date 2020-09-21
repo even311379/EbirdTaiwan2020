@@ -13,7 +13,7 @@
 <div id='dashboard_content' style='display:none'>
     {% plotly_direct name=page.dash_board_name %}
 </div>
-<div id='not_open_yet'>
+<div id='not_open_yet' style='display:none'>
     <img id='wait01' src={% static 'img/fall/wait01.png' %}>
     <img id='wait02' src={% static 'img/fall/wait02.png' %}>
     <img id='wait03' src={% static 'img/fall/wait03.png' %}>
@@ -26,7 +26,7 @@
 from browser import document
 import datetime
 
-if datetime.date.today() >= datetime.date(2020,10,1):
+if {{ page.IsDemoApp }} or datetime.date.today() >= datetime.date(2020,10,1):    
     document['dashboard_content'].style.display = 'block'
 else:
     document['not_open_yet'].style.display = 'block'

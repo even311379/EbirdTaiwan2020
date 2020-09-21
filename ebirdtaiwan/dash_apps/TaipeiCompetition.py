@@ -13,6 +13,11 @@ import numpy as np
 # from fall.models import 
 import plotly.express as px
 
+import sys
+import os
+sys.path.append(os.path.abspath('dash_apps')) 
+import CustomWidgets
+
 '''
 This is just the begining:
 
@@ -95,47 +100,55 @@ area_map.update_layout(
 )
 
 
+
+dashboard_content = html.Div(dbc.Row([
+    dbc.Col([
+        html.Div([
+            html.Div(html.Img(src='/static/img/fall/farmbird.png', className='px-3'),className='team_card_col'),
+            html.Div([
+                html.Div([html.Div('隊員人數：'), html.Div('XX',className='ml-auto', id='team1_n_people')], className='d-flex w-75 pb-2'),
+                html.Div([html.Div('總上傳清單數：'),html.Div('400',className='ml-auto', id='team1_n_list')], className='d-flex w-75 pb-2'),
+                html.Div([html.Div('總上傳鳥種數:'),html.Div('544',className='ml-auto', id='team1_n_species')], className='d-flex w-75 pb-2'),
+                html.Div([html.Div('總上傳鳥隻數：'),html.Div('400',className='ml-auto', id='team1_n_count')], className='d-flex w-75'),
+            ], className='team_card_col')
+        ],className='single_team_card'),
+        html.Div([
+            html.Div(html.Img(src='/static/img/fall/citybird.png', className='px-3'),className='team_card_col'),
+            html.Div([
+                html.Div([html.Div('隊員人數：'), html.Div('XX',className='ml-auto', id='team2_n_people')], className='d-flex w-75 pb-2'),
+                html.Div([html.Div('總上傳清單數：'),html.Div('400',className='ml-auto', id='team2_n_list')], className='d-flex w-75 pb-2'),
+                html.Div([html.Div('總上傳鳥種數:'),html.Div('544',className='ml-auto', id='team2_n_species')], className='d-flex w-75 pb-2'),
+                html.Div([html.Div('總上傳鳥隻數：'),html.Div('400',className='ml-auto', id='team2_n_count')], className='d-flex w-75'),
+            ], className='team_card_col')
+        ],className='single_team_card'),
+        html.Div([
+            html.Div(html.Img(src='/static/img/fall/forestbird.png', className='px-3'),className='team_card_col'),
+            html.Div([
+                html.Div([html.Div('隊員人數：'), html.Div('XX',className='ml-auto', id='team3_n_people')], className='d-flex w-75 pb-2'),
+                html.Div([html.Div('總上傳清單數：'),html.Div('400',className='ml-auto', id='team3_n_list')], className='d-flex w-75 pb-2'),
+                html.Div([html.Div('總上傳鳥種數:'),html.Div('544',className='ml-auto', id='team3_n_species')], className='d-flex w-75 pb-2'),
+                html.Div([html.Div('總上傳鳥隻數：'),html.Div('400',className='ml-auto', id='team3_n_count')], className='d-flex w-75'),
+            ], className='team_card_col')
+        ],className='single_team_card'),           
+    ],width=4),
+    dbc.Col(
+        dcc.Graph(figure = area_map, className='prgression_map', config=dict(scrollZoom=False, displayModeBar=False)),
+        className=''
+    ,width=8)
+]))
+
+
+
+
 app.layout = html.Div([
-    dbc.Row([
-        dbc.Col([
-            html.Div([
-                html.Div(html.Img(src='/static/img/fall/farmbird.png', className='px-3'),className='team_card_col'),
-                html.Div([
-                    html.Div([html.Div('隊員人數：'), html.Div('XX',className='ml-auto', id='team1_n_people')], className='d-flex w-75 pb-2'),
-                    html.Div([html.Div('總上傳清單數：'),html.Div('400',className='ml-auto', id='team1_n_list')], className='d-flex w-75 pb-2'),
-                    html.Div([html.Div('總上傳鳥種數:'),html.Div('544',className='ml-auto', id='team1_n_species')], className='d-flex w-75 pb-2'),
-                    html.Div([html.Div('總上傳鳥隻數：'),html.Div('400',className='ml-auto', id='team1_n_count')], className='d-flex w-75'),
-                ], className='team_card_col')
-            ],className='single_team_card'),
-            html.Div([
-                html.Div(html.Img(src='/static/img/fall/citybird.png', className='px-3'),className='team_card_col'),
-                html.Div([
-                    html.Div([html.Div('隊員人數：'), html.Div('XX',className='ml-auto', id='team2_n_people')], className='d-flex w-75 pb-2'),
-                    html.Div([html.Div('總上傳清單數：'),html.Div('400',className='ml-auto', id='team2_n_list')], className='d-flex w-75 pb-2'),
-                    html.Div([html.Div('總上傳鳥種數:'),html.Div('544',className='ml-auto', id='team2_n_species')], className='d-flex w-75 pb-2'),
-                    html.Div([html.Div('總上傳鳥隻數：'),html.Div('400',className='ml-auto', id='team2_n_count')], className='d-flex w-75'),
-                ], className='team_card_col')
-            ],className='single_team_card'),
-            html.Div([
-                html.Div(html.Img(src='/static/img/fall/forestbird.png', className='px-3'),className='team_card_col'),
-                html.Div([
-                    html.Div([html.Div('隊員人數：'), html.Div('XX',className='ml-auto', id='team3_n_people')], className='d-flex w-75 pb-2'),
-                    html.Div([html.Div('總上傳清單數：'),html.Div('400',className='ml-auto', id='team3_n_list')], className='d-flex w-75 pb-2'),
-                    html.Div([html.Div('總上傳鳥種數:'),html.Div('544',className='ml-auto', id='team3_n_species')], className='d-flex w-75 pb-2'),
-                    html.Div([html.Div('總上傳鳥隻數：'),html.Div('400',className='ml-auto', id='team3_n_count')], className='d-flex w-75'),
-                ], className='team_card_col')
-            ],className='single_team_card'),           
-        ],width=4),
-        dbc.Col(
-            dcc.Graph(figure = area_map, className='prgression_map', config=dict(scrollZoom=False, displayModeBar=False)),
-            className=''
-        ,width=8)
-    ], className=''),
+    html.Div(dashboard_content,className='dashboard_container', id='dashboard_content',style={'display':'none'}),
+    CustomWidgets.login_widget,
+    CustomWidgets.leave_widget,
     dcc.Interval(id='tick',interval=3000), # update things every 3 s for demo
     dcc.Location(id='url'),
     html.Div('',id='empty',style={'display':'none'})
-    # dcc.Interval(id='tick',interval=150000), # update things every 150 s
-], className='dashboard_container')
+    ]
+)
 
 
 demo_t1np = 12
@@ -151,11 +164,29 @@ demo_t3nl = 70
 demo_t3ns = 38
 demo_t3nc = 1301
 
-@app.callback(
-    Output('empty','children'),
-    [Input('url','pathname')]
+
+app.clientside_callback(
+    """
+    function(path) {
+        console.log(path)
+        return path+',' + String(window.innerWidth) + ',' + String(window.innerHeight);
+    }
+    """,
+    Output('empty', 'children'),
+    [Input('url', 'pathname')]
 )
-def reload_refresh(path):
+
+
+@app.callback(
+    [Output('dashboard_content','style'),
+    Output('login_widget','style'),
+    Output('leave_widget','style')],
+    [Input('empty','children'),
+    Input('password','value')],
+)
+def reload_refresh(helper_string, password_input):
+
+    print('HEY~~')
 
     global demo_t1np
     global demo_t1nl
@@ -182,8 +213,29 @@ def reload_refresh(path):
     demo_t3nl = 70
     demo_t3ns = 38
     demo_t3nc = 1301
+
+
+    if helper_string.split(',')[0].split('/')[-3] == 'private':
+        if password_input == '':
+            return [{'display':'none'}, {'display':'block'}, {'display':'none'}]
+        elif password_input == 'iamheretotestthisapp':
+            return [{'display':'block'}, {'display':'none'}, {'display':'none'}]
+        else:
+            return [{'display':'none'}, {'display':'none'}, {'display':'block'}]   
+        
+    return [{'display':'block'}, {'display':'none'}, {'display':'none'}]
     
-    return None
+    # return dashboard_content
+
+# @app.callback(
+#     Output('dashboard_content','children'),
+#     []
+# )
+# def check_tester(password_input):
+#     if password_input == 'iamheretotestthisapp':
+#         return dashboard_content
+#     return CustomWidgets.leave_widget
+
 
 
 @app.callback(
