@@ -13,11 +13,14 @@
 	width: 101%;
 	height: 100%;
 	background: transparent;
+	-webkit-mask: url("raw_mask.png");
 	mask: url("raw_mask.png");
+	-webkit-mask-size: 3000% 100%;
 	mask-size: 3000% 100%;
 	border: none;
+	height: 80vh;
+    width: auto;
 	/* color: #f00; */
-
 	/* animation: maskin 1.0s steps(29) forwards; */
 }
 
@@ -29,12 +32,33 @@
 	overflow: hidden;
 }
 
-@keyframes maskin {
+@-webkit-keyframes maskin {
 	from {
+		-webkit-mask-position: 100% 0;
 		mask-position: 100% 0;
 	}
 
-	to {		
+	to {
+		-webkit-mask-position: 0 0;
 		mask-position: 0 0;
+	}
+}
+
+@keyframes maskin {
+	from {
+		-webkit-mask-position: 100% 0;
+		mask-position: 100% 0;
+	}
+
+	to {
+		-webkit-mask-position: 0 0;		
+		mask-position: 0 0;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.spcial-container img {
+		height: auto;
+		width: 90vw;
 	}
 }
