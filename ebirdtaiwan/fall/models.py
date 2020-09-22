@@ -54,7 +54,7 @@ class Dashboard(MenuPage):
 
     dash_board_name = models.CharField(max_length=30, blank=False, help_text="DON'tT TOUCH this")
     IsDemoApp = models.BooleanField(default=True)
-    
+
     content_panels = Page.content_panels + [
         FieldPanel('IsDemoApp'),
         FieldPanel('dash_board_name', classname='full')
@@ -178,15 +178,16 @@ class Survey(models.Model):
     survey_datetime = models.DateTimeField(blank=False, verbose_name='調查時間', null=True) #try out will set verbose name good?
     latitude = models.FloatField(blank=False, default=23.5)
     longitude = models.FloatField(blank=False, default=120.5)
+    region_code = models.CharField(blank=True, max_length=10)
+    is_valid = models.BooleanField(default=False) #checklist不含X 大於5分鐘    
 
     def __str__(self):
         return self.checklist_id
 
 
 class SurveyObs(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
-    species_code = models.CharField(blank=False, max_length=10, default='aalife')
-    species_tranlated_name = models.CharField(blank=False, max_length=30, default='unKnown')
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)    
+    species_name = models.CharField(blank=False, max_length=30, default='unKnown')
     amount = models.IntegerField(blank=False, default=0)
 
 

@@ -297,9 +297,10 @@ img {
 
 .carousel_img{
     position: relative;
-    width: 75%;
+    width: auto;
     height: 30vh;
     left: 12.5%;
+    
 }
 
 
@@ -361,12 +362,11 @@ body {
 
 .prize_carousel_item{
     left: 10%;
-    width: 80%;
-    /* height:60%; */
+    width: 80%;    
 }
 
 .prize_carousel_img {
-    width: 60vw;
+    width: auto;
     height: 20vh;
     margin: 0 auto;
 }
