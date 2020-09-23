@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static plotly_dash wagtailimages_tags wagtailcore_tags %}
 
-{% block body_class %}container-fluid{% endblock %}
+{% comment %} {% block body_class %}container-fluid{% endblock %} {% endcomment %}
 
 {% block extra_css %}    
  <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
@@ -20,9 +20,14 @@
     <div id='not_yet_title'>等不及了？<br>挑戰賽還沒開始喔～</div>
 </div>
 
-<div class='bottom_rect'></div>
+{% comment %} <div id='dlogos' style='display:none'>主辦單位 ｜ <img src={% static 'img/home/corporation_logos.png' %}> &nbsp;&nbsp;&nbsp;&nbsp; 活動贊助 ｜ <img src={% static 'img/home/supporter_logos.png' %}>  </div> {% endcomment %}
+<div id='bottom_rect' class='bottom_rect'></div>
 
 <script type="text/python">
+{% if page.brython_file_name %}
+from app import {{ page.brython_file_name }}
+{% endif %}
+
 from browser import document
 import datetime
 
@@ -31,5 +36,7 @@ if {{ page.IsDemoApp }} or datetime.date.today() >= datetime.date(2020,10,1):
 else:
     document['not_open_yet'].style.display = 'block'
 
+#document['dlogos'].style.display = 'block'
+#document['bottom_rect'].style.display = 'block'
 </script>
 {% endblock content %}

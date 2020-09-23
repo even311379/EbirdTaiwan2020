@@ -54,10 +54,12 @@ class Dashboard(MenuPage):
 
     dash_board_name = models.CharField(max_length=30, blank=False, help_text="DON'tT TOUCH this")
     IsDemoApp = models.BooleanField(default=True)
+    brython_file_name = models.CharField(max_length=30, blank=True, help_text='page_instance_specific brython script')
 
     content_panels = Page.content_panels + [
         FieldPanel('IsDemoApp'),
-        FieldPanel('dash_board_name', classname='full')
+        FieldPanel('dash_board_name', classname='full'),
+        FieldPanel('brython_file_name')
     ]
 
 
@@ -69,10 +71,10 @@ class SignupData(models.Model):
         ('大冠鷲隊', '大冠鷲隊' ),
     ]
 
-    ebirdid = models.CharField(max_length=50)
-    team = models.CharField(max_length=6, choices=team_choice, default='彩鷸隊')
-    email = models.EmailField(max_length=100)    
-    signup_time = models.DateTimeField(auto_now_add=True, editable=False)  
+    ebirdid = models.CharField(max_length=50, verbose_name='ebird公開帳號')
+    team = models.CharField(max_length=6, choices=team_choice, default='彩鷸隊', verbose_name='隊伍名稱')
+    email = models.EmailField(max_length=100, verbose_name='電子信箱')    
+    signup_time = models.DateTimeField(auto_now_add=True, editable=False, verbose_name='報名時間')  
 
     def __str__(self):
         return self.ebirdid
@@ -123,13 +125,28 @@ class SignupPage(Page):
             return render(request, 'fall/signup.html', {'page': self, 'error_message':'' })
 
 
+class AutumnChallengePage(Page):
+
+    subtitle = models.CharField(max_length=300,blank=True)
+    rules = RichTextField(blank=True)
+    prizes = RichTextField(blank=True)
+    dash_board_name = models.CharField(max_length=30, blank=False, help_text="DON'tT TOUCH this")
+
+    content_panels = Page.content_panels + [
+        FieldPanel('subtitle'),
+        FieldPanel('rules', classname='full'),
+        FieldPanel('prizes', classname='full'),
+        FieldPanel('dash_board_name')
+    ]
+
+
 class PredictionData(models.Model):
     
-    participant_name = models.CharField(blank=False, max_length=40)
-    participant_email = models.EmailField(max_length=100)
-    guess_n_species = models.IntegerField(default=0)
-    guess_total_individual = models.IntegerField(default=0)
-    prediction_datetime = models.DateTimeField(auto_now=True, editable=False)
+    participant_name = models.CharField(blank=False, max_length=40, verbose_name='參與者名稱')
+    participant_email = models.EmailField(max_length=100, verbose_name='電子信箱')
+    guess_n_species = models.IntegerField(default=0, verbose_name='幾種物種？')
+    guess_total_individual = models.IntegerField(default=0, verbose_name='全部幾隻？')
+    prediction_datetime = models.DateTimeField(auto_now=True, editable=False, verbose_name='何時進行預測')
 
     def __str__(self):
         return self.participant_name + self.participant_email
@@ -171,24 +188,24 @@ Scraped data area
 '''
 
 class Survey(models.Model):
-    scrape_date = models.DateField(editable=False,auto_now_add=True)
-    team = models.CharField(blank=False, max_length=5, default='沒有隊')
-    checklist_id = models.CharField(blank=False, max_length=15, primary_key=True)
-    creator = models.CharField(blank=False, max_length=30)
+    scrape_date = models.DateField(editable=False,auto_now_add=True,verbose_name='清單抓取日期')
+    team = models.CharField(blank=False, max_length=5, default='沒有隊',verbose_name='隊伍名稱')
+    checklist_id = models.CharField(blank=False, max_length=15, primary_key=True,verbose_name='清單ID')
+    creator = models.CharField(blank=False, max_length=30,verbose_name='清單分享來源')
     survey_datetime = models.DateTimeField(blank=False, verbose_name='調查時間', null=True) #try out will set verbose name good?
-    latitude = models.FloatField(blank=False, default=23.5)
-    longitude = models.FloatField(blank=False, default=120.5)
-    region_code = models.CharField(blank=True, max_length=10)
-    is_valid = models.BooleanField(default=False) #checklist不含X 大於5分鐘    
+    latitude = models.FloatField(blank=False, default=23.5,verbose_name='緯度')
+    longitude = models.FloatField(blank=False, default=120.5,verbose_name='經度')
+    region_code = models.CharField(blank=True, max_length=10,verbose_name='區域代碼')
+    is_valid = models.BooleanField(default=False,verbose_name='是否完整') #checklist不含X 大於5分鐘    
 
     def __str__(self):
         return self.checklist_id
 
 
 class SurveyObs(models.Model):
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)    
-    species_name = models.CharField(blank=False, max_length=30, default='unKnown')
-    amount = models.IntegerField(blank=False, default=0)
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, verbose_name='清單ID')    
+    species_name = models.CharField(blank=False, max_length=30, default='unKnown', verbose_name='物種名稱')
+    amount = models.IntegerField(blank=False, default=0, verbose_name='數量')
 
 
 

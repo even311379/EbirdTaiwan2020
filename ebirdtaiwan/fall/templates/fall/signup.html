@@ -62,22 +62,31 @@ else:
 
 
 ## brython alert not support touch events....
-## write my own alert?
+## write my own alert?  yeah~ it's pretty easy and fun, all ideas work!
 
-def fix_touch_close(ev):
-    #print(123)
-    document.select('div.brython-dialog-main')[0].style.display = 'none'
-
+def CustomRemoveDialog(ev):
+    document.select('div.brython-dialog-main')[0].remove()
 
 def show_help(ev):
     d = Dialog("如何查看公開顯示帳號",top=vh10, left=vw10, ok_cancel=False)
     d.panel<=html.IMG(src='{% static 'img/fall/get_id_helper.png' %}', style={'width':'95vw'})
-    #document.select('span.brython-dialog-close')[0].bind("mouseenter",fix_touch_close)
-    #print(document.select('span.brython-dialog-close')[0].text)
-    #print(456)
-
-
+    d.panel<=html.H2(html.I(Class="fas fa-times"), id='custom_dialog_close', 
+        style={'position':'absolute',
+            'top':'0',
+            'right':'10px',
+            'color':'#fff',
+            'font-size':'24px',
+            'z-index':'2',
+            'font-weight':'800',
+            'cursor':'pointer',
+            'text-align':'center',
+        }
+    )
+    document.select('span.brython-dialog-close')[0].style.display = 'none'
+    document["custom_dialog_close"].bind("click", CustomRemoveDialog)
+    
 document["help_id"].bind("click", show_help)
 document["mhelp_id"].bind("click", show_help)
+
 </script>
 {% endblock content %}

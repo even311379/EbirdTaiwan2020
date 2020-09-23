@@ -1,3 +1,10 @@
+._dash-loading {
+    display: none;
+    /* text-indent: -9999em; */
+}
+
+
+
 .spcial-container {
     position: absolute;
     z-index: 2;

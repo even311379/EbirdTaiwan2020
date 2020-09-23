@@ -149,7 +149,6 @@ def ResponsiveTable(w):
     if w < 768: vw='80vw'
     return dash_table.DataTable(
         data = prediction_df.to_dict('records'),
-        enable_drag_and_drop=True, # just curious for this
         columns=[{'id': c, 'name': c} for c in prediction_df.columns],
         fixed_rows={ 'headers': True, 'data': 0 },
         style_as_list_view=True,

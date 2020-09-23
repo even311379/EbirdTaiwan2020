@@ -10,7 +10,7 @@ import re
 
 profile = webdriver.FirefoxProfile()
 options = Options()
-options.headless = True
+# options.headless = True
 profile.set_preference("dom.webnotifications.enabled", False)  # Finally, turned off webnotifications...
 
 
@@ -73,14 +73,14 @@ ele_p.send_keys(password)
 ele_submit.click()
 driver.get('https://ebird.org/shared')
 time.sleep(5)
-btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == 'Accept' or b.text == 'Keep']
+btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == '接受' or b.text == '保留']
 
 n_btn_clicked = 0
 max_allowed_click_times = 200
 while btns:
-    btns[0].click
+    btns[0].click()
     time.sleep(3)
-    btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == 'Accept' or b.text == 'Keep']
+    btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == '接受' or b.text == '保留']
     n_btn_clicked += 1
     if n_btn_clicked >= max_allowed_click_times:
         logger.error('Reached maxed allowed btn clicked times, could trigger infinite loop')
@@ -94,8 +94,8 @@ if n_btn_clicked > 0:
 htmltext = driver.page_source
 
 # only take five for test purpose
-all_checklist_id = re.findall('/checklist/(.*?)"', htmltext)[7:52]
-all_creators = re.findall('"owner" class="dataCell">(.*?)</td>', htmltext)[7:52]
+all_checklist_id = re.findall('/checklist/(.*?)"', htmltext)[:6]
+all_creators = re.findall('"owner" class="dataCell">(.*?)</td>', htmltext)[:6]
 
 db_checklists = Survey.objects.values_list('checklist_id', flat=True)
 
