@@ -9,6 +9,8 @@ api_key = 'o1rng64r9e2b'
 locale = 'zh'
 client = Client(api_key, locale)
 
+records = client.get_visits('TW', date=datetime.date.today())
+
 
 region_codes = [
     'TW-TPE', #台北

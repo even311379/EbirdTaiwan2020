@@ -2,16 +2,24 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
+
 from django_plotly_dash import DjangoDash
 import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 import plotly.express as px
 import dash_table
 import dash_daq as daq
+
 import pandas as pd
 import numpy as np
+import random
 import json
+import names
+import datetime
 
+a = dash.Dash()
+a.callback
 test_data = pd.DataFrame(
     dict(
         c0=list(range(100)),
@@ -26,6 +34,17 @@ test_data = pd.DataFrame(
         g6=list(range(100))
     )
 )
+
+people = [names.get_first_name() for i in range(50)]
+towns = [names.get_last_name() for i in range(50)]
+sim_upload_time = [datetime.datetime(2020,10,2,14,32,38)]
+for i in range(49):
+    sim_upload_time.append(sim_upload_time[-1] + datetime.timedelta(seconds=random.randint(10,2000)))
+
+sim_upload_time_str = [datetime.datetime.strftime(i, '%Y-%m-%d %H:%M:%S') for i in sim_upload_time]
+
+TEST_TIME = 0
+
 mapbox_access_token = 'pk.eyJ1IjoiZXZlbjMxMTM3OSIsImEiOiJjamFydGVtOHk0bHo1MnFyejhneGowaG1sIn0.gyK3haF84TD-oxioghabsQ'
 
 def draw_ac_map(team):
@@ -96,13 +115,14 @@ def draw_ac_table():
         id='ac_datatable'
     )
 
-
-sample_card_content = [
+def create_card_content(img_seed, name, town_name, upload_time_str):
+    return [
     html.Img(src='/static/img/fall/temp_user_thumbnail.png', className='ac_card_thumbnail'),
-    html.Div([html.P('王小明'), html.P('剛於xx鄉鎮上傳一份清單')],className='ac_card_content'),
-    html.Div('2020/08/01 00:00:00', className='ac_card_time'),    
+    html.Div([html.P(name), html.P(f'剛於{town_name}上傳清單')],className='ac_card_content'),
+    html.Div(upload_time_str, className='ac_card_time'),    
 ]
 
+now_str = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
 
 
 ac_map = html.Div(dcc.Graph(figure=draw_ac_map(''), id='ac_map'),id='ac_map_container')
@@ -124,13 +144,13 @@ app = DjangoDash(
 
 app.layout = html.Div([
     html.Div([
-        html.Div(sample_card_content, className='ac_card'),
-        html.Div(sample_card_content, className='ac_card'),
-        html.Div(sample_card_content, className='ac_card'),
-        html.Div(sample_card_content, className='ac_card'),
-        html.Div(sample_card_content, className='ac_card'),
-        html.Div(sample_card_content, className='ac_card', style={'margin-bottom':'0'}),
-    ], id='ac_cards'),
+        html.Div(
+            children = create_card_content(0, people[i], towns[i], sim_upload_time_str[i]),
+            className = 'ac_card',
+            style={'transform':'translateY(-12vh)'}
+        )
+        for i in range(TEST_TIME,TEST_TIME+7)]
+    , id='ac_cards'),
     html.Div(live_data_area, className='', id='live_data_area'),
     dcc.Interval(id='tick',interval=1000,n_intervals=0), # update things every 3 s for demo
     dcc.Location(id='url'),
@@ -144,12 +164,12 @@ salvation for my responsive....
 app.clientside_callback(
     """
     function(path) {
+        console.log(1234);
         return String(window.innerWidth) + ',' + String(window.innerHeight);
-        console.log('???')
-    }
+    }    
     """,
     Output('empty', 'children'),
-    [Input('url', 'pathname')]
+    [Input('url', 'pathname')], prevent_initial_call = True
 )
 
 # '''
@@ -177,28 +197,48 @@ def toggle_map_or_data(on):
         return [dict(display='none'), dict(display='block'), html.Div('返回地圖', style=dict(color='#000'))]
     return [dict(display='block'), dict(display='none'), html.Div('顯示資料', style=dict(color='#fff'))]
 
-# @app.callback(
-#     Output('ac_cards', 'children'),
-#     [Input('tick', 'n_intervals')],
-#     [State('ac_cards', 'children'),]
-# )
-# def TestAnimation(n_intervals, ostate):
-#     if n_intervals == 10:
-#         print('animation?')
-#         return [
-#             html.Div(sample_card_content, className='ac_card',style={'transform':'translateY(-12vh)','opactity':'0'}),
-#             html.Div(sample_card_content, className='ac_card',style={'transform':'translateY(-12vh)'}),
-#             html.Div(sample_card_content, className='ac_card',style={'transform':'translateY(-12vh)'}),
-#             html.Div(sample_card_content, className='ac_card',style={'transform':'translateY(-12vh)'}),
-#             html.Div(sample_card_content, className='ac_card',style={'transform':'translateY(-12vh)'}),
-#             html.Div(sample_card_content, className='ac_card',style={'transform':'translateY(-12vh)'}),
-#             html.Div(sample_card_content, className='ac_card',style={'transform':'translateY(-12vh)','opactity':'1'}),
-#         ]
-#     return [ html.Div(sample_card_content, className='ac_card',style={'transition':''}),
-#             html.Div(sample_card_content, className='ac_card',style={'transition':''}),
-#             html.Div(sample_card_content, className='ac_card',style={'transition':''}),
-#             html.Div(sample_card_content, className='ac_card',style={'transition':''}),
-#             html.Div(sample_card_content, className='ac_card',style={'transition':''}),
-#             html.Div(sample_card_content, className='ac_card', style={'transition':'','margin-bottom':'0'}),
-#         ]
-    # return [{'transform':'translateY(-12vh)'}, {'opacity':'0','display':'none'}, {'margin-bottom':'1.5vh'}, {'opacity':'1','display':'block'}]
+
+##################################
+#### moving card simulation ####
+##################################
+
+
+
+
+def moving_cards(T):
+    return [
+            html.Div(
+                create_card_content(0, people[i], towns[i], sim_upload_time_str[i]),
+                className='ac_card',
+                style={'transform':'translateY(-12vh)'})
+            for i in range(T,T+7)
+        ]
+    
+
+def update_cards(T):
+    return [
+            html.Div(
+                create_card_content(0, people[i], towns[i], sim_upload_time_str[i]),
+                className='ac_card',
+                style={'transition':'none'})
+            for i in range(T,T+7)
+        ]    
+
+###################
+
+@app.callback(
+    Output('ac_cards', 'children'),
+    [Input('tick', 'n_intervals')],
+    [State('ac_cards', 'children'),]
+)
+def TestAnimation(n_intervals, ostate):
+
+    global TEST_TIME
+    if n_intervals % 5 == 0:
+        return moving_cards(TEST_TIME)
+    if n_intervals % 5 == 1:
+        TEST_TIME += 1
+        return update_cards(TEST_TIME)
+
+    raise PreventUpdate
+

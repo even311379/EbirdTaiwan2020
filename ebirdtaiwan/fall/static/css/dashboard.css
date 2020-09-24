@@ -254,6 +254,8 @@ add animation here
     top: 0;
     left: 0;
     width: 18vw;
+    overflow: hidden;
+    bottom: 0;
 }
 
 .ac_card{

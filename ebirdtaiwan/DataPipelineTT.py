@@ -1,3 +1,8 @@
+'''
+Data pipeline for three teams competition app
+
+'''
+
 # setup selenium
 import selenium
 from selenium import webdriver
@@ -35,16 +40,10 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(levelname)s - %(name)s - %(asctime)s - %(message)s',
     datefmt='%Y/%m/%d %H:%M:%S',
-    filename='scraper.log'
+    filename='DataPipeline.log'
 )
-logger = logging.getLogger('Scraper')
+logger = logging.getLogger('ThreeTeams')
 
-''' # test headless
-logger.info('test headless')
-driver.get('https://stackoverflow.com/questions/46753393/how-to-make-firefox-headless-programmatically-in-selenium-with-python')
-logger.info(f'success!? : {driver.title}')
-driver.close()
-'''
 
 # setup access to django db
 import sys
@@ -119,7 +118,7 @@ for i, c in zip(all_checklist_id, all_creators):
             latitude=float(gps_loc.split(',')[0]),
             longitude=float(gps_loc.split(',')[0]),
             region_code = api_data['subnational1Code'],
-            is_valid = -1 in N or api_data['durationHrs'] < 0.084
+            is_valid = -1 not in N and api_data['durationHrs'] > 0.084
         )
         NewSurvey.save()
 

@@ -130,7 +130,7 @@ class AutumnChallengePage(Page):
     subtitle = models.CharField(max_length=300,blank=True)
     rules = RichTextField(blank=True)
     prizes = RichTextField(blank=True)
-    dash_board_name = models.CharField(max_length=30, blank=False, help_text="DON'tT TOUCH this")
+    dash_board_name = models.CharField(max_length=30, blank=False, help_text="DON't TOUCH this")
 
     content_panels = Page.content_panels + [
         FieldPanel('subtitle'),
@@ -207,6 +207,15 @@ class SurveyObs(models.Model):
     species_name = models.CharField(blank=False, max_length=30, default='unKnown', verbose_name='物種名稱')
     amount = models.IntegerField(blank=False, default=0, verbose_name='數量')
 
+class AutumnChanllengeData(models.Model):
+    checklist_id = models.CharField(blank=False, max_length=15, primary_key=True,verbose_name='清單ID')
+    scrape_date = models.DateField(editable=False,auto_now_add=True,verbose_name='清單抓取日期')
+    survey_datetime = models.DateTimeField(editable=False,auto_now_add=True,verbose_name='調查時間')
+    creator = models.CharField(editable=False,blank=False, max_length=30,verbose_name='清單分享來源')
+    latitude = models.FloatField(default=23.5,verbose_name='緯度')
+    longitude = models.FloatField(default=120.5,verbose_name='經度')
+    county = models.CharField(default='天國市地獄鎮',max_length=15,verbose_name='鄉鎮名稱')
+    is_valid = models.BooleanField(editable=False,verbose_name='有鳥才算數')
 
 
 
