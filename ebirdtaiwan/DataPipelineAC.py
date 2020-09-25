@@ -64,36 +64,53 @@ def GetCountyByCoord(lat, lon):
     return '不在台灣啦!'
 
 def UpdateDataFromEbirdApi():
+    logger.info(f'Start to collect new data!')
     scraped_Ids = AutumnChanllengeData.objects.values_list('checklist_id', flat=True)
     checklists = client.get_visits('TW', date = datetime.date.today())
+    N = 0
     for l in checklists:
         cid = l['subId']
         if cid not in scraped_Ids:
+            N+=1
             obs = client.get_checklist(l['subId'])
-            AutumnChanllengeData.objects.create(
-                checklist_id = l['subId'],
-                creator = l['userDisplayName'],
-                latitude = l['latitude'],
-                longitude = l['longitude'],
-                county = GetCountyByCoord(l['latitude'], l['longitude']),
-                is_valid = bool(obs['obs'])
-            )
+            
+            '''
+            handle known issues
+            '''
+            if 'obsTime' not in l:
+                logger.error(f"{l['subId']} is invalid due to lack of day time! (hours and minutes)")
+                continue
 
+            try:
+                AutumnChanllengeData.objects.create(
+                    checklist_id = l['subId'],
+                    survey_datetime = datetime.datetime.strptime(l['obsDt'] + ' ' + l['obsTime'], '%d %b %Y %H:%M'),
+                    creator = l['userDisplayName'],
+                    latitude = l['loc']['latitude'],
+                    longitude = l['loc']['longitude'],
+                    county = GetCountyByCoord(l['loc']['latitude'], l['loc']['longitude']),
+                    is_valid = bool(obs['obs'])
+                )
+            except Exception as e:
+                logger.error(f'!!!{l}: {e}!!!')                
+    logger.info(f'Add {N} new checklists!')
 
 
 
 
 
 if __name__ == '__main__':
+    UpdateDataFromEbirdApi()
     # while True:
     #     if datetime.datetime.now().minute == 0:
     #         UpdateDataFromEbirdApi()
     #     time.sleep(60)
 
-    print(GetCountyByCoord(24.669527, 121.725319))
-    print(GetCountyByCoord(24.996413, 119.447619))
-    print(GetCountyByCoord(25.118471, 119.373589))
-    print(GetCountyByCoord(23.205872, 120.813756))
+
+    # print(GetCountyByCoord(24.669527, 121.725319))
+    # print(GetCountyByCoord(24.996413, 119.447619))
+    # print(GetCountyByCoord(25.118471, 119.373589))
+    # print(GetCountyByCoord(23.205872, 120.813756))
     
     
 

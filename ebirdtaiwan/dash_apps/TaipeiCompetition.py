@@ -45,7 +45,7 @@ with open('../helper_files/TaiwanCounties_simple.geojson') as f:
 
 data = pd.read_csv('../helper_files/TaiwanCounties.csv')
 
-mapbox_access_token = 'pk.eyJ1IjoiZXZlbjMxMTM3OSIsImEiOiJjamFydGVtOHk0bHo1MnFyejhneGowaG1sIn0.gyK3haF84TD-oxioghabsQ'
+mapbox_access_token = 'pk.eyJ1IjoiZXZlbjMxMTM3OSIsImEiOiJja2ZpOThqdDcwNG9kMnNxanRyMnJ5cjh5In0.thf034Ej9F7_uJ4eWvJVMQ'
 
 NorthTaiwan_geo = []
 for f in geoj['features']:

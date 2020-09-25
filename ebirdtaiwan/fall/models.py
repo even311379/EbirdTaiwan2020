@@ -210,7 +210,7 @@ class SurveyObs(models.Model):
 class AutumnChanllengeData(models.Model):
     checklist_id = models.CharField(blank=False, max_length=15, primary_key=True,verbose_name='清單ID')
     scrape_date = models.DateField(editable=False,auto_now_add=True,verbose_name='清單抓取日期')
-    survey_datetime = models.DateTimeField(editable=False,auto_now_add=True,verbose_name='調查時間')
+    survey_datetime = models.DateTimeField(editable=False,auto_now_add=False,verbose_name='調查時間')
     creator = models.CharField(editable=False,blank=False, max_length=30,verbose_name='清單分享來源')
     latitude = models.FloatField(default=23.5,verbose_name='緯度')
     longitude = models.FloatField(default=120.5,verbose_name='經度')

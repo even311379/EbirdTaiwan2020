@@ -1,13 +1,16 @@
 from django.contrib import admin
 
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register
-from .models import SignupData, Survey, SurveyObs, PredictionData
+from .models import SignupData, Survey, SurveyObs, PredictionData, AutumnChanllengeData
+
+from .wagtail_hooks import ExportModelAdminMixin
 
 ####################################################
 ##############  wagtail admin     ###################
 ####################################################
 
-class SignupDataAdmin(ModelAdmin):
+class SignupDataAdmin(ExportModelAdminMixin, ModelAdmin):
+    index_template_name = "fall/export_csv.html"
     model = SignupData
     menu_label = '報名資料'  # ditch this to use verbose_name_plural from model
     menu_icon = 'form'  # change as required
@@ -17,7 +20,8 @@ class SignupDataAdmin(ModelAdmin):
 
 modeladmin_register(SignupDataAdmin)
 
-class SurveyAdmin(ModelAdmin):
+class SurveyAdmin(ExportModelAdminMixin, ModelAdmin):
+    index_template_name = "fall/export_csv.html"
     model = Survey
     menu_label = '競賽上傳清單'
     menu_icon = 'doc-empty' 
@@ -29,7 +33,8 @@ class SurveyAdmin(ModelAdmin):
 modeladmin_register(SurveyAdmin)
 
 
-class SurveyObsAdmin(ModelAdmin):
+class SurveyObsAdmin(ExportModelAdminMixin, ModelAdmin):
+    index_template_name = "fall/export_csv.html"
     model = SurveyObs
     menu_label = '競賽上傳物種資料'
     menu_icon = 'doc-empty' 
@@ -43,7 +48,8 @@ class SurveyObsAdmin(ModelAdmin):
 
 modeladmin_register(SurveyObsAdmin)
 
-class PredictionDataAdmin(ModelAdmin):
+class PredictionDataAdmin(ExportModelAdminMixin, ModelAdmin):
+    index_template_name = "fall/export_csv.html"
     model = PredictionData
     menu_label = '民眾預測'
     menu_icon = 'success'
@@ -53,6 +59,16 @@ class PredictionDataAdmin(ModelAdmin):
 modeladmin_register(PredictionDataAdmin)
 
 
+class ACDataAdmin(ExportModelAdminMixin, ModelAdmin):
+    index_template_name = "fall/export_csv.html"
+    model = AutumnChanllengeData
+    menu_label = '秋季挑戰賽資料'
+    menu_icon = 'doc-empty'
+    list_display = ('checklist_id', 'scrape_date','survey_datetime','creator','latitude','longitude','county','is_valid')
+    list_filter = ('survey_datetime', 'county')
+    search_fields = ['checklist_id', 'creator',]
+
+modeladmin_register(ACDataAdmin)
 ####################################################
 ##############  django admin     ###################
 ####################################################
@@ -78,3 +94,12 @@ class PredictionDataDAdmin(admin.ModelAdmin):
     search_fields = ['participant_name',]
 
 admin.site.register(PredictionData, PredictionDataDAdmin)
+
+
+class ACDataDAdmin(admin.ModelAdmin):
+    list_display = ('checklist_id', 'scrape_date','survey_datetime','creator','latitude','longitude','county','is_valid')
+    list_filter = ('survey_datetime', 'county')
+    search_fields = ['checklist_id', 'creator',]
+
+admin.site.register(AutumnChanllengeData, ACDataDAdmin)
+

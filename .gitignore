@@ -139,3 +139,4 @@ geckodriver
 geckodriver.log
 # ebirdtaiwan/ebirdtaiwan/settings/dev.py
 ebirdtaiwan/media
+*.ipynb
