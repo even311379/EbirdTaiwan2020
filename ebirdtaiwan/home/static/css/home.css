@@ -111,9 +111,10 @@
     display: none;
 }
 
-body {
-    overflow-y: hidden; /* Hide vertical scrollbar */
-    overflow-x: hidden; /* Hide horizontal scrollbar */
+
+.no_scroll_bar_xy {
+    overflow-y: hidden; 
+    overflow-x: hidden; 
 }
 
 #mobile_region {

@@ -49,11 +49,6 @@ random_delay = []
 CARD_POSITION = 0
 
 
-def thumbnail_generation(seed):
-    '''
-    create them prior to use, just pick up one from pool, rather then generate in run time
-    '''
-    pass
 
 # prevent setup complex map twice
 def empty_map():
@@ -99,10 +94,10 @@ def create_score_df():
     east_person = df[df.longitude == df.longitude.max()].creator.iloc[0]
     west_person = df[df.longitude == df.longitude.min()].creator.iloc[0]
 
-    special_score[unique_creator.index(north_person)] += f'極北 (緯度：{df.latitude.max()})'
-    special_score[unique_creator.index(south_person)] += f'極南 (緯度：{df.latitude.min()})'
-    special_score[unique_creator.index(east_person)] += f'極東 (經度：{df.longitude.max()})'
-    special_score[unique_creator.index(west_person)] += f'極西 (經度：{df.longitude.min()})'
+    special_score[unique_creator.index(north_person)] += f'極北<br>(緯度：{round(df.latitude.max(), 3)})'
+    special_score[unique_creator.index(south_person)] += f'極南<br>(緯度：{round(df.latitude.min(), 3)})'
+    special_score[unique_creator.index(east_person)] += f'極東<br>(經度：{round(df.longitude.max(), 3)})'
+    special_score[unique_creator.index(west_person)] += f'極西<br>(經度：{round(df.longitude.min(), 3)})'
 
 
     total_score = [i + j for i,j in zip(number_of_occupied, first_county_numbers)]
@@ -207,7 +202,10 @@ Finally, figured it out this as a bug, and solve it by set 'maxHeight' in style_
 
 
 
-def draw_ac_table(score_df):
+def draw_ac_table(score_df, v_width):
+
+    text_size = '1vw'
+    if v_width < 768: text_size = '2vw'
 
     return dash_table.DataTable(
         data = score_df.to_dict('records'),
@@ -217,7 +215,7 @@ def draw_ac_table(score_df):
         filter_action='native',
         sort_action='native',
         page_action='none',
-        style_cell={'minWidth': '30px','width': '30px','maxWidth': '30px','font-size':'16px','textAlign':'center'},
+        style_cell={'minWidth': '30px','width': '30px','maxWidth': '30px','font-size':text_size,'textAlign':'center'},
         style_header={'background':'#6c7ae0','color':'#fff','font-weight':'600','border':'1px solid #000','border-radius': '2vh 2vh 0 0'},
         style_data={'whiteSpace': 'normal','height': 'auto'},
         style_table={'height': '68vh','maxHeight':'70vh'},
@@ -226,7 +224,7 @@ def draw_ac_table(score_df):
 
 def create_card_content(img_seed, name, town_name, upload_time_str):
     return [
-    html.Img(src='/static/img/fall/temp_user_thumbnail.png', className='ac_card_thumbnail'),
+    html.Img(src=f'/static/img/fall/random_thumbnails/{img_seed}.png', className='ac_card_thumbnail'),
     html.Div([html.P(name), html.P(f'在 {town_name} 上傳')],className='ac_card_content'),
     html.Div(upload_time_str, className='ac_card_time'),    
 ]
@@ -251,11 +249,11 @@ app = DjangoDash(
 
 app.layout = html.Div([
     html.Div(id='ac_cards'),
-    html.Div(live_data_area, className='', id='live_data_area'),
-    dcc.Interval(id='tick',interval=1000,n_intervals=0), # update things every 3 s for demo
+    html.Div(live_data_area, id='live_data_area'),
+    dcc.Interval(id='tick',interval=1000,n_intervals=0),
     dcc.Location(id='url'),
     html.Div('',id='empty',style={'display':'none'}), # to write useful data to present things
-], className='')
+])
 
 
 '''
@@ -278,14 +276,12 @@ app.clientside_callback(
 @app.callback(
     [Output('ac_map','figure'),
     Output('ac_table_container','children'),
-    # Output('ac_cards', 'children')
-    ],
+    Output('tick', 'n_intervals')],
     [Input('empty', 'children')], prevent_initial_call = True
 )
 def redraw_onreload(helper_str):
     width = int(helper_str.split(',')[0])
-    height = int(helper_str.split(',')[1])
-    
+    # height = int(helper_str.split(',')[1])    
     global CARD_POSITION
 
     #(1) create score data_frame
@@ -295,11 +291,11 @@ def redraw_onreload(helper_str):
     fig = draw_ac_map(score_df)
 
     #(3) create table
-    table = draw_ac_table(score_df)    
+    table = draw_ac_table(score_df, width)    
 
     CARD_POSITION = 0
 
-    return fig, table
+    return fig, table, 0
 
 
     
@@ -307,13 +303,14 @@ def redraw_onreload(helper_str):
 @app.callback(
     [Output('ac_map_container', 'style'),
     Output('ac_table_container','style'),
-    Output('switch_hint', 'children')],
+    Output('switch_hint', 'children'),
+    ],
     [Input('switch','on')]
 )
 def toggle_map_or_data(on):
     if on:
         return [dict(display='none'), dict(display='block'), html.Div('返回地圖', style=dict(color='#000'))]
-    return [dict(display='block'), dict(display='none'), html.Div('顯示資料', style=dict(color='#fff'))]
+    return [dict(display='block'), dict(display='none'), html.Div('顯示資料', style=dict(color='#000'))]
 
 
 ##################################
@@ -349,7 +346,7 @@ def update_cards(T):
     [Input('tick', 'n_intervals')],
     [State('ac_cards', 'children'),]
 )
-def TestAnimation(n_intervals, ostate):
+def CardAnimation(n_intervals, ostate):
 
     global CARD_POSITION
 
@@ -357,10 +354,12 @@ def TestAnimation(n_intervals, ostate):
     global towns
     global upload_time
     global thumbnail
-    global random_delay        
+    global random_delay
 
     # init cards vars
-    if n_intervals == 0:                        
+    if n_intervals == 0: raise PreventUpdate
+
+    if n_intervals == 1:                        
 
         recent_data3 = AutumnChanllengeData.objects.all().order_by('-survey_datetime')[:20]
         df = pd.DataFrame.from_records(recent_data3.values('creator','county','survey_datetime'))[::-1]
@@ -368,19 +367,19 @@ def TestAnimation(n_intervals, ostate):
         peoples = df['creator'].tolist()
         towns = df['county'].tolist()
         upload_time = [datetime.datetime.strftime(t, '%Y-%m-%d %H:%M:%S') for t in df['survey_datetime'].tolist()]
-        thumbnail = [random.randint(0,48) for i in range(len(df))]
+        thumbnail = [random.randint(1,50) for i in range(len(df))]
 
-        random_delay.append(random.randint(1,4))
+        random_delay.append(random.randint(2,4))
         for i in range(12):
             random_delay.append(random_delay[-1]+random.randint(2,5))
-        print(random_delay)
+
         cards = [
             html.Div(
                 children = create_card_content(thumbnail[L], peoples[L], towns[L], upload_time[L]),
                 className = 'ac_card',)
             for L in range(7)]
 
-        return cards, False
+        return cards, False    
 
     if n_intervals % random_delay[CARD_POSITION] == 0:
         return moving_cards(CARD_POSITION), False

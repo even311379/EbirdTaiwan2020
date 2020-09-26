@@ -11,7 +11,7 @@ For all dashboard setting
 }
 
 
-#dlogos{
+/* #dlogos{
     position: absolute;
     bottom: 1vh;
     width: 18vw;
@@ -24,7 +24,7 @@ For all dashboard setting
 #dlogos img {
     height: 1.8vw;
     width: auto;
-}
+} */
 
 /* 
  For "Three Teams"
@@ -232,12 +232,12 @@ For all dashboard setting
 }
 
 .ac_title_region h1{
-    font-size: 9vh;
+    font-size: 5vw;
     margin-bottom: 2vh;
 }
 
 .ac_title_region p{
-    font-size: 2vh
+    font-size: 1.5vw;
 }
 
 .ac_dashboard_region {
@@ -296,15 +296,15 @@ add animation here
 
 
 .ac_explain_region{
-    margin-top: 24vh;
+    margin-top: 20vh;
 }
 .ac_explain_region h4{
     text-align: center;
-    font-size: 6vh;
+    font-size: 4vw;
     margin-bottom: 8vh;
 }
 .ac_explain_region p{
-    font-size: 3vh;
+    font-size: 1.5vw;
     line-height: 4.5vh;
 }
 
@@ -316,7 +316,19 @@ add animation here
 .ac_explain_icons{
     height: 15vh;
     width: auto;
+    animation-name: slow_rotate;
+    animation-duration: 3s;
+    animation-iteration-count:infinite;
+    animation-timing-function: linear;
 }
+
+@keyframes slow_rotate {
+     0%   {transform: rotate(0);}
+    25%   {transform: rotate(7.5deg);}
+    50%   {transform: rotate(0deg);}
+    75%   {transform: rotate(-7.5deg);}
+    100%   {transform: rotate(0deg);}   
+  }
 
 #ac_map{
     position: absolute;
@@ -362,4 +374,56 @@ add animation here
     border-radius: 2vh;
     background: #fff;
     overflow: hidden;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .ac_bg_rect2 {     
+        height: 20vh;     
+    }
+
+    #live_data_area{
+        left: 0;
+        right: 0;
+        height: 55vh;
+        width: 85vw;
+    }
+
+    #ac_cards {
+        top: 57vh;
+        width: 100%;
+        height: 13vh;
+    }
+
+    .ac_title_region h1{
+        font-size: 7vw;
+    }
+    
+    .ac_title_region p{
+        font-size: 2vw;
+    }
+
+    .ac_explain_region {
+        margin-top: 15vh;
+    }
+
+    .ac_explain_region h4 {
+        font-size: 10vw;
+    }
+
+    .ac_explain_region p {
+        font-size: 2.75vw;
+        line-height: 3.5vh;
+        margin-right: 2vw;
+    }
+    .ac_explain_icon_region {
+        width: 30vw;
+        margin-left: 0;
+        margin-right: 10vw;
+    }
+
+    .ac_explain_icons {
+        height: 10vh;
+    }
+
 }

@@ -6,6 +6,7 @@
 {% block extra_css %}    
  <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
  <link rel="stylesheet" type="text/css" href="{% static 'css/fall.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
 {% endblock extra_css %}
 
 {% block body_class%}ac_container{%endblock%}
@@ -33,7 +34,7 @@
         <p>{{ page.prizes|safe}}</p>
     </div>
 </div>
-<div id='dlogos'>主辦單位 ｜ <img src={% static 'img/home/corporation_logos.png' %}> &nbsp;&nbsp;&nbsp;&nbsp; 活動贊助 ｜ <img src={% static 'img/home/supporter_logos.png' %}>  </div>
+<div id='logos'>主辦單位 ｜ <img src={% static 'img/home/corporation_logos.png' %}> &nbsp;&nbsp;&nbsp;&nbsp; 活動贊助 ｜ <img src={% static 'img/home/supporter_logos.png' %}>  </div>
 <div class='ac_bg_rect3'></div>
 <script type="text/python">
 
