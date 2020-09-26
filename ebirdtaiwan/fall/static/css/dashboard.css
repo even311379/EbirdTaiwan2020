@@ -264,7 +264,7 @@ add animation here
     border-radius: 10px;
     position: relative;
     margin-bottom: 1.5vh;
-    transition: transform 1s ease-in-out, opacity 0.5s linear;
+    transition: transform 1s ease-in-out;
 }
 
 .ac_card_thumbnail{
@@ -293,6 +293,7 @@ add animation here
     font-size: 1.2vh;
     color: #999999;
 }
+
 
 .ac_explain_region{
     margin-top: 24vh;

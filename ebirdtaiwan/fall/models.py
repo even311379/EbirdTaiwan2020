@@ -9,7 +9,7 @@ from wagtailmenus.models import MenuPage
 from django.shortcuts import render
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
-from automation import passwords
+import eb_passwords
 
 # import datetime
 
@@ -85,7 +85,7 @@ def send_validation_email(email, team, ebirdid):
     msg = EmailMessage(
         '歡迎加入ebirdTaiwan秋季挑戰賽',
         content,
-        passwords.mailserver_account,
+        eb_passwords.mailserver_account,
         [email]
     )
     msg.content_subtype = 'html'

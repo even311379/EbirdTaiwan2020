@@ -17,7 +17,8 @@ import sys
 # print(sys.path)
 
 sys.path.append(os.path.abspath('../')) 
-from automation import passwords
+import eb_passwords
+# from automation import passwords
 
 # import passwords # TEST ONLY
 
@@ -234,6 +235,6 @@ PLOTLY_COMPONENTS = [
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = passwords.mailserver_account
-EMAIL_HOST_PASSWORD = passwords.mailserver_password
+EMAIL_HOST_USER = eb_passwords.mailserver_account
+EMAIL_HOST_PASSWORD = eb_passwords.mailserver_password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

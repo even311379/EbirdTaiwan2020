@@ -11,19 +11,18 @@ import plotly.graph_objs as go
 
 from ebird.api import Client
 import pandas as pd
+
 '''
 add abs path from relative path to sys
 in this way, I can successfully import passwords.py
+
+.... too much complex...
+move password file to site-packages
 '''
 
-import sys
-import os
-sys.path.append(os.path.abspath('../')) 
-# print(sys.path)
-from automation import passwords
+import eb_passwords
 import datetime
 
-mapbox_access_token = 'pk.eyJ1IjoiZXZlbjMxMTM3OSIsImEiOiJjamFydGVtOHk0bHo1MnFyejhneGowaG1sIn0.gyK3haF84TD-oxioghabsQ'
 
 region_codes = {
     'TW-TPE' : '台北',
@@ -57,7 +56,7 @@ There is no need to copy their data to my data base,
 df_checklist = ''
 
 
-client = Client(passwords.ebird_api_key, 'zh')
+client = Client(eb_passwords.ebird_api_key, 'zh')
 
 def AllCheckListDashDT(date):
     
@@ -174,7 +173,7 @@ def CheckListDetailDashDT(CID):
     lng = df_checklist.loc[df_checklist['上傳清單ID']==CID]['經度'].iloc[0]
 
     mapdata = [go.Scattermapbox(lat=[lat], lon=[lng],mode='markers',marker={'size':36,'symbol':'star'})]
-    layout = go.Layout(autosize=True, hovermode='closest',mapbox=dict(accesstoken=mapbox_access_token,center=dict(lat=lat,lon=lng),pitch=0,zoom=12,style='outdoors'))
+    layout = go.Layout(autosize=True, hovermode='closest',mapbox=dict(accesstoken=eb_passwords.map_box_api_key,center=dict(lat=lat,lon=lng),pitch=0,zoom=12,style='outdoors'))
 
     output_map = dcc.Graph(figure = dict(data=mapdata, layout=layout), style={'height':'600px'})
 

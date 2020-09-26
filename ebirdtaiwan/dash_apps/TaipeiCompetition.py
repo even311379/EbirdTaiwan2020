@@ -17,6 +17,7 @@ import sys
 import os
 sys.path.append(os.path.abspath('dash_apps')) 
 import CustomWidgets
+import eb_passwords
 
 '''
 This is just the begining:
@@ -45,7 +46,6 @@ with open('../helper_files/TaiwanCounties_simple.geojson') as f:
 
 data = pd.read_csv('../helper_files/TaiwanCounties.csv')
 
-mapbox_access_token = 'pk.eyJ1IjoiZXZlbjMxMTM3OSIsImEiOiJja2ZpOThqdDcwNG9kMnNxanRyMnJ5cjh5In0.thf034Ej9F7_uJ4eWvJVMQ'
 
 NorthTaiwan_geo = []
 for f in geoj['features']:
@@ -91,7 +91,7 @@ area_map.update_traces(
 )
 area_map.update_layout(
     mapbox = dict(        
-        accesstoken=mapbox_access_token,                        
+        accesstoken=eb_passwords.map_box_api_key,                        
         pitch = 45,                
     ),
     margin={"r":0,"t":0,"l":0,"b":0},

@@ -21,21 +21,18 @@ from collections import Counter
 
 from fall.models import AutumnChanllengeData
 
+from eb_passwords import map_box_api_key
 
 a = dash.Dash()
 a.callback
 test_data = pd.DataFrame(
     dict(
-        c0=list(range(100)),
-        c1=list(range(100)),
-        c2=list(range(100)),
-        c3=list(range(100)),
-        c4=list(range(100)),
-        c5=list(range(100)),
-        e6=list(range(100)),
-        e4=list(range(100)),
-        e5=list(range(100)),
-        g6=list(range(100))
+        上傳人=list(range(100)),
+        總清單數=list(range(100)),
+        佔領鄉鎮數=list(range(100)),
+        拓荒鄉鎮數=list(range(100)),
+        特殊得分=list(range(100)),
+        總得分=list(range(100)),
     )
 )
 
@@ -48,19 +45,8 @@ peoples = []
 towns = []
 upload_time = []
 thumbnail = []
-
-
-# people = [names.get_first_name() for i in range(50)]
-# towns = [names.get_last_name() for i in range(50)]
-# sim_upload_time = [datetime.datetime(2020,10,2,14,32,38)]
-# for i in range(49):
-#     sim_upload_time.append(sim_upload_time[-1] + datetime.timedelta(seconds=random.randint(10,2000)))
-
-# sim_upload_time_str = [datetime.datetime.strftime(i, '%Y-%m-%d %H:%M:%S') for i in sim_upload_time]
-
-TEST_TIME = 0
-
-mapbox_access_token = 'pk.eyJ1IjoiZXZlbjMxMTM3OSIsImEiOiJjamFydGVtOHk0bHo1MnFyejhneGowaG1sIn0.gyK3haF84TD-oxioghabsQ'
+random_delay = []
+CARD_POSITION = 0
 
 
 def thumbnail_generation(seed):
@@ -69,16 +55,85 @@ def thumbnail_generation(seed):
     '''
     pass
 
-def draw_ac_map():
+# prevent setup complex map twice
+def empty_map():
+    fig = go.Figure(go.Scattermapbox(lat=['38.91427',],lon=['-77.02827',]))
+    fig.update_layout(
+        mapbox=dict(
+            center=dict(lat=23.973793,lon=120.979703),
+            zoom=8,
+            style='white-bg')
+    )
+    return fig
+
+
+def create_score_df():
+
+    AutumnChanllengeData.objects.all()
+    df = pd.DataFrame.from_records(
+        AutumnChanllengeData.objects.filter(is_valid=True).values(
+            'creator','survey_datetime','latitude','longitude','county',))
+
+    creator_count = df.creator.value_counts()
+    number_of_checklist = creator_count.tolist()
+    unique_creator = creator_count.index.tolist()
+
+    unique_county = pd.unique(df.county)
+
+    number_of_occupied = [len(pd.unique(df[df.creator == c].county)) for c in unique_creator]
+
+    first_counties = ['']*len(unique_creator)
+    for county in unique_county:        
+        sdf = df[df.county == county].sort_values(by=['survey_datetime'])
+        # extra code tp handle shared list issue, return a list of person...
+        for c in sdf[sdf.survey_datetime == sdf.survey_datetime.min()].creator.tolist():
+            first_counties[unique_creator.index(c)] += county+','
+
+    first_counties = [s[:-1] if s else '' for s in first_counties]
+    first_county_numbers = [len(s.split(',')) for s in first_counties]
+            
+    special_score = ['']*len(unique_creator)
+
+    north_person = df[df.latitude == df.latitude.max()].creator.iloc[0]
+    south_person = df[df.latitude == df.latitude.min()].creator.iloc[0]
+    east_person = df[df.longitude == df.longitude.max()].creator.iloc[0]
+    west_person = df[df.longitude == df.longitude.min()].creator.iloc[0]
+
+    special_score[unique_creator.index(north_person)] += f'極北 (緯度：{df.latitude.max()})'
+    special_score[unique_creator.index(south_person)] += f'極南 (緯度：{df.latitude.min()})'
+    special_score[unique_creator.index(east_person)] += f'極東 (經度：{df.longitude.max()})'
+    special_score[unique_creator.index(west_person)] += f'極西 (經度：{df.longitude.min()})'
+
+
+    total_score = [i + j for i,j in zip(number_of_occupied, first_county_numbers)]
+
+
+    total_score[unique_creator.index(north_person)] += 5
+    total_score[unique_creator.index(south_person)] += 5
+    total_score[unique_creator.index(east_person)] += 5
+    total_score[unique_creator.index(west_person)] += 5
+
+    return pd.DataFrame(
+        dict(
+            挑戰者=unique_creator,
+            總清單數=number_of_checklist,
+            佔領鄉鎮數=number_of_occupied,
+            首次佔領鄉鎮=first_counties,
+            特殊得分=special_score,
+            總得分=total_score
+            )
+        )
+
+
+def draw_ac_map(score_df):
 
     with open('../helper_files/TaiwanCounties_simple.geojson') as f:
         geoj = json.load(f)
 
     all_county = AutumnChanllengeData.objects.values_list('county', flat=True)
     county_counts = Counter(all_county)
-    # data = pd.read_csv('../helper_files/TaiwanCounties.csv')    
-    data = pd.DataFrame()
 
+    data = pd.DataFrame()
     RN = []
     for k in range(len(geoj['features'])):
         temp = geoj['features'][k]['properties']['COUNTYNAME']+geoj['features'][k]['properties']['TOWNNAME']
@@ -99,24 +154,25 @@ def draw_ac_map():
             occupied.append('空白地帶')
 
     data['occupied'] = occupied
-    # print(county_counts)
-    # print(data.head(6))
-    # print(data['occupied'].tolist())
+
+
+    # data['hover_text'] = occupied
+    
     '''
     TODO design hover text here
     (1) the first occupied person
     (2) total lists here
     (3) some of the peoples ??
     '''
+    #use score_df to do things...some what complex skip it for a few minutes
 
     area_map = px.choropleth_mapbox(data, geojson=geoj, color="occupied",
                 locations="Name",center={"lat": 23.973793, "lon":120.979703},
                 hover_data=["occupied"],
-                # featureidkey="properties.TOWNNAME",
                 mapbox_style="white-bg", zoom=8,
                 color_discrete_map={'空白地帶':'rgba(217,236,242, 1)', '剛佔領':'rgba(255,239,160, 1)', '熱門地帶':'rgba(172,75,28, 1)'},                
             )
-    print("plotly express hovertemplate:", area_map.data[0].hovertemplate)
+    # print("plotly express hovertemplate:", area_map.data[0].hovertemplate)
     area_map.update_traces(        
         hovertemplate='%{location}: %{customdata[0]}! <extra></extra>', 
         hoverlabel=dict(font=dict(size=18)),
@@ -124,12 +180,12 @@ def draw_ac_map():
     )
     area_map.update_layout(
         mapbox = dict(        
-            accesstoken=mapbox_access_token,                                        
+            accesstoken=map_box_api_key,                                        
         ),
         margin={"r":0,"t":0,"l":0,"b":0},
         dragmode="pan",
         hovermode='closest',
-        # coloraxis_showscale=False,
+        # coloraxis_showscale=False, 
         # showlegend = False,
         legend=dict(
             yanchor="top",
@@ -148,10 +204,14 @@ fixed_rows will make max height of this table 500px...
 Finally, figured it out this as a bug, and solve it by set 'maxHeight' in style_table
 '''
 
-def draw_ac_table():    
+
+
+
+def draw_ac_table(score_df):
+
     return dash_table.DataTable(
-        data = test_data.to_dict('records'),
-        columns=[{'id': c, 'name': c} for c in test_data.columns],
+        data = score_df.to_dict('records'),
+        columns=[{'id': c, 'name': c} for c in score_df.columns],
         fixed_rows={ 'headers': True, 'data': 0 },
         style_as_list_view=True,
         filter_action='native',
@@ -167,14 +227,12 @@ def draw_ac_table():
 def create_card_content(img_seed, name, town_name, upload_time_str):
     return [
     html.Img(src='/static/img/fall/temp_user_thumbnail.png', className='ac_card_thumbnail'),
-    html.Div([html.P(name), html.P(f'剛於{town_name}上傳清單')],className='ac_card_content'),
+    html.Div([html.P(name), html.P(f'在 {town_name} 上傳')],className='ac_card_content'),
     html.Div(upload_time_str, className='ac_card_time'),    
 ]
 
-now_str = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
 
-# config=dict(displayModeBar=False)
-ac_map = html.Div(dcc.Graph(figure=draw_ac_map(), id='ac_map'),id='ac_map_container')
+ac_map = html.Div(dcc.Graph(figure=empty_map(), id='ac_map', config=dict(displayModeBar=False)),id='ac_map_container')
 ac_table = html.Div(id='ac_table_container',style={'display':'none'})
 ac_switch = html.Div([
     html.Div(html.Div('切換至資料'), id='switch_hint'),
@@ -214,49 +272,34 @@ app.clientside_callback(
 )
 
 
-
 # '''
 # should also read newest data here~~
 # '''
 @app.callback(
     [Output('ac_map','figure'),
     Output('ac_table_container','children'),
-    Output('ac_cards', 'children')],
+    # Output('ac_cards', 'children')
+    ],
     [Input('empty', 'children')], prevent_initial_call = True
 )
 def redraw_onreload(helper_str):
     width = int(helper_str.split(',')[0])
     height = int(helper_str.split(',')[1])
+    
+    global CARD_POSITION
 
-    #(1) create map
-    fig = draw_ac_map()
+    #(1) create score data_frame
+    score_df = create_score_df()
+    
+    #(2) create map
+    fig = draw_ac_map(score_df)
 
-    #(2) create table
-    table = draw_ac_table()
+    #(3) create table
+    table = draw_ac_table(score_df)    
 
-    #(3) init cards vars
-    global peoples
-    global towns
-    global upload_time
-    global thumbnail
+    CARD_POSITION = 0
 
-    recent_data3 = AutumnChanllengeData.objects.filter(
-        survey_datetime__gte=(datetime.datetime.now()-datetime.timedelta(hours=5))
-    ).order_by('survey_datetime')
-    df = pd.DataFrame.from_records(recent_data3.values('creator','county','survey_datetime'))
-    # df = pd.read_sql_query(recent_data3)
-    peoples = df['creator'].tolist()
-    towns = df['county'].tolist()
-    upload_time = [datetime.datetime.strftime(t, '%Y-%m-%d %H:%M:%S') for t in df['survey_datetime'].tolist()]
-    thumbnail = [random.randint(0,48) for i in range(len(df))]
-    cards_number = 7 if len(df) > 7 else len(df)
-    cards = [
-        html.Div(
-            children = create_card_content(thumbnail[L], peoples[L], towns[L], upload_time[L]),
-            className = 'ac_card',)
-        for L in range(cards_number)]
-
-    return fig, table, cards
+    return fig, table
 
 
     
@@ -282,40 +325,70 @@ def toggle_map_or_data(on):
 
 def moving_cards(T):
     return [
-            html.Div(
-                create_card_content(0, people[i], towns[i], sim_upload_time_str[i]),
-                className='ac_card',
-                style={'transform':'translateY(-12vh)'})
-            for i in range(T,T+7)
-        ]
+        html.Div(
+            children = create_card_content(thumbnail[L], peoples[L], towns[L], upload_time[L]),
+            className = 'ac_card',
+            style={'transform':'translateY(-12vh)'})
+        for L in range(T, T+7)]   
     
 
 def update_cards(T):
     return [
-            html.Div(
-                create_card_content(0, people[i], towns[i], sim_upload_time_str[i]),
-                className='ac_card',
-                style={'transition':'none'})
-            for i in range(T,T+7)
-        ]    
+        html.Div(
+            children = create_card_content(thumbnail[L], peoples[L], towns[L], upload_time[L]),
+            className = 'ac_card',
+            style={'transition':'none'})
+        for L in range(T, T+7)] 
 
 ###################
 
-# @app.callback(
-#     Output('ac_cards', 'children'),
-#     [Input('tick', 'n_intervals')],
-#     [State('ac_cards', 'children'),]
-# )
-# def TestAnimation(n_intervals, ostate):
 
-#     global TEST_TIME
-#     if n_intervals % 5 == 0:
-#         return moving_cards(TEST_TIME)
-#     if n_intervals % 5 == 1:
-#         TEST_TIME += 1
-#         return update_cards(TEST_TIME)
+@app.callback(
+    [Output('ac_cards', 'children'),
+    Output('tick', 'disabled')],
+    [Input('tick', 'n_intervals')],
+    [State('ac_cards', 'children'),]
+)
+def TestAnimation(n_intervals, ostate):
 
-#     raise PreventUpdate
+    global CARD_POSITION
+
+    global peoples
+    global towns
+    global upload_time
+    global thumbnail
+    global random_delay        
+
+    # init cards vars
+    if n_intervals == 0:                        
+
+        recent_data3 = AutumnChanllengeData.objects.all().order_by('-survey_datetime')[:20]
+        df = pd.DataFrame.from_records(recent_data3.values('creator','county','survey_datetime'))[::-1]
+
+        peoples = df['creator'].tolist()
+        towns = df['county'].tolist()
+        upload_time = [datetime.datetime.strftime(t, '%Y-%m-%d %H:%M:%S') for t in df['survey_datetime'].tolist()]
+        thumbnail = [random.randint(0,48) for i in range(len(df))]
+
+        random_delay.append(random.randint(1,4))
+        for i in range(12):
+            random_delay.append(random_delay[-1]+random.randint(2,5))
+        print(random_delay)
+        cards = [
+            html.Div(
+                children = create_card_content(thumbnail[L], peoples[L], towns[L], upload_time[L]),
+                className = 'ac_card',)
+            for L in range(7)]
+
+        return cards, False
+
+    if n_intervals % random_delay[CARD_POSITION] == 0:
+        return moving_cards(CARD_POSITION), False
+    if n_intervals % random_delay[CARD_POSITION] == 1 and n_intervals > 1:
+        CARD_POSITION += 1
+        return update_cards(CARD_POSITION), CARD_POSITION==13
+
+    raise PreventUpdate
 
 '''
 
