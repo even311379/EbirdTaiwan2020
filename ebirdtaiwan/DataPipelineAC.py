@@ -39,6 +39,7 @@ import pandas as pd
 import json
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
+from shapely.ops import nearest_points
 
 towns_polygons = {}
 with open('../helper_files/TaiwanCounties_simple.geojson') as f:
@@ -49,6 +50,22 @@ for i in raw_json['features']:
     towns_polygons[town_name] = i['geometry']['coordinates']
     # a town could have multiple polygons...離島之類的
 
+from math import sin, cos, sqrt, atan2, radians
+
+def great_circle_distance_on_earth(point1, point2):
+    # approximate radius of earth in km
+    R = 6373.0
+
+    lat1 = radians(point1.y)
+    lon1 = radians(point1.x)
+    lat2 = radians(point2.y)
+    lon2 = radians(point2.x)
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
 
 def GetCountyByCoord(lat, lon):
     point = Point(lon, lat)
@@ -58,15 +75,28 @@ def GetCountyByCoord(lat, lon):
                 polygon = Polygon(town_polygon[0])
             else:            
                 polygon = Polygon(town_polygon)
-            if polygon.contains(point):
+            if polygon.contains(point):                
                 return town
-            
+
+    logger.warning(f'Vague point detected! Start further algorithm to check its town ')
+    
+    for town in towns_polygons:
+        for town_polygon in towns_polygons[town]:
+            if len(town_polygon) == 1:
+                polygon = Polygon(town_polygon[0])
+            else:            
+                polygon = Polygon(town_polygon)
+            p1, _ = nearest_points(polygon, point)            
+            if great_circle_distance_on_earth(point, p1) < 5: # distance to shore 5km?
+                logger.info(f'Success detect its town as {town}!')
+                return town
+    logger.warning(f'Failed to detect town!')                
     return '不在台灣啦!'
 
 def UpdateDataFromEbirdApi():
     logger.info(f'Start to collect new data!')
     scraped_Ids = AutumnChanllengeData.objects.values_list('checklist_id', flat=True)
-    checklists = client.get_visits('TW', date = datetime.date.today())
+    checklists = client.get_visits('TW', date = datetime.date.today() - datetime.timedelta(days=1))
     N = 0
     for l in checklists:
         cid = l['subId']

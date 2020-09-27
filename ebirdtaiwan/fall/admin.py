@@ -25,8 +25,8 @@ class SurveyAdmin(ExportModelAdminMixin, ModelAdmin):
     model = Survey
     menu_label = '競賽上傳清單'
     menu_icon = 'doc-empty' 
-    list_display = ('checklist_id','creator', 'team','scrape_date','survey_datetime','region_code','is_valid')
-    list_filter = ('team','region_code', 'is_valid')
+    list_display = ('checklist_id','creator', 'team','scrape_date','survey_datetime','county','is_valid')
+    list_filter = ('team','county', 'is_valid')
     search_fields = ['creator']
 
 
@@ -79,8 +79,8 @@ class SignupDataDAdmin(admin.ModelAdmin):
 admin.site.register(SignupData, SignupDataDAdmin)
 
 class SurveyDAdmin(admin.ModelAdmin):
-    list_display = ('checklist_id','creator', 'team','scrape_date','survey_datetime','region_code','is_valid')
-    list_filter = ('team','region_code', 'is_valid')
+    list_display = ('checklist_id','creator', 'team','scrape_date','survey_datetime','county','is_valid')
+    list_filter = ('team','county', 'is_valid')
 
 admin.site.register(Survey, SurveyDAdmin)
 

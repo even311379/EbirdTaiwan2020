@@ -12,9 +12,10 @@ import plotly.graph_objs as go
 import pandas as pd
 import random
 import numpy as np
+import datetime
 
 from home.models import HomePage
-
+from fall.models import SurveyObs
 
 '''
 GLOBAL VARS
@@ -28,9 +29,9 @@ N_species_3 = 9
 
 homepage_data = HomePage.objects.all()[0]
 
-team1_color = '#fff'
-team2_color = '#fff'
-team3_color = '#fff'
+team1_color = '#2E92D3'
+team2_color = '#EF8018'
+team3_color = '#FFF101'
 
 # app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP],update_title=None)
 app = DjangoDash(
@@ -43,74 +44,43 @@ DISABLED = True
 app.layout = html.Div([
     html.Div(id='bottom_bar'),
     dcc.Location(id='url', refresh=True),
-    dcc.Interval(id='tick',interval=50,n_intervals=0),
-    dcc.Interval(id='bar_update',interval=10000,n_intervals=0)
+    html.Div(id ='empty', style={'display':'none'})
 ])
 
-@app.callback(
-    Output('tick', 'n_intervals'),
+
+app.clientside_callback(
+    """
+    function(path) {
+        return String(window.innerWidth) + ',' + String(window.innerHeight);
+    }    
+    """,
+    Output('empty', 'children'),
     [Input('url', 'pathname')]
 )
-def display_page(pathname):
-    global N_species_1
-    global N_species_2
-    global N_species_3    
-    N_species_1 = 1
-    N_species_2 = 1
-    N_species_3 = 1
 
-    for i in range(1,4):
-        code_string = f'''
-try:        
-    team{i}_color = homepage_data.team{i}_color
-except:            
-    team{i}_color = '#fff'            
-        '''
-    exec(code_string)
-
-
-    return 0
-
-# DISABLE tick before it begins
-'''
 @app.callback(
-    Output('bottom_bar', 'children'),
-    [Input('bar_update','n_intervals')]
+    Output('bottom_bar','children'),
+    [Input('empty', 'children')], prevent_initial_call = True
 )
-def update_species_accumulation(delta_time):
-    print('is update called whenever relaod page??')
-    global N_species_1
-    global N_species_2
-    global N_species_3
-    N_species_1 += random.randint(0, 2)
-    N_species_2 += random.randint(0, 3)
-    N_species_3 += random.randint(0, 4)
-    total = N_species_1 + N_species_2 + N_species_3
-    P = [0, 0, 0]
-    if total == 0:
-        P = [33, 34, 33]
-        
+def hidden_graph(h):
+    if datetime.date.today() < datetime.date(2020,10,1):
+        team1 = len(set(SurveyObs.objects.filter(survey__team = '黑面琵鷺隊').values_list('species_name', flat=True)))
+        team2 = 10
+        team3 = 7
     else:
-        P[0] = round(N_species_1*100/total)
-        P[1] = round(N_species_2*100/total)
-        P[2] = 100 - P[0] - P[1]
+        team1 = len(set(SurveyObs.objects.filter(survey__team = '彩鷸隊').values_list('species_name', flat=True)))
+        team2 = len(set(SurveyObs.objects.filter(survey__team = '家燕隊').values_list('species_name', flat=True)))
+        team3 = len(set(SurveyObs.objects.filter(survey__team = '大冠鷲隊').values_list('species_name', flat=True)))
 
-    # # to fix total width > 100 for some value == 0, to triger whole bar invisible
-    # P[P.index(min(P))] += 1
-    # P[P.index(max(P))] -= 1
-
-    # #still some special case 0 , 0, 100 may trigger this bug
-
-    team1_color = homepage_data.team1_color
-    team2_color = homepage_data.team2_color
-    team3_color = homepage_data.team3_color
-
+    T = team1+team2+team3
+    P = [round(team1*100/T), round(team2*100/T), round(team3*100/T),]
+    
     return [
-        html.Div(className="score_bar", style={"width":f"{P[0]}%","background":team1_color}),
-        html.Div(className="score_bar", style={"width":f"{P[1]}%","background":team2_color,"left":f"{P[0]}%"}),
-        html.Div(className="score_bar", style={"width":f"{P[2]}%","background":team3_color,"left":f"{P[0]+P[1]}%"})
-    ]
-'''    
+            html.Div(className="score_bar", style={"width":f"{P[0]}%","background":team1_color}),
+            html.Div(className="score_bar", style={"width":f"{P[1]}%","background":team2_color,"left":f"{P[0]}%"}),
+            html.Div(className="score_bar", style={"width":f"{P[2]}%","background":team3_color,"left":f"{P[0]+P[1]}%"})
+        ]
+
     
 
 if __name__ == '__main__':

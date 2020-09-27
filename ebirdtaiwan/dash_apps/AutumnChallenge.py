@@ -64,7 +64,6 @@ def empty_map():
 
 def create_score_df():
 
-    AutumnChanllengeData.objects.all()
     df = pd.DataFrame.from_records(
         AutumnChanllengeData.objects.filter(is_valid=True).values(
             'creator','survey_datetime','latitude','longitude','county',))
@@ -94,10 +93,10 @@ def create_score_df():
     east_person = df[df.longitude == df.longitude.max()].creator.iloc[0]
     west_person = df[df.longitude == df.longitude.min()].creator.iloc[0]
 
-    special_score[unique_creator.index(north_person)] += f'極北<br>(緯度：{round(df.latitude.max(), 3)})'
-    special_score[unique_creator.index(south_person)] += f'極南<br>(緯度：{round(df.latitude.min(), 3)})'
-    special_score[unique_creator.index(east_person)] += f'極東<br>(經度：{round(df.longitude.max(), 3)})'
-    special_score[unique_creator.index(west_person)] += f'極西<br>(經度：{round(df.longitude.min(), 3)})'
+    special_score[unique_creator.index(north_person)] += f'極北 (緯度：{round(df.latitude.max(), 3)})'
+    special_score[unique_creator.index(south_person)] += f'極南 (緯度：{round(df.latitude.min(), 3)})'
+    special_score[unique_creator.index(east_person)] += f'極東 (經度：{round(df.longitude.max(), 3)})'
+    special_score[unique_creator.index(west_person)] += f'極西 (經度：{round(df.longitude.min(), 3)})'
 
 
     total_score = [i + j for i,j in zip(number_of_occupied, first_county_numbers)]
@@ -160,16 +159,33 @@ def draw_ac_map(score_df):
     (3) some of the peoples ??
     '''
     #use score_df to do things...some what complex skip it for a few minutes
+    who = ['' for i in range(len(data))]
+    for p, t in zip(score_df['挑戰者'].tolist(), score_df['首次佔領鄉鎮'].tolist()):
+        if not t: continue
+        for town in t.split(','):
+            if town == '不在台灣啦!': continue
+            who[RN.index(town)] += p + ','
+    who = [s[:-1] if s else '' for s in who]
+    info = []
+
+    for o, w in zip(occupied, who):
+        if o == '空白地帶':
+            info.append(o+'!')
+        else:
+            info.append(f'{o}!<br>最早占領者為 <b>{w}</b>！')
+
+    data['info'] = info
 
     area_map = px.choropleth_mapbox(data, geojson=geoj, color="occupied",
                 locations="Name",center={"lat": 23.973793, "lon":120.979703},
-                hover_data=["occupied"],
+                hover_data=["info"],
                 mapbox_style="white-bg", zoom=8,
+                # mapbox_style="carto-positron", zoom=8,
                 color_discrete_map={'空白地帶':'rgba(217,236,242, 1)', '剛佔領':'rgba(255,239,160, 1)', '熱門地帶':'rgba(172,75,28, 1)'},                
             )
     # print("plotly express hovertemplate:", area_map.data[0].hovertemplate)
     area_map.update_traces(        
-        hovertemplate='%{location}: %{customdata[0]}! <extra></extra>', 
+        hovertemplate='%{location}: %{customdata[0]} <extra></extra>', 
         hoverlabel=dict(font=dict(size=18)),
         marker=dict(line=dict(width=1,color='#000')),
     )
@@ -183,6 +199,7 @@ def draw_ac_map(score_df):
         # coloraxis_showscale=False, 
         # showlegend = False,
         legend=dict(
+            title='',
             yanchor="top",
             y=0.99,
             xanchor="left",
@@ -216,7 +233,7 @@ def draw_ac_table(score_df, v_width):
         sort_action='native',
         page_action='none',
         style_cell={'minWidth': '30px','width': '30px','maxWidth': '30px','font-size':text_size,'textAlign':'center'},
-        style_header={'background':'#6c7ae0','color':'#fff','font-weight':'600','border':'1px solid #000','border-radius': '2vh 2vh 0 0'},
+        style_header={'background':'rgb(114 157 84)','color':'#fff','font-weight':'600','border':'1px solid #000','border-radius': '2vh 2vh 0 0'},
         style_data={'whiteSpace': 'normal','height': 'auto'},
         style_table={'height': '68vh','maxHeight':'70vh'},
         id='ac_datatable'
@@ -250,7 +267,7 @@ app = DjangoDash(
 app.layout = html.Div([
     html.Div(id='ac_cards'),
     html.Div(live_data_area, id='live_data_area'),
-    dcc.Interval(id='tick',interval=1000,n_intervals=0),
+    # dcc.Interval(id='tick',interval=1000,n_intervals=0),
     dcc.Location(id='url'),
     html.Div('',id='empty',style={'display':'none'}), # to write useful data to present things
 ])
@@ -275,8 +292,8 @@ app.clientside_callback(
 # '''
 @app.callback(
     [Output('ac_map','figure'),
-    Output('ac_table_container','children'),
-    Output('tick', 'n_intervals')],
+    Output('ac_table_container','children')],
+    # Output('tick', 'n_intervals')],
     [Input('empty', 'children')], prevent_initial_call = True
 )
 def redraw_onreload(helper_str):
@@ -295,7 +312,7 @@ def redraw_onreload(helper_str):
 
     CARD_POSITION = 0
 
-    return fig, table, 0
+    return fig, table
 
 
     
@@ -339,7 +356,7 @@ def update_cards(T):
 
 ###################
 
-
+'''
 @app.callback(
     [Output('ac_cards', 'children'),
     Output('tick', 'disabled')],
@@ -388,6 +405,7 @@ def CardAnimation(n_intervals, ostate):
         return update_cards(CARD_POSITION), CARD_POSITION==13
 
     raise PreventUpdate
+'''
 
 '''
 

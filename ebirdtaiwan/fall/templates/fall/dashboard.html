@@ -21,7 +21,7 @@
 </div>
 
 {% comment %} <div id='dlogos' style='display:none'>主辦單位 ｜ <img src={% static 'img/home/corporation_logos.png' %}> &nbsp;&nbsp;&nbsp;&nbsp; 活動贊助 ｜ <img src={% static 'img/home/supporter_logos.png' %}>  </div> {% endcomment %}
-<div id='bottom_rect' class='bottom_rect'></div>
+<div id='bottom_rect' class='dbottom_rect'></div>
 
 <script type="text/python">
 {% if page.brython_file_name %}
@@ -36,7 +36,5 @@ if {{ page.IsDemoApp }} or datetime.date.today() >= datetime.date(2020,10,1):
 else:
     document['not_open_yet'].style.display = 'block'
 
-#document['dlogos'].style.display = 'block'
-#document['bottom_rect'].style.display = 'block'
 </script>
 {% endblock content %}

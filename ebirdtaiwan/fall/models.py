@@ -9,6 +9,9 @@ from wagtailmenus.models import MenuPage
 from django.shortcuts import render
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
+
+import pandas as pd
+import datetime
 import eb_passwords
 
 # import datetime
@@ -121,7 +124,6 @@ class SignupPage(Page):
             
             return render(request, 'fall/thankyou.html', {'page': self, 'ebirdid':ebirdid, 'team':team})
         else:
-            print('it is get...')
             return render(request, 'fall/signup.html', {'page': self, 'error_message':'' })
 
 
@@ -130,7 +132,7 @@ class AutumnChallengePage(Page):
     subtitle = models.CharField(max_length=300,blank=True)
     rules = RichTextField(blank=True)
     prizes = RichTextField(blank=True)
-    dash_board_name = models.CharField(max_length=30, blank=False, help_text="DON't TOUCH this")
+    dash_board_name = models.CharField(max_length=30, blank=False, help_text="DON't TOUCH this")    
 
     content_panels = Page.content_panels + [
         FieldPanel('subtitle'),
@@ -138,6 +140,17 @@ class AutumnChallengePage(Page):
         FieldPanel('prizes', classname='full'),
         FieldPanel('dash_board_name')
     ]
+
+    def serve(self, request):
+
+        recent_data20 = AutumnChanllengeData.objects.all().order_by('-survey_datetime')[:20]
+        df = pd.DataFrame.from_records(recent_data20.values('creator','county','survey_datetime'))[::-1]        
+
+        peoples = df['creator'].tolist()
+        towns = df['county'].tolist()
+        upload_time = [datetime.datetime.strftime(t, '%Y-%m-%d %H:%M:%S') for t in df['survey_datetime'].tolist()]
+
+        return render(request, 'fall/autumn_challenge_page.html', {'page': self, 'peoples':peoples,'towns':towns,'upload_time':upload_time})
 
 
 class PredictionData(models.Model):
@@ -195,7 +208,7 @@ class Survey(models.Model):
     survey_datetime = models.DateTimeField(blank=False, verbose_name='調查時間', null=True) #try out will set verbose name good?
     latitude = models.FloatField(blank=False, default=23.5,verbose_name='緯度')
     longitude = models.FloatField(blank=False, default=120.5,verbose_name='經度')
-    region_code = models.CharField(blank=True, max_length=10,verbose_name='區域代碼')
+    county = models.CharField(default='天國市地獄鎮',max_length=15,verbose_name='鄉鎮名稱')    
     is_valid = models.BooleanField(default=False,verbose_name='是否完整') #checklist不含X 大於5分鐘    
 
     def __str__(self):

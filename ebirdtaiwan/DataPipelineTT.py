@@ -15,14 +15,9 @@ import re
 
 profile = webdriver.FirefoxProfile()
 options = Options()
-# options.headless = True
+options.headless = True
 profile.set_preference("dom.webnotifications.enabled", False)  # Finally, turned off webnotifications...
-
-
-#####################################
-profile.set_preference("intl.accept_languages","zh-tw") # can I force selenium "zh-tw" by this option
-######################################
-
+profile.set_preference("intl.accept_languages","zh-tw")
 profile.update_preferences()    
 driver = webdriver.Firefox(firefox_profile=profile, options=options)
 
@@ -57,6 +52,62 @@ settings.configure(DATABASES=DATABASES, INSTALLED_APPS=INSTALLED_APPS)
 django.setup()
 
 from fall.models import Survey, SurveyObs
+
+import json
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
+from shapely.ops import nearest_points
+from math import sin, cos, sqrt, atan2, radians
+
+towns_polygons = {}
+with open('../helper_files/TaiwanCounties_simple.geojson') as f:
+    raw_json = json.load(f)
+
+for i in raw_json['features']:
+    town_name = i['properties']['COUNTYNAME'] + i['properties']['TOWNNAME']
+    towns_polygons[town_name] = i['geometry']['coordinates']
+
+def great_circle_distance_on_earth(point1, point2):
+    # approximate radius of earth in km
+    R = 6373.0
+
+    lat1 = radians(point1.y)
+    lon1 = radians(point1.x)
+    lat2 = radians(point2.y)
+    lon2 = radians(point2.x)
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
+
+def GetCountyByCoord(lat, lon):
+    point = Point(lon, lat)
+    for town in towns_polygons:        
+        for town_polygon in towns_polygons[town]:
+            if len(town_polygon) == 1:
+                polygon = Polygon(town_polygon[0])
+            else:            
+                polygon = Polygon(town_polygon)
+            if polygon.contains(point):                
+                return town
+
+    logger.warning(f'Vague point detected! Start further algorithm to check its town ')
+    
+    for town in towns_polygons:
+        for town_polygon in towns_polygons[town]:
+            if len(town_polygon) == 1:
+                polygon = Polygon(town_polygon[0])
+            else:            
+                polygon = Polygon(town_polygon)
+            p1, _ = nearest_points(polygon, point)            
+            if great_circle_distance_on_earth(point, p1) < 5: # distance to shore 5km?
+                logger.info(f'Success detect its town as {town}!')
+                return town
+    logger.warning(f'Failed to detect town!')                
+    return '不在台灣啦!'
+
 
 logger.info('Scraper started!')
 
@@ -101,9 +152,11 @@ db_checklists = Survey.objects.values_list('checklist_id', flat=True)
 for i, c in zip(all_checklist_id, all_creators):
     if i not in db_checklists:
         api_data = client.get_checklist(i)
+        if api_data['subnational1Code'] not in ['TW-TPE', 'TW-TPQ', 'TW-KEE']:
+            logger.warning(f'{c} shared a list({i}) not inside competition area!')
+            continue
         driver.get('https://ebird.org/checklist/'+i)
         htmltext = driver.page_source
-
         # get species names
         S = re.findall('Heading-main\".*?>(.*?)</span',htmltext)[4:]
         # get species amounts
@@ -116,8 +169,8 @@ for i, c in zip(all_checklist_id, all_creators):
             creator=c,
             survey_datetime = datetime.datetime.strptime(api_data['obsDt'], '%Y-%m-%d %H:%M'),
             latitude=float(gps_loc.split(',')[0]),
-            longitude=float(gps_loc.split(',')[0]),
-            region_code = api_data['subnational1Code'],
+            longitude=float(gps_loc.split(',')[1]),
+            county = GetCountyByCoord(gps_loc.split(',')[0], gps_loc.split(',')[1]),
             is_valid = -1 not in N and api_data['durationHrs'] > 0.084
         )
         NewSurvey.save()

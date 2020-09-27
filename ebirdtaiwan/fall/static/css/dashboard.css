@@ -11,7 +11,7 @@ For all dashboard setting
 }
 
 
-/* #dlogos{
+#dlogos{
     position: absolute;
     bottom: 1vh;
     width: 18vw;
@@ -24,7 +24,19 @@ For all dashboard setting
 #dlogos img {
     height: 1.8vw;
     width: auto;
-} */
+}
+
+
+.dbottom_rect {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 7.5vh;
+    width: 100vw;
+    background: #A4D386;
+}
+
 
 /* 
  For "Three Teams"
@@ -55,6 +67,7 @@ For all dashboard setting
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-size: 1vw;
 }
 
 .prgression_map {
@@ -67,6 +80,24 @@ For all dashboard setting
     max-width: 100%;
     max-height: 100%;
 }
+
+@media only screen and (max-width: 768px) {
+    .dbottom_rect {
+        bottom: -80vh;
+    }
+
+    .prgression_map {
+        height: 70vh;
+    }
+    .dashboard_container {
+        left: 5vw;
+        width: 90vw;
+    }
+    .team_card_col {
+        font-size: 3vw;
+    }
+}
+
 
 /*
  For single team

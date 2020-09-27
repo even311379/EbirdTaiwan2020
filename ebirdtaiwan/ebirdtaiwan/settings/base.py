@@ -150,7 +150,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False # I want to save time all by my self
+USE_TZ = True # I want to save time all by my self
 
 
 # Static files (CSS, JavaScript, Images)
