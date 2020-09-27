@@ -64,9 +64,10 @@ app.clientside_callback(
 )
 def hidden_graph(h):
     if datetime.date.today() < datetime.date(2020,10,1):
-        team1 = len(set(SurveyObs.objects.filter(survey__team = '黑面琵鷺隊').values_list('species_name', flat=True)))
-        team2 = 10
-        team3 = 7
+        return []
+        # team1 = len(set(SurveyObs.objects.filter(survey__team = '黑面琵鷺隊').values_list('species_name', flat=True)))
+        # team2 = 10
+        # team3 = 7
     else:
         team1 = len(set(SurveyObs.objects.filter(survey__team = '彩鷸隊').values_list('species_name', flat=True)))
         team2 = len(set(SurveyObs.objects.filter(survey__team = '家燕隊').values_list('species_name', flat=True)))
