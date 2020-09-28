@@ -107,9 +107,6 @@ For all dashboard setting
     height: 30vh;
 }
 
-.team_bar{
-
-}
 
 .img_flex_center {
     display: flex;
@@ -131,6 +128,7 @@ For all dashboard setting
     box-sizing: border-box;
     box-shadow: 4px 4px 0px #CCC;
     border-radius: 10px;
+    margin-top: 2vh;
 }
 
 .bar_style {
@@ -143,9 +141,32 @@ For all dashboard setting
     margin-top: 0.5rem;
     margin-bottom: 0.5rem
 }
+@media only screen and (max-width: 768px) {
 
+    .dbottom_rect_one{
+        bottom: -215vh !important;
+    }
 
+    .bar_card {
+        width: 90vw;
+        left: 5vw;
+        position: relative;
+    }
 
+    .bar_style{
+        width: 80vw;
+        height:35vh;
+    }
+    #team_map {
+        height: 40vh;
+        margin-top: 5vh;
+        margin-bottom: 5vh;
+    }
+
+    #team_datatable {
+        margin-top: 5vh;
+    }
+}
 /*
 * for prediction page
 */

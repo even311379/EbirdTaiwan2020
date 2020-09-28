@@ -21,20 +21,24 @@
 </div>
 
 {% comment %} <div id='dlogos' style='display:none'>主辦單位 ｜ <img src={% static 'img/home/corporation_logos.png' %}> &nbsp;&nbsp;&nbsp;&nbsp; 活動贊助 ｜ <img src={% static 'img/home/supporter_logos.png' %}>  </div> {% endcomment %}
-<div id='bottom_rect' class='dbottom_rect'></div>
 
 <script type="text/python">
 {% if page.brython_file_name %}
 from app import {{ page.brython_file_name }}
 {% endif %}
 
-from browser import document
+from browser import document, html
 import datetime
 
 if {{ page.IsDemoApp }} or datetime.date.today() >= datetime.date(2020,10,1):    
     document['dashboard_content'].style.display = 'block'
 else:
     document['not_open_yet'].style.display = 'block'
+
+if '{{ page.dash_board_name }}' == 'OneTeam':
+    document<=html.DIV(Class='dbottom_rect_one dbottom_rect', id='bottom_rect')
+else:
+    document<=html.DIV(Class='dbottom_rect', id='bottom_rect')
 
 </script>
 {% endblock content %}

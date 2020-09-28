@@ -61,8 +61,10 @@ def team_thumbnail_content(team):
 
 def team_datatable(team, w):
     text_size = '1vw'
+    table_height = '30vh'
     if w < 768: 
-        text_size = '2vw' 
+        text_size = '4vw'
+        table_height = '40vh' 
 
     if datetime.date.today() < datetime.date(2020,10,1):
         records = SurveyObs.objects.filter(survey__team = '黑面琵鷺隊', survey__is_valid=True).values('survey__checklist_id','species_name', 'amount')
@@ -104,7 +106,6 @@ def team_datatable(team, w):
     odf = odf[['物種','總數量','清單數']].reset_index(drop=True)
 
     final_table = dash_table.DataTable(
-        #id = table_id,
         data = odf.to_dict('records'),
         columns=[{'id': c, 'name': c} for c in odf.columns],
         fixed_rows={ 'headers': True, 'data': 0 },
@@ -115,13 +116,27 @@ def team_datatable(team, w):
         style_cell={'minWidth': '30px','width': '30px','maxWidth': '30px','font-size':text_size,'textAlign':'center'},
         style_header={'background':'rgb(114 157 84)','color':'#fff','font-weight':'600','border':'1px solid #000','border-radius': '2vh 2vh 0 0'},
         style_data={'whiteSpace': 'normal','height': 'auto'},
-        style_table={'height': '30vh','maxHeight':'70vh'},
+        style_table={'height': table_height,'maxHeight':'70vh'},
     )
 
     return final_table
 
 
-def team_map(team):
+# prevent setup complex map twice
+def empty_map():
+    fig = go.Figure(go.Scattermapbox(lat=['38.91427',],lon=['-77.02827',]))
+    fig.update_layout(
+        mapbox=dict(
+            center=dict(lat=23.973793,lon=120.979703),
+            zoom=8,
+            style='white-bg')
+    )
+    return fig
+
+def team_map(team, w):
+
+    zoom = 9
+    if w < 768: zoom = 8
 
     with open('../helper_files/TaiwanCounties_simple.geojson') as f:
         geoj = json.load(f)
@@ -158,7 +173,7 @@ def team_map(team):
     
     area_map = px.choropleth_mapbox(data, geojson=geoj, color="NC",
                 locations="Name",center={"lat": 24.9839, "lon":121.65},
-                mapbox_style="carto-positron", zoom=9, hover_data=['NC'],
+                mapbox_style="carto-positron", zoom=zoom, hover_data=['NC'],
                 color_continuous_scale="Greens",                
             )
     area_map.update_traces(
@@ -261,7 +276,7 @@ def draw_bar(values, names, w):
                 textfont=dict(
                     color='white',
                     family='Noto Sans TC',
-                    size=17),
+                    size=14),
                 hoverinfo='none')]
 
     if empty_plot:
@@ -310,13 +325,12 @@ def bar1_content(team, w):
 
     return html.Div([
     dbc.Row([
-        dbc.Col(html.Div('上傳鳥種數排名',className='bar_title'),width=7),
-        dbc.Col(html.Div('1小時前更新',id='ut1',className='text-muted', style={'text-align':'right','fontSize':12}),width=5),
-        ],justify='end',align='baseline', className='pt-2'),
+        dbc.Col(html.Div('上傳鳥種數排名',className='bar_title'),md=7),        
+        ],align='baseline', className='pt-2'),
     html.Hr(),
-    dcc.Graph(figure=draw_bar([i[0] for i in ns_c[0:5]], [i[1] for i in ns_c[0:5]], w), id='fNs',config=dict(displayModeBar=False),className='bar_style'),
+    dcc.Graph(figure=draw_bar([i[0] for i in ns_c[0:5]], [i[1] for i in ns_c[0:5]], w),config=dict(displayModeBar=False),className='bar_style'),
     html.Hr()
-    ], className='h-100 w-100')
+    ])
 
 def bar2_content(team, w):
 
@@ -332,13 +346,12 @@ def bar2_content(team, w):
 
     return html.Div([
     dbc.Row([
-        dbc.Col(html.Div('上傳鳥隻數排名',className='bar_title'),width=7),
-        dbc.Col(html.Div('1小時前更新',id='ut1',className='text-muted', style={'text-align':'right','fontSize':12}),width=5),
-        ],justify='end',align='baseline', className='pt-2'),
+        dbc.Col(html.Div('上傳鳥隻數排名',className='bar_title'),md=7),        
+        ],align='baseline', className='pt-2'),
     html.Hr(),
-    dcc.Graph(figure=draw_bar([i[0] for i in ta_c[0:5]], [i[1] for i in ta_c[0:5]], w), id='fNs',config=dict(displayModeBar=False),className='bar_style'),
+    dcc.Graph(figure=draw_bar([i[0] for i in ta_c[0:5]], [i[1] for i in ta_c[0:5]], w),config=dict(displayModeBar=False),className='bar_style'),
     html.Hr()
-    ], className='h-100 w-100')
+    ])
 
 def bar3_content(team, w):
 
@@ -354,35 +367,34 @@ def bar3_content(team, w):
 
     return html.Div([
     dbc.Row([
-        dbc.Col(html.Div('上傳清單數排名',className='bar_title'),width=7),
-        dbc.Col(html.Div('1小時前更新',id='ut1',className='text-muted', style={'text-align':'right','fontSize':12}),width=5),
-        ],justify='end',align='baseline', className='pt-2'),
+        dbc.Col(html.Div('上傳清單數排名',className='bar_title'),md=7),        
+        ],align='baseline', className='pt-2'),
     html.Hr(),
-    dcc.Graph(figure=draw_bar([i[0] for i in tl_c[0:5]], [i[1] for i in tl_c[0:5]], w), id='fNs',config=dict(displayModeBar=False),className='bar_style'),
+    dcc.Graph(figure=draw_bar([i[0] for i in tl_c[0:5]], [i[1] for i in tl_c[0:5]], w),config=dict(displayModeBar=False),className='bar_style'),
     html.Hr()
-    ], className='h-100 w-100')
+    ])
 
 
 
 
 app.layout = html.Div([
     dbc.Row([
-        dbc.Col(className='w-100 h-100 img_flex_center',width=3,id='team_thumbnail'),
+        dbc.Col(className='img_flex_center',md=3,id='team_thumbnail'),
         dbc.Col([
             dbc.Row([
-                dbc.Col(className='w-100 h-100',width=6, id='participants_curve'),
-                dbc.Col(dcc.Graph(id='team_map'),width=6),
-            ], className='h-50 w-100'), 
+                dbc.Col(md=6, id='team_datatable'),
+                dbc.Col(dcc.Graph(id='team_map',figure=empty_map(),config=dict(displayModeBar=False)),md=6),
+            ],), 
             dbc.Row([
-                dbc.Col(className='team_bar', width=4, id='bar1'),
-                dbc.Col(className='team_bar', width=4, id='bar2'),
-                dbc.Col(className='team_bar', width=4, id='bar3'),
-            ], className='h-50 w-100 bar_card')
-        ],width=9)
-    ], className='h-100'),    
+                dbc.Col(md=4, id='bar1'),
+                dbc.Col(md=4, id='bar2'),
+                dbc.Col(md=4, id='bar3'),
+            ], className='bar_card')
+        ],md=9)
+    ], className=''),    
     dcc.Location(id='url'),
     html.Div('',id='empty',style={'display':'none'})
-], className='dashboard_container')
+], className='dashboard_container', id='team_container')
 
 
 app.clientside_callback(
@@ -400,7 +412,7 @@ app.clientside_callback(
 
 @app.callback(
     [Output('team_thumbnail', 'children'),
-    Output('participants_curve', 'children'),
+    Output('team_datatable', 'children'),
     Output('team_map', 'figure'),    
     Output('bar1', 'children'),
     Output('bar2', 'children'),
@@ -414,9 +426,9 @@ def on_page_load(init_info):
     h = int(init_info.split(',')[2])
     
     if (path.split('/')[-2]) == 'team3':
-        return team_thumbnail_content(2), team_datatable(2, w), team_map(2), bar1_content(2, w), bar2_content(2, w), bar3_content(2, w)
+        return team_thumbnail_content(2), team_datatable(2, w), team_map(2, w), bar1_content(2, w), bar2_content(2, w), bar3_content(2, w)
     if (path.split('/')[-2]) == 'team2':
-        return team_thumbnail_content(1), team_datatable(1, w), team_map(1), bar1_content(1, w), bar2_content(1, w), bar3_content(1, w)
+        return team_thumbnail_content(1), team_datatable(1, w), team_map(1, w), bar1_content(1, w), bar2_content(1, w), bar3_content(1, w)
     
-    return team_thumbnail_content(0), team_datatable(0, w), team_map(0), bar1_content(0, w), bar2_content(0, w), bar3_content(0, w)
+    return team_thumbnail_content(0), team_datatable(0, w), team_map(0, w), bar1_content(0, w), bar2_content(0, w), bar3_content(0, w)
     

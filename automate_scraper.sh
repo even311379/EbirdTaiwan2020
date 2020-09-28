@@ -1,4 +1,4 @@
-source venv/bin/activate
+. venv/bin/activate
 cd ebirdtaiwan
-python testa.py
+python DataPipelineTT.py
 cd ..
