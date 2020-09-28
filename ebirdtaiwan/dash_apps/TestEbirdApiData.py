@@ -119,7 +119,7 @@ def AllCheckListDashDT(date):
     return output_table
 
 birdcode_ref = pd.read_csv('../helper_files/eBird_Taxonomy_v2019.csv')
-birdcname_ref = pd.read_csv('../helper_files/NameValid_2019.csv')
+birdcname_ref = pd.read_csv('../helper_files/NameValid.csv')
 
 def BirdCodeToBirdCName(codestr):
     Taxa = birdcode_ref.loc[birdcode_ref.SPECIES_CODE==codestr].TAXON_ORDER.iloc[0]

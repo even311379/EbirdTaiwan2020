@@ -179,7 +179,7 @@ def draw_ac_map(score_df):
     area_map = px.choropleth_mapbox(data, geojson=geoj, color="occupied",
                 locations="Name",center={"lat": 23.973793, "lon":120.979703},
                 hover_data=["info"],
-                mapbox_style="white-bg", zoom=8,
+                mapbox_style="white-bg", zoom=7,
                 # mapbox_style="carto-positron", zoom=8,
                 color_discrete_map={'空白地帶':'rgba(217,236,242, 1)', '剛佔領':'rgba(255,239,160, 1)', '熱門地帶':'rgba(172,75,28, 1)'},                
             )
@@ -312,10 +312,7 @@ def redraw_onreload(helper_str):
 
     CARD_POSITION = 0
 
-    return fig, table
-
-
-    
+    return fig, table    
 
 @app.callback(
     [Output('ac_map_container', 'style'),
@@ -328,87 +325,3 @@ def toggle_map_or_data(on):
     if on:
         return [dict(display='none'), dict(display='block'), html.Div('返回地圖', style=dict(color='#000'))]
     return [dict(display='block'), dict(display='none'), html.Div('顯示資料', style=dict(color='#000'))]
-
-
-##################################
-#### moving card simulation ####
-##################################
-
-
-
-
-def moving_cards(T):
-    return [
-        html.Div(
-            children = create_card_content(thumbnail[L], peoples[L], towns[L], upload_time[L]),
-            className = 'ac_card',
-            style={'transform':'translateY(-12vh)'})
-        for L in range(T, T+7)]   
-    
-
-def update_cards(T):
-    return [
-        html.Div(
-            children = create_card_content(thumbnail[L], peoples[L], towns[L], upload_time[L]),
-            className = 'ac_card',
-            style={'transition':'none'})
-        for L in range(T, T+7)] 
-
-###################
-
-'''
-@app.callback(
-    [Output('ac_cards', 'children'),
-    Output('tick', 'disabled')],
-    [Input('tick', 'n_intervals')],
-    [State('ac_cards', 'children'),]
-)
-def CardAnimation(n_intervals, ostate):
-
-    global CARD_POSITION
-
-    global peoples
-    global towns
-    global upload_time
-    global thumbnail
-    global random_delay
-
-    # init cards vars
-    if n_intervals == 0: raise PreventUpdate
-
-    if n_intervals == 1:                        
-
-        recent_data3 = AutumnChanllengeData.objects.all().order_by('-survey_datetime')[:20]
-        df = pd.DataFrame.from_records(recent_data3.values('creator','county','survey_datetime'))[::-1]
-
-        peoples = df['creator'].tolist()
-        towns = df['county'].tolist()
-        upload_time = [datetime.datetime.strftime(t, '%Y-%m-%d %H:%M:%S') for t in df['survey_datetime'].tolist()]
-        thumbnail = [random.randint(1,50) for i in range(len(df))]
-
-        random_delay.append(random.randint(2,4))
-        for i in range(12):
-            random_delay.append(random_delay[-1]+random.randint(2,5))
-
-        cards = [
-            html.Div(
-                children = create_card_content(thumbnail[L], peoples[L], towns[L], upload_time[L]),
-                className = 'ac_card',)
-            for L in range(7)]
-
-        return cards, False    
-
-    if n_intervals % random_delay[CARD_POSITION] == 0:
-        return moving_cards(CARD_POSITION), False
-    if n_intervals % random_delay[CARD_POSITION] == 1 and n_intervals > 1:
-        CARD_POSITION += 1
-        return update_cards(CARD_POSITION), CARD_POSITION==13
-
-    raise PreventUpdate
-'''
-
-'''
-
-TODO make cards start from bottom rather than top
-
-'''

@@ -30,34 +30,8 @@ I'll use md(768px) as the line to show my content and use viewport based unit fo
 
 '''
 
-'''
-this is still static...
 
-'''
-
-
-
-def random_email_generation():
-    domains = [ "hotmail.com", "gmail.com", "outlook.com", "yahoo.com"]
-    str_seq = 'abcdefghigklmnopqrstuvwxy'
-    num_seq = '0123456789'
-    addr = random.choice(str_seq)
-    for i in range(random.randint(4, 10)):
-        addr+=random.choice(str_seq+num_seq)
-    addr += '@'
-    addr += random.choice(domains)
-    return addr
-
-def encrypt_email(email):
-    s1 = email.split('@')[0]
-    es = s1[0]+'O'*(len(s1)-2)+s1[-1]
-    return es+'@'+email.split('@')[1]
-
-
-# ns_Guess = [] # number of species guess
-# nc_Guess = [] # number of total count guess
 prediction_df = pd.DataFrame() 
-
 
 def init_df():
 
@@ -65,21 +39,18 @@ def init_df():
 
     if datetime.date.today() > datetime.date(2020,10,1):
         df = pd.DataFrame.from_records(PredictionData.objects.all().values(
-            'participant_name','participant_email','guess_n_species','guess_total_individual','prediction_datetime',)
+            'participant_name','participant_phone','guess_n_species','guess_total_individual','prediction_datetime',)
         ).sort_values(by=['prediction_datetime'])
         ns_Guess = df.guess_n_species.tolist()
         nc_Guess = df.guess_total_individual.tolist()
-        prediction_df['名稱'] = df.participant_name
-        prediction_df['電子信箱'] = [encrypt_email(email) for email in df.participant_email]
+        prediction_df['名稱'] = df.participant_name        
         prediction_df['預測鳥種數'] = ns_Guess
         prediction_df['預測總隻數'] = nc_Guess
     else:
         ns_Guess = np.random.normal(45, 7, 80).astype(int)
         nc_Guess = ns_Guess*np.random.normal(15,2,80).astype(int) + np.random.uniform(5,30,80).astype(int)
-        participant_names = [names.get_last_name() for i in range(80)]
-        participant_emails = [random_email_generation() for i in range(80)]
-        encrypted_emails = [encrypt_email(email) for email in participant_emails]
-        prediction_df = pd.DataFrame(dict(名稱=participant_names,電子信箱=encrypted_emails,預測鳥種數=ns_Guess,預測總隻數=nc_Guess))
+        participant_names = [names.get_last_name() for i in range(80)]        
+        prediction_df = pd.DataFrame(dict(名稱=participant_names,預測鳥種數=ns_Guess,預測總隻數=nc_Guess))
         
 
 
@@ -116,10 +87,10 @@ def ViewportSizedHist2d(width, height):
 
     vw = width*45/100
     vh = height*50/100
-    tw = width*1/100
+    tw = width*0.6/100
     if width < 768:
         vw = width*80/100
-        tw = width*2/100
+        tw = width*1.5/100
     fig = go.Figure()
     fig.add_trace(go.Histogram2dContour(
             x =  prediction_df['預測鳥種數'],

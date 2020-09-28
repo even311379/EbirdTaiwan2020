@@ -140,3 +140,4 @@ geckodriver.log
 ebirdtaiwan/ebirdtaiwan/settings/dev.py
 ebirdtaiwan/media
 *.ipynb
+nohup.out

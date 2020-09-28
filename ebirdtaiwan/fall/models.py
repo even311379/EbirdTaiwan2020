@@ -129,7 +129,7 @@ class SignupPage(Page):
 
 class AutumnChallengePage(Page):
 
-    subtitle = models.CharField(max_length=300,blank=True)
+    subtitle = RichTextField(blank=True)
     rules = RichTextField(blank=True)
     prizes = RichTextField(blank=True)
     dash_board_name = models.CharField(max_length=30, blank=False, help_text="DON't TOUCH this")    
@@ -155,14 +155,14 @@ class AutumnChallengePage(Page):
 
 class PredictionData(models.Model):
     
-    participant_name = models.CharField(blank=False, max_length=40, verbose_name='參與者名稱')
-    participant_email = models.EmailField(max_length=100, verbose_name='電子信箱')
+    participant_name = models.CharField(blank=False, max_length=40, verbose_name='參與者名稱')   
+    participant_phone = models.CharField(max_length=30, verbose_name='聯絡電話',default='0912345678')
     guess_n_species = models.IntegerField(default=0, verbose_name='幾種物種？')
     guess_total_individual = models.IntegerField(default=0, verbose_name='全部幾隻？')
     prediction_datetime = models.DateTimeField(auto_now=True, editable=False, verbose_name='何時進行預測')
 
     def __str__(self):
-        return self.participant_name + self.participant_email
+        return self.participant_name + self.participant_phone
 
 
 class SubmitPrediction(Page):
@@ -171,18 +171,16 @@ class SubmitPrediction(Page):
     def serve(self, request):
         if request.method == 'POST':
             name = request.POST.get('participant_name', None)
-            print('????')
-            print(name)
-            email = request.POST.get('participant_email', None)            
+            phone = request.POST.get('participant_phone', None)            
             gns = request.POST.get('guess_n_species', None)
             gni = request.POST.get('guess_total_individual', None)  
             
-            if (len(PredictionData.objects.filter(participant_email=email)) > 0):
-                return render(request, 'fall/prediction.html', {'page': self, 'error_message': '錯誤！一個email只能進行一次預測'})
+            if (len(PredictionData.objects.filter(participant_phone=phone)) > 0):
+                return render(request, 'fall/prediction.html', {'page': self, 'error_message': '錯誤！一組電話只能進行一次預測'})
 
             NewPredictionData = PredictionData(
                 participant_name = name,
-                participant_email = email,
+                participant_phone = phone,
                 guess_n_species = gns,
                 guess_total_individual = gni
             )

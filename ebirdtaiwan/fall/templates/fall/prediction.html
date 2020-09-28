@@ -14,14 +14,13 @@
         <form>            
             <div class="form-group">
                 <label for="open_name">姓名</label>
-                <input type="text" class="form-control form-control-lg" id="open_name" placeholder="姓名？" required=True>
+                <input type="text" class="form-control form-control-lg" id="open_name" placeholder="ex: 王大明" required=True>
             </div>
             <div class="form-group">
-                <label for="open_email">電子信箱</label>
-                <input type="email" class="form-control form-control-lg" id="open_email" placeholder="電子信箱？" required=True>
+                <label for="open_phone">聯絡電話</label>
+                <input type="tel" class="form-control form-control-lg" id="open_phone" placeholder="ex: 0912345678" required=True>
             </div>            
             <div id='next_btn' class="fall_btn signup_btn01">下一步</div> 
-            {% comment %}  check whether this will check valid fields? {% endcomment %}
         </form>       
     </div>
     <div id='error_message' class='error_message'>{{ error_message }}</div>
@@ -35,7 +34,7 @@
         <form action="{% pageurl page %}" method="POST">
             {% csrf_token %}
             <input id='hidden_name' name='participant_name' value='' style='display:none'>
-            <input id='hidden_email' name='participant_email' value='' style='display:none'>
+            <input id='hidden_phone' name='participant_phone' value='' style='display:none'>
             <div class="form-group">
                 <label for="gns">我要猜活動鳥種數為:</label>
                 <input type="number" class="form-control form-control-lg" id="gns" name="guess_n_species" placeholder="鳥種數?" required=True>
@@ -54,19 +53,19 @@
 <body class="{% block body_class %}{% endblock %}" onload="brython()">
 <script type="text/python">
 from browser import document, html
+import re
 
 def next_screen(ev):
-    if (document['open_name'].value != None) and \
-        ('@' in document['open_email'].value):
+    if (document['open_name'].value != None) and re.findall('\d',document['open_phone'].value):
         document['error_message'].text = ''
 
         print(document['open_name'].value)
         document['hidden_name'].attrs['value'] = document['open_name'].value
 
-        document['hidden_email'].value = document['open_email'].value
+        document['hidden_phone'].value = document['open_phone'].value
         document['page2'].style.top = '0vh'
     else:
-        document['error_message'].text = '欄位空白或email錯誤'
+        document['error_message'].text = '欄位空白或電話錯誤'
 
 document['next_btn'].bind('click',next_screen)
 

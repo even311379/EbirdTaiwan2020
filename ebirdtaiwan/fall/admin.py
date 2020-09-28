@@ -53,7 +53,7 @@ class PredictionDataAdmin(ExportModelAdminMixin, ModelAdmin):
     model = PredictionData
     menu_label = '民眾預測'
     menu_icon = 'success'
-    list_display = ('participant_name', 'participant_email','guess_n_species','guess_total_individual','prediction_datetime')
+    list_display = ('participant_name', 'participant_phone','guess_n_species','guess_total_individual','prediction_datetime')
     search_fields = ['participant_name',]
 
 modeladmin_register(PredictionDataAdmin)
@@ -90,7 +90,7 @@ class SurveyObsDAdmin(admin.ModelAdmin):
 admin.site.register(SurveyObs, SurveyObsDAdmin)
 
 class PredictionDataDAdmin(admin.ModelAdmin):
-    list_display = ('participant_name', 'participant_email','guess_n_species','guess_total_individual','prediction_datetime')
+    list_display = ('participant_name', 'participant_phone','guess_n_species','guess_total_individual','prediction_datetime')
     search_fields = ['participant_name',]
 
 admin.site.register(PredictionData, PredictionDataDAdmin)

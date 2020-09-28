@@ -15,7 +15,7 @@
 <div class="home_title"><img src={% static 'img/home/eBirdTaiwan.png' %}> </div>
 <div class='ac_title_region'>
     <h1>{{ page.title }}</h1>
-    <p>{{ page.subtitle|safe}}</p>
+    {{ page.subtitle|safe}}
 </div>
 
 <div id='dashboard_content' class='ac_dashboard_region'> 
@@ -27,11 +27,12 @@
     <h4>活動說明</h4>
     <div class='d-flex align-items-center' style='margin-bottom: 7vh'> 
         <div class='ac_explain_icon_region'><img class='ac_explain_icons' src='{% static 'img/fall/trophy.png' %}'></div>
-        <p>{{ page.rules|safe}}</p>
+        {{ page.rules|safe}}
     </div>
+    <br>
     <div class='d-flex align-items-center'> 
         <div class='ac_explain_icon_region'><img class='ac_explain_icons' src='{% static 'img/fall/gift_box.png' %}'></div>
-        <p>{{ page.prizes|safe}}</p>
+        {{ page.prizes|safe}}
     </div>
 </div>
 <div id='dlogos'>主辦單位 ｜ <img src={% static 'img/home/corporation_logos.png' %}> &nbsp;&nbsp;&nbsp;&nbsp; 活動贊助 ｜ <img src={% static 'img/home/supporter_logos.png' %}>  </div>

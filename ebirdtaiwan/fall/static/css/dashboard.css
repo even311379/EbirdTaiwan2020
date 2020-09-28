@@ -45,7 +45,7 @@ For all dashboard setting
     position: absolute;
     left: 2.5vw;
     width: 95vw;
-    top: 10vh;
+    top: 15vh;
     bottom: 15vh;
 }
 
@@ -103,8 +103,12 @@ For all dashboard setting
  For single team
 */
 
-.team_map {
-    height: 37.5vh;
+#team_map {
+    height: 30vh;
+}
+
+.team_bar{
+
 }
 
 .img_flex_center {
@@ -247,7 +251,7 @@ For all dashboard setting
 
 .ac_container{
     width:100vw;
-    height:220vh;
+    height: 255vh;
     position: absolute;
     top:0;
     z-index: -2;    
@@ -260,15 +264,15 @@ For all dashboard setting
 }
 
 .ac_bg_rect1{
-    top: 70vh;
-    height: 30vh;
+    top: 80vh;
+    height: 45vh;
     border-right: 100vw solid #A4D386;
     border-top: 13vh solid transparent;
 }
 
 .ac_bg_rect2{
-    top: 100vh;
-    height: 40vh;
+    top: 125vh;
+    height: 45vh;
     border-left: 100vw solid #A4D386;
     border-bottom: 13vh solid transparent;
 }
@@ -287,16 +291,17 @@ For all dashboard setting
 
 .ac_title_region{
     margin-top: 15vh;
-    margin-bottom: 3vh;
+    margin-bottom: 8vh;
 }
 
 .ac_title_region h1{
     font-size: 5vw;
-    margin-bottom: 2vh;
+    margin-bottom: 5vh;
 }
 
 .ac_title_region p{
     font-size: 1.5vw;
+    width: 75%;
 }
 
 .ac_dashboard_region {
@@ -365,10 +370,13 @@ add animation here
 .ac_explain_region p{
     font-size: 1.5vw;
     line-height: 4.5vh;
+    position: absolute;
+    left: 25vw;
+    width: 70vw;
 }
 
 .ac_explain_icon_region{
-    width: 15vw;
+    /* width: 15vw; */
     margin-left:8vw;
 }
 
@@ -459,20 +467,22 @@ add animation here
     }
     
     .ac_title_region p{
-        font-size: 2vw;
+        font-size: 3vw;
+        width:95%;
     }
 
     .ac_explain_region {
-        margin-top: 15vh;
+        margin-top: 10vh;
     }
 
     .ac_explain_region h4 {
         font-size: 10vw;
+        margin-bottom: 15vh;
     }
 
     .ac_explain_region p {
         font-size: 2.75vw;
-        line-height: 3.5vh;
+        line-height: 2.75vh;
         margin-right: 2vw;
     }
     .ac_explain_icon_region {
@@ -483,6 +493,10 @@ add animation here
 
     .ac_explain_icons {
         height: 10vh;
+    }
+
+    .ac_container{
+        height: 225vh;
     }
 
 }

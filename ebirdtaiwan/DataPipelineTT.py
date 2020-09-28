@@ -108,92 +108,104 @@ def GetCountyByCoord(lat, lon):
     logger.warning(f'Failed to detect town!')                
     return '不在台灣啦!'
 
+def ScrapDataFromAccount(account, password):
 
-logger.info('Scraper started!')
+    logger.info('Scraper started!')
 
-account = 'ET黑面琵鷺隊'
-password ='201910BFS'
-
-driver.get('https://secure.birds.cornell.edu/cassso/login?')
-ele_submit = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.ID, "form-submit")))
-ele_n = driver.find_element_by_name('username')
-ele_p = driver.find_element_by_name('password')
-ele_n.send_keys(account)
-ele_p.send_keys(password)
-ele_submit.click()
-driver.get('https://ebird.org/shared')
-time.sleep(5)
-btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == '接受' or b.text == '保留']
-
-n_btn_clicked = 0
-max_allowed_click_times = 200
-while btns:
-    btns[0].click()
-    time.sleep(3)
+    driver.get('https://secure.birds.cornell.edu/cassso/login?')
+    ele_submit = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.ID, "form-submit")))
+    ele_n = driver.find_element_by_name('username')
+    ele_p = driver.find_element_by_name('password')
+    ele_n.send_keys(account)
+    ele_p.send_keys(password)
+    ele_submit.click()
+    driver.get('https://ebird.org/shared')
+    time.sleep(5)
     btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == '接受' or b.text == '保留']
-    n_btn_clicked += 1
-    if n_btn_clicked >= max_allowed_click_times:
-        logger.error('Reached maxed allowed btn clicked times, could trigger infinite loop')
-        break
 
-if n_btn_clicked > 0: 
-    logger.info(f'{account} accept {n_btn_clicked} new checklist!')
-
-# get all checklist url and add new ones to database
-
-htmltext = driver.page_source
-
-# only take five for test purpose
-all_checklist_id = re.findall('/checklist/(.*?)"', htmltext)[:6]
-all_creators = re.findall('"owner" class="dataCell">(.*?)</td>', htmltext)[:6]
-
-db_checklists = Survey.objects.values_list('checklist_id', flat=True)
-
-for i, c in zip(all_checklist_id, all_creators):
-    if i not in db_checklists:
-        api_data = client.get_checklist(i)
-        if api_data['subnational1Code'] not in ['TW-TPE', 'TW-TPQ', 'TW-KEE']:
-            logger.warning(f'{c} shared a list({i}) not inside competition area!')
-            continue
-        driver.get('https://ebird.org/checklist/'+i)
-        htmltext = driver.page_source
-        # get species names
-        S = re.findall('Heading-main\".*?>(.*?)</span',htmltext)[4:]
-        # get species amounts
-        N = [-1 if n == 'X' else int(n) for n in re.findall('<span>([X|\d]\d*?)</span>',htmltext)]
-
-        gps_loc = re.findall('"https://www.google.com/maps/search.*query=(.*?)"', htmltext)[0]
-        NewSurvey = Survey(
-            team = '黑面琵鷺隊',
-            checklist_id=i,
-            creator=c,
-            survey_datetime = datetime.datetime.strptime(api_data['obsDt'], '%Y-%m-%d %H:%M'),
-            latitude=float(gps_loc.split(',')[0]),
-            longitude=float(gps_loc.split(',')[1]),
-            county = GetCountyByCoord(gps_loc.split(',')[0], gps_loc.split(',')[1]),
-            is_valid = -1 not in N and api_data['durationHrs'] > 0.084
-        )
-        NewSurvey.save()
-
-        if not N or not S or len(N) != len(S):
-            logger.warning(f'checklist: {i} contains no data!')
+    n_btn_clicked = 0
+    max_allowed_click_times = 200
+    while btns:
+        btns[0].click()
+        time.sleep(3)
+        btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == '接受' or b.text == '保留']
+        n_btn_clicked += 1
+        if n_btn_clicked >= max_allowed_click_times:
+            logger.error('Reached maxed allowed btn clicked times, could trigger infinite loop')
             break
 
-        # fix some special case?
-        if 'eBird' in S[0]:
-            S = S[2:]
-        if 'Checklist flagged' in S:  
-            S.remove('Checklist flagged')
+    if n_btn_clicked > 0: 
+        logger.info(f'{account} accept {n_btn_clicked} new checklist!')
 
-        for s,n in zip(S, N):
-            SurveyObs.objects.create(
-                survey=Survey.objects.get(checklist_id=i),
-                species_name=s,
-                amount=n
+    # get all checklist url and add new ones to database
+
+    htmltext = driver.page_source
+
+    # only take five for test purpose
+    all_checklist_id = re.findall('/checklist/(.*?)"', htmltext)
+    all_creators = re.findall('"owner" class="dataCell">(.*?)</td>', htmltext)
+    print(len(all_checklist_id))
+    db_checklists = Survey.objects.values_list('checklist_id', flat=True)
+
+    new = 0
+    FASD = 0
+    for i, c in zip(all_checklist_id, all_creators):
+        print(f'N_done: {new}/ {FASD}')
+        FASD += 1
+        if i not in db_checklists:
+            api_data = client.get_checklist(i)
+
+            if api_data['subnational1Code'] not in ['TW-TPE', 'TW-TPQ']:
+                # logger.warning(f'{c} shared a list({i}) not inside competition area!')
+                time.sleep(1)
+                continue
+
+            if 'durationHrs' not in api_data:
+                logger.warning(f'checklist: {i} contains no durationHrs!!?')
+                continue
+
+            driver.get('https://ebird.org/checklist/'+i)
+            htmltext = driver.page_source
+            # get species names
+            S = re.findall('Heading-main\".*?>(.*?)</span',htmltext)[4:]
+            # get species amounts
+            N = [-1 if n == 'X' else int(n) for n in re.findall('<span>([X|\d]\d*?)</span>',htmltext)]            
+            gps_loc = re.findall('"https://www.google.com/maps/search.*query=(.*?)"', htmltext)[0]
+            NewSurvey = Survey(
+                scrape_date = datetime.date.today(),
+                team = '黑面琵鷺隊',
+                checklist_id=i,
+                creator=c,
+                survey_datetime = datetime.datetime.strptime(api_data['obsDt'], '%Y-%m-%d %H:%M'),
+                latitude=float(gps_loc.split(',')[0]),
+                longitude=float(gps_loc.split(',')[1]),
+                county = GetCountyByCoord(float(gps_loc.split(',')[0]), float(gps_loc.split(',')[1])),
+                is_valid = -1 not in N and api_data['durationHrs'] > 0.084
             )
+            NewSurvey.save()            
+            new += 1
 
-        time.sleep(2)        
-# 
+            # fix some special case?
+            if 'eBird' in S[0]:
+                S = S[2:]
+            if 'Checklist flagged' in S:  
+                S.remove('Checklist flagged')
 
-driver.close()
-logger.info('Scraper finished!')
+            if not N or not S or len(N) != len(S):
+                logger.warning(f'checklist: {i} contains no data!')
+                continue
+
+            for s,n in zip(S, N):
+                SurveyObs.objects.create(
+                    survey=Survey.objects.get(checklist_id=i),
+                    species_name=s,
+                    amount=n
+                )
+            time.sleep(2)        
+
+    driver.close()
+    logger.info(f'Scraper finished with {new} new checklist!')
+
+
+if __name__ == '__main__':
+    ScrapDataFromAccount('ET黑面琵鷺隊', '201910BFS')

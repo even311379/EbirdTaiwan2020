@@ -14,10 +14,6 @@ import datetime
 from fall.models import SignupData, Survey, SurveyObs
 import plotly.express as px
 
-import sys
-import os
-sys.path.append(os.path.abspath('dash_apps')) 
-import CustomWidgets
 import eb_passwords
 from collections import Counter
 
@@ -51,7 +47,7 @@ def draw_area_map():
 
     NorthTaiwan_geo = []
     for f in geoj['features']:
-        if f['properties']['COUNTYNAME'] in ['新北市', '臺北市', '基隆市']:
+        if f['properties']['COUNTYNAME'] in ['新北市', '臺北市']:
             NorthTaiwan_geo.append(f)
     geoj['features'] = NorthTaiwan_geo
 
@@ -72,7 +68,7 @@ def draw_area_map():
             data[t] = np.random.randint(5, 40, len(data))
     else:
         for t in ['彩鷸隊', '家燕隊', '大冠鷲隊']:
-            towns = Survey.objects.filter(team=t).values_list('county',flat=True)
+            towns = Survey.objects.filter(team=t, is_valid=True).values_list('county',flat=True)
             county_counts = Counter(towns)
             nc = [''] * len(RN)
             for t in county_counts:
@@ -99,7 +95,7 @@ def draw_area_map():
     area_map.update_traces(
         hovertemplate='''
     <b>%{location}</b><br>
-    上傳清單數:<br><br>
+    上傳清單數<br><br>
         彩鷸隊: %{customdata[0]}<br>
         家燕隊: %{customdata[1]}<br>
         大冠鷲隊: %{customdata[2]}<extra></extra>
@@ -110,8 +106,7 @@ def draw_area_map():
     )
     area_map.update_layout(
         mapbox = dict(        
-            accesstoken=eb_passwords.map_box_api_key,                        
-            pitch = 45,                
+            accesstoken=eb_passwords.map_box_api_key,                                        
         ),
         margin={"r":0,"t":0,"l":0,"b":0},
         legend=dict(
@@ -121,7 +116,6 @@ def draw_area_map():
             xanchor="left",
             x=0.01,
             bgcolor='rgba(0,0,0,0)'),
-        dragmode="pan",
         # this is a severe bug, dragmode = False should just remove drag, but its not working for me...  
     )
 
