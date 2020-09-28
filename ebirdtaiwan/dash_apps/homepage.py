@@ -47,7 +47,6 @@ app.layout = html.Div([
     html.Div(id ='empty', style={'display':'none'})
 ])
 
-
 app.clientside_callback(
     """
     function(path) {

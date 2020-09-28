@@ -55,7 +55,6 @@ def draw_area_map():
             NorthTaiwan_geo.append(f)
     geoj['features'] = NorthTaiwan_geo
 
-
     RN = []
     for k in range(len(geoj['features'])):
         temp = geoj['features'][k]['properties']['COUNTYNAME']+geoj['features'][k]['properties']['TOWNNAME']
@@ -64,8 +63,6 @@ def draw_area_map():
 
     # and insert id to df
     data['Name'] = RN
-
-
     
     '''
     prepare the map data, the team color with most checklist in each town

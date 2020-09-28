@@ -56,13 +56,18 @@ upload_time = []
 upload_time.append('{{ t }}')
 {% endfor %}
 
+# wait is dirty solution for id not shown yet... I'd use try loop to check?
+
+def wait():
+    AC_Anim.init_cards()
+    AC_Anim.animloop(1)
 
 def start_anim(event):
     AC_Anim.SetupGVar(peoples, towns, upload_time)
     AC_Anim.init_cards()
-    #timer.set_timeout(AC_Anim.moving_cards, 3000)
-    #timer.set_timeout(AC_Anim.update_cards, 5000)
     AC_Anim.animloop(1)
+    #timer.set_timeout(wait, 5000)  
+    #timer.set_timeout(AC_Anim.update_cards, 5000)
 
 document<=html.DIV(id='hidden_trigger', style={'display':'none'})
 document['hidden_trigger'].bind('click', start_anim)

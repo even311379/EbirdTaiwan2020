@@ -152,12 +152,40 @@ For all dashboard setting
 
 .dashfig_title{
     text-align: center;
-    font-size: 32px;
+    font-size: 1.8vw;
     font-weight: 600;
     padding-top: 3vh;
     padding-bottom: 3vh;
 }
 
+#predict_table{
+    border: 1px solid #000;
+    box-sizing: border-box;
+    filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.25));
+    border-radius: 2vh;
+    background: #fff;
+    overflow: hidden;
+    height:50vh;
+    width:45vw;
+}
+
+@media only screen and (max-width: 768px) {
+    #predict_table{ 
+        width:80vw;
+        margin-left: 5vw;
+    }
+    #hist2d{
+        margin-left: 5vw;
+    }
+    .dashfig_title{
+        font-size: 5vw;
+    }
+
+    .prediction_btn {
+        bottom: -70vh !important;
+        transform: translateX(-5vw);
+    }
+}
 
 /*
 * not yet page

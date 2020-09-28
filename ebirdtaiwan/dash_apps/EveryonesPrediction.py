@@ -11,12 +11,10 @@ import numpy as np
 import pandas as pd
 import datetime
 import random
-
 import numpy as np
 import names
 
-import time
-
+from fall.models import PredictionData
 '''
 visdcc not working with django - dash
 
@@ -55,32 +53,89 @@ def encrypt_email(email):
     es = s1[0]+'O'*(len(s1)-2)+s1[-1]
     return es+'@'+email.split('@')[1]
 
-DEMO_MODE = True
 
-if DEMO_MODE == True:
-    x = np.random.normal(45, 7, 80).astype(int)
-    y = x*np.random.normal(15,2,80).astype(int) + np.random.uniform(5,30,80).astype(int)
-    participant_names = [names.get_last_name() for i in range(80)]
-    participant_emails = [random_email_generation() for i in range(80)]
-    encrypted_emails = [encrypt_email(email) for email in participant_emails]
-    prediction_df = pd.DataFrame(dict(名稱=participant_names,電子信箱=encrypted_emails,預測鳥種數=x,預測總隻數=y))
+# ns_Guess = [] # number of species guess
+# nc_Guess = [] # number of total count guess
+prediction_df = pd.DataFrame() 
 
-def ViewportSizedHist2d(vw, vh):
+
+def init_df():
+
+    global prediction_df
+
+    if datetime.date.today() > datetime.date(2020,10,1):
+        df = pd.DataFrame.from_records(PredictionData.objects.all().values(
+            'participant_name','participant_email','guess_n_species','guess_total_individual','prediction_datetime',)
+        ).sort_values(by=['prediction_datetime'])
+        ns_Guess = df.guess_n_species.tolist()
+        nc_Guess = df.guess_total_individual.tolist()
+        prediction_df['名稱'] = df.participant_name
+        prediction_df['電子信箱'] = [encrypt_email(email) for email in df.participant_email]
+        prediction_df['預測鳥種數'] = ns_Guess
+        prediction_df['預測總隻數'] = nc_Guess
+    else:
+        ns_Guess = np.random.normal(45, 7, 80).astype(int)
+        nc_Guess = ns_Guess*np.random.normal(15,2,80).astype(int) + np.random.uniform(5,30,80).astype(int)
+        participant_names = [names.get_last_name() for i in range(80)]
+        participant_emails = [random_email_generation() for i in range(80)]
+        encrypted_emails = [encrypt_email(email) for email in participant_emails]
+        prediction_df = pd.DataFrame(dict(名稱=participant_names,電子信箱=encrypted_emails,預測鳥種數=ns_Guess,預測總隻數=nc_Guess))
+        
+
+
+def empty_fig():
+    fig = go.Figure()
+    fig.update_layout(
+        autosize = False,
+        xaxis = dict(
+            zeroline = False,
+            domain = [0,0.85],
+            showgrid = False,
+            showticklabels=False
+        ),
+        yaxis = dict(
+            zeroline = False,
+            domain = [0,0.85],
+            showgrid = False,            
+            showticklabels=False
+        ),
+        bargap = 0,
+        hovermode = 'closest',
+        showlegend = False,
+        dragmode=False,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=0,r=0,b=0,t=0),
+    )
+    return fig
+
+
+def ViewportSizedHist2d(width, height):
+
+    global prediction_df
+
+    vw = width*45/100
+    vh = height*50/100
+    tw = width*1/100
+    if width < 768:
+        vw = width*80/100
+        tw = width*2/100
     fig = go.Figure()
     fig.add_trace(go.Histogram2dContour(
-            x = x,
-            y = y,        
+            x =  prediction_df['預測鳥種數'],
+            y = prediction_df['預測總隻數'],        
             colorscale = 'Greens',
+            showscale =False,
             xaxis = 'x',
             yaxis = 'y',
             hoverinfo = "none",
         ))
     fig.add_trace(go.Scatter(
-            x = x,
-            y = y,
+            x = prediction_df['預測鳥種數'],
+            y = prediction_df['預測總隻數'],
             xaxis = 'x',
             yaxis = 'y',
-            text = [n for n in participant_names],
+            text = [n for n in prediction_df['名稱']],
             hoverlabel=dict(bgcolor='#000000',bordercolor='#ffffff',font=dict(size=18, color='#ffffff')),
             hovertemplate="%{text}預測，%{x}種鳥，共%{y}隻<extra></extra>", 
             mode = 'markers',
@@ -90,15 +145,17 @@ def ViewportSizedHist2d(vw, vh):
             )
         ))
     fig.add_trace(go.Histogram(
-            y = y,
+            y = prediction_df['預測總隻數'],
             xaxis = 'x2',
+            hoverinfo = "none",
             marker = dict(
                 color = '#006a71'
             )
         ))
     fig.add_trace(go.Histogram(
-            x = x,
+            x = prediction_df['預測鳥種數'],
             yaxis = 'y2',
+            hoverinfo = "none",
             marker = dict(
                 color = '#e5df88'
             )
@@ -107,28 +164,10 @@ def ViewportSizedHist2d(vw, vh):
 
     fig.update_layout(
         autosize = False,
-        xaxis = dict(
-            zeroline = False,
-            domain = [0,0.85],
-            showgrid = False
-        ),
-        yaxis = dict(
-            zeroline = False,
-            domain = [0,0.85],
-            showgrid = False
-        ),
-        xaxis2 = dict(
-            zeroline = False,
-            domain = [0.85,1],
-            showgrid = False,
-            title='預測總鳥種數'
-        ),
-        yaxis2 = dict(
-            zeroline = False,
-            domain = [0.85,1],
-            showgrid = False,
-            title='預測總隻數'
-        ),
+        xaxis = dict(zeroline = False,domain = [0,0.85],showgrid = False),
+        yaxis = dict(zeroline = False,domain = [0,0.85],showgrid = False),
+        xaxis2 = dict(zeroline = False,domain = [0.85,1],showgrid = False,title=dict(text='預測總鳥種數',font=dict(size=tw))),
+        yaxis2 = dict(zeroline = False,domain = [0.85,1],showgrid = False,title=dict(text='預測總隻數',font=dict(size=tw))),
         bargap = 0,
         hovermode = 'closest',
         showlegend = False,
@@ -145,8 +184,12 @@ def ViewportSizedHist2d(vw, vh):
 # prediction_fig = fig
 
 def ResponsiveTable(w):
-    vw = '45vw'
-    if w < 768: vw='80vw'
+
+    global prediction_df
+
+    text_size = '1vw'
+    if w < 768: 
+        text_size = '2vw'        
     return dash_table.DataTable(
         data = prediction_df.to_dict('records'),
         columns=[{'id': c, 'name': c} for c in prediction_df.columns],
@@ -155,9 +198,9 @@ def ResponsiveTable(w):
         filter_action='native',
         sort_action='native',
         page_action='none',
-        style_cell={'minWidth': '30px','width': '30px','maxWidth': '30px','font-size':'16px','textAlign':'center'},
+        style_cell={'minWidth': '30px','width': '30px','maxWidth': '30px','font-size':text_size,'textAlign':'center'},
+        style_header={'background':'rgb(114 157 84)','color':'#fff','font-weight':'600','border':'1px solid #000','border-radius': '2vh 2vh 0 0'},
         style_data={'whiteSpace': 'normal','height': 'auto'},
-        style_table={'height':'50vh','width' :vw}
     )
     
 
@@ -171,7 +214,7 @@ app.layout = html.Div([
     dbc.Row([
         dbc.Col([
             html.H4('預測鳥種數與總隻數分佈', className='dashfig_title'),
-            dcc.Graph(id='hist2d',config=dict(displayModeBar=False),)
+            dcc.Graph(id='hist2d', figure=empty_fig(),config=dict(displayModeBar=False),)
             ],lg=6),
         dbc.Col([
             html.H4('大家的預測', className='dashfig_title'),
@@ -179,10 +222,8 @@ app.layout = html.Div([
         ], lg=6)
     ], className='h-100'),
     html.A('我要猜',className='fall_btn teams_btn prediction_btn', href='/make_prediction'),        
-    dcc.Interval(id='tick',interval=1000), # update things every 3 s for demo
     dcc.Location(id='url'),
-    html.Div('',id='empty',style={'display':'none'}),
-    html.Div('',id='screen_size',style={'display':'none'}),     
+    html.Div('',id='empty',style={'display':'none'}),  
 ], className='dashboard_container')
 
 '''
@@ -195,7 +236,7 @@ app.clientside_callback(
         return String(window.innerWidth) + ',' + String(window.innerHeight);
     }
     """,
-    Output('screen_size', 'children'),
+    Output('empty', 'children'),
     [Input('url', 'pathname')]
 )
 
@@ -204,10 +245,12 @@ should also read newest data here~~
 '''
 @app.callback([Output('hist2d','figure'),
     Output('predict_table','children'),],
-    [Input('screen_size', 'children')]
+    [Input('empty', 'children')]
 )
 def set_size(size):
     width = int(size.split(',')[0])
     height = int(size.split(',')[1])
-    hist2d_fig = ViewportSizedHist2d(width*45/100, height*50/100)
+    init_df()
+    hist2d_fig = ViewportSizedHist2d(width, height)
+
     return hist2d_fig, ResponsiveTable(width)
