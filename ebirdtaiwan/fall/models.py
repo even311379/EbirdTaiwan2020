@@ -107,9 +107,15 @@ class SignupPage(Page):
             team = request.POST.get('team', None)            
             email = request.POST.get('email', None)            
             if (len(SignupData.objects.filter(ebirdid=ebirdid)) > 0):
-                return render(request, 'fall/signup.html', {'page': self, 'error_message': '這個eBird公開顯示名稱已經註冊了！'})
+                render_data = locals()
+                render_data['page'] = self
+                render_data['error_message'] = '這個eBird公開顯示名稱已經註冊了！'
+                return render(request, 'fall/signup.html', render_data)
             if (len(SignupData.objects.filter(email=email)) > 0):
-                return render(request, 'fall/signup.html', {'page': self, 'error_message': '這個email註冊過了！'})
+                render_data = locals()
+                render_data['page'] = self
+                render_data['error_message'] = '這個email註冊過了！'
+                return render(request, 'fall/signup.html', render_data)
 
             send_validation_email(email = email, team = team, ebirdid = ebirdid)
             '''
@@ -121,10 +127,12 @@ class SignupPage(Page):
                 email=email,                
             )            
             NewSignupData.save()
-            
-            return render(request, 'fall/thankyou.html', {'page': self, 'ebirdid':ebirdid, 'team':team})
+            render_data = locals()
+            render_data['page'] = self
+            return render(request, 'fall/thankyou.html', render_data)
         else:
-            return render(request, 'fall/signup.html', {'page': self, 'error_message':'' })
+            render_data = locals()
+            return render(request, 'fall/signup.html', render_data)
 
 
 class AutumnChallengePage(Page):
@@ -149,8 +157,9 @@ class AutumnChallengePage(Page):
         peoples = df['creator'].tolist()
         towns = df['county'].tolist()
         upload_time = [datetime.datetime.strftime(t, '%Y-%m-%d %H:%M:%S') for t in df['survey_datetime'].tolist()]
-
-        return render(request, 'fall/autumn_challenge_page.html', {'page': self, 'peoples':peoples,'towns':towns,'upload_time':upload_time})
+        render_data = locals()
+        render_data['page'] = self
+        return render(request, 'fall/autumn_challenge_page.html', render_data)
 
 
 class PredictionData(models.Model):
@@ -176,7 +185,10 @@ class SubmitPrediction(Page):
             gni = request.POST.get('guess_total_individual', None)  
             
             if (len(PredictionData.objects.filter(participant_phone=phone)) > 0):
-                return render(request, 'fall/prediction.html', {'page': self, 'error_message': '錯誤！一組電話只能進行一次預測'})
+                render_data = locals()
+                render_data['page'] = self
+                render_data['error_message'] =  '錯誤！一組電話只能進行一次預測'
+                return render(request, 'fall/prediction.html', render_data)
 
             NewPredictionData = PredictionData(
                 participant_name = name,
@@ -186,10 +198,13 @@ class SubmitPrediction(Page):
             )
 
             NewPredictionData.save()
-
-            return render(request, 'fall/prediction_finish.html', {'page': self})
+            render_data = locals()
+            render_data['page'] = self
+            return render(request, 'fall/prediction_finish.html', render_data)
         else:
-            return render(request, 'fall/prediction.html', {'page': self, 'error_message': ''})
+            render_data = locals()
+            render_data['page'] = self
+            return render(request, 'fall/prediction.html', render_data)
 
         
 
