@@ -37,10 +37,13 @@
 </div>
 <div id='dlogos'>主辦單位 ｜ <img src={% static 'img/home/corporation_logos.png' %}> &nbsp;&nbsp;&nbsp;&nbsp; 活動贊助 ｜ <img src={% static 'img/home/supporter_logos.png' %}>  </div>
 <div class='ac_bg_rect3'></div>
+<div id='no_menu_hide' class="bar" style='z-index: 9999;background: #fff;'></div>
+<div id='no_menu' style='display:none'></div>
 <script type="text/python">
 from browser import document, html, timer
 from app import AC_Anim
 
+document['no_menu_hide'].style.display = 'none'
 
 peoples = []
 {% for p in peoples %}
