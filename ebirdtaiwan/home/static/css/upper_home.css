@@ -57,6 +57,7 @@ body {
     top: 20vh;
     height: 35vh;
     width: 100vw; 
+    z-index: -1;
 }
 
 .title_left{
@@ -173,7 +174,7 @@ body {
         height: auto;    
     }
     .nav_text{
-        font-size:3vw;    
+        font-size:5.1vw;    
     }
 
     .eBird{
