@@ -22,10 +22,11 @@ profile.update_preferences()
 driver = webdriver.Firefox(firefox_profile=profile, options=options)
 
 # setup ebird api
+import eb_passwords
 from ebird.api import Client
 import datetime
 
-api_key = 'o1rng64r9e2b'
+api_key = eb_passwords.ebird_api_key
 locale = 'zh'
 client = Client(api_key, locale)
 
@@ -108,7 +109,7 @@ def GetCountyByCoord(lat, lon):
     logger.warning(f'Failed to detect town!')                
     return '不在台灣啦!'
 
-def ScrapDataFromAccount(account, password):
+def ScrapDataFromAccount(team_name, account, password):
 
     logger.info('Scraper started!')
 
@@ -144,33 +145,31 @@ def ScrapDataFromAccount(account, password):
     # only take five for test purpose
     all_checklist_id = re.findall('/checklist/(.*?)"', htmltext)
     all_creators = re.findall('"owner" class="dataCell">(.*?)</td>', htmltext)
-    print(len(all_checklist_id))
     db_checklists = Survey.objects.values_list('checklist_id', flat=True)
 
     new = 0
-    FASD = 0
+    
     for i, c in zip(all_checklist_id, all_creators):
-        print(f'N_done: {new}/ {FASD}')
-        FASD += 1
         if i not in db_checklists:
-            api_data = client.get_checklist(i)
-
+            valid = True            
+            api_data = client.get_checklist(i)            
             if api_data['subnational1Code'] not in ['TW-TPE', 'TW-TPQ']:
-                # logger.warning(f'{c} shared a list({i}) not inside competition area!')
-                time.sleep(1)
-                continue
-
-            if 'durationHrs' not in api_data:
-                logger.warning(f'checklist: {i} contains no durationHrs!!?')
-                continue
+                logger.warning(f'{c} shared a list({i}) not inside competition area!, save it as invalid data')
+                valid = False                
+            elif 'durationHrs' not in api_data:
+                logger.warning(f'checklist: {i} contains no durationHrs!!?, save it as invalid data')
+                valid = False            
 
             driver.get('https://ebird.org/checklist/'+i)
             htmltext = driver.page_source
             # get species names
             S = re.findall('Heading-main\".*?>(.*?)</span',htmltext)[4:]
             # get species amounts
-            N = [-1 if n == 'X' else int(n) for n in re.findall('<span>([X|\d]\d*?)</span>',htmltext)]            
+            N = [-1 if n == 'X' else int(n) for n in re.findall(r'<span>([X|\d]\d*?)</span>',htmltext)]            
             gps_loc = re.findall('"https://www.google.com/maps/search.*query=(.*?)"', htmltext)[0]
+
+            if valid:
+                valid = -1 not in N and api_data['durationHrs'] > 0.084
             NewSurvey = Survey(
                 scrape_date = datetime.date.today(),
                 team = '黑面琵鷺隊',
@@ -180,11 +179,15 @@ def ScrapDataFromAccount(account, password):
                 latitude=float(gps_loc.split(',')[0]),
                 longitude=float(gps_loc.split(',')[1]),
                 county = GetCountyByCoord(float(gps_loc.split(',')[0]), float(gps_loc.split(',')[1])),
-                is_valid = -1 not in N and api_data['durationHrs'] > 0.084
+                is_valid = valid
             )
-            NewSurvey.save()            
-            new += 1
+            NewSurvey.save()
 
+            if not valid:
+                time.sleep(1)
+                continue
+
+            new += 1
             # fix some special case?
             if 'eBird' in S[0]:
                 S = S[2:]
@@ -201,11 +204,19 @@ def ScrapDataFromAccount(account, password):
                     species_name=s,
                     amount=n
                 )
-            time.sleep(2)        
+            time.sleep(1)        
 
     driver.close()
     logger.info(f'Scraper finished with {new} new checklist!')
 
 
 if __name__ == '__main__':
-    ScrapDataFromAccount('ET黑面琵鷺隊', '201910BFS')
+    team_names = ['彩鷸隊', '家燕隊', '大冠鷲隊']
+    acounts = [eb_passwords.team_left_account, eb_passwords.team_middle_account, eb_passwords.team_right_account]
+    passes = [eb_passwords.team_left_password, eb_passwords.team_middle_password, eb_passwords.team_right_password]
+    while True:
+        if datetime.datetime.now().minute == 20 and datetime.datetime.now().hour % 3 == 1:            
+            for name, account, password in zip(team_names, acounts, passes):
+                ScrapDataFromAccount(name, account, password)                    
+
+        time.sleep(60)

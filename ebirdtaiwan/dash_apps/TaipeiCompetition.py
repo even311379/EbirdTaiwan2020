@@ -38,7 +38,7 @@ def empty_map():
     return fig
 
 
-def draw_area_map():
+def draw_area_map():    
 
     with open('../helper_files/TaiwanCounties_simple.geojson') as f:
         geoj = json.load(f)
@@ -67,6 +67,12 @@ def draw_area_map():
         for t in ['彩鷸隊', '家燕隊', '大冠鷲隊']:
             data[t] = np.random.randint(5, 40, len(data))
     else:
+        temp_town = []
+        for t in ['彩鷸隊', '家燕隊', '大冠鷲隊']:
+            temp_town.append(Survey.objects.filter(team=t, is_valid=True).values_list('county',flat=True))
+        if not temp_town[0] and not temp_town[1] and not temp_town[2]:
+            return empty_map()
+
         for t in ['彩鷸隊', '家燕隊', '大冠鷲隊']:
             towns = Survey.objects.filter(team=t, is_valid=True).values_list('county',flat=True)
             county_counts = Counter(towns)

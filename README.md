@@ -21,6 +21,7 @@ search #source_code modification in the dash_wrapper.py file on the top most fol
 
 ## in server run:
 ```bash
-nohup xxxxx.sh &!
+nohup automate_scraper_ebirdapi.sh &!
+nohup automate_scraper_selenium.sh &!
 ```
 Because I am using zsh, I must add ! after the script, otherwise zsh will close this running task when I log out.

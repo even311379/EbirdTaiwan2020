@@ -63,8 +63,11 @@ upload_time.append('{{ t }}')
 # wait is dirty solution for id not shown yet... I'd use try loop to check?
 
 def wait():
-    AC_Anim.init_cards()
-    AC_Anim.animloop(1)
+    if peoples:
+        AC_Anim.init_cards()
+        AC_Anim.animloop(1)
+    else:
+        AC_Anim.show_no_data()
 
 def start_anim(event):
     AC_Anim.SetupGVar(peoples, towns, upload_time)

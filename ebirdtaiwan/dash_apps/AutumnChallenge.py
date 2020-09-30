@@ -68,6 +68,9 @@ def create_score_df():
         AutumnChanllengeData.objects.filter(is_valid=True).values(
             'creator','survey_datetime','latitude','longitude','county',))
 
+    if len(df) == 0:
+        return pd.DataFrame(dict(挑戰者=[],總清單數=[],佔領鄉鎮數=[],首次佔領鄉鎮=[],特殊得分=[],總得分=[]))
+
     creator_count = df.creator.value_counts()
     number_of_checklist = creator_count.tolist()
     unique_creator = creator_count.index.tolist()
@@ -125,6 +128,10 @@ def draw_ac_map(score_df):
         geoj = json.load(f)
 
     all_county = AutumnChanllengeData.objects.values_list('county', flat=True)
+
+    if not all_county: 
+        return empty_map()
+
     county_counts = Counter(all_county)
 
     data = pd.DataFrame()

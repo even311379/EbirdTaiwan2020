@@ -37,7 +37,7 @@ def init_df():
 
     global prediction_df
 
-    if datetime.date.today() > datetime.date(2020,10,1):
+    if datetime.date.today() >= datetime.date(2020,10,1):
         df = pd.DataFrame.from_records(PredictionData.objects.all().values(
             'participant_name','participant_phone','guess_n_species','guess_total_individual','prediction_datetime',)
         ).sort_values(by=['prediction_datetime'])

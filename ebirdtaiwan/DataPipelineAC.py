@@ -5,10 +5,11 @@ every hour to visit ebird api for all taiwan data
 '''
 
 # setup ebird api
+import eb_passwords
 from ebird.api import Client
 import datetime
 
-api_key = 'o1rng64r9e2b'
+api_key = eb_passwords.ebird_api_key
 locale = 'zh'
 client = Client(api_key, locale)
 
@@ -93,10 +94,10 @@ def GetCountyByCoord(lat, lon):
     logger.warning(f'Failed to detect town!')                
     return '不在台灣啦!'
 
-def UpdateDataFromEbirdApi():
+def UpdateDataFromEbirdApi(target_date):
     logger.info(f'Start to collect new data!')
     scraped_Ids = AutumnChanllengeData.objects.values_list('checklist_id', flat=True)
-    checklists = client.get_visits('TW', date = datetime.date.today() - datetime.timedelta(days=1))
+    checklists = client.get_visits('TW', date = target_date)
     N = 0
     for l in checklists:
         cid = l['subId']
@@ -114,6 +115,7 @@ def UpdateDataFromEbirdApi():
             try:
                 AutumnChanllengeData.objects.create(
                     checklist_id = l['subId'],
+                    scrape_date = datetime.date.today(),
                     survey_datetime = datetime.datetime.strptime(l['obsDt'] + ' ' + l['obsTime'], '%d %b %Y %H:%M'),
                     creator = l['userDisplayName'],
                     latitude = l['loc']['latitude'],
@@ -130,7 +132,26 @@ def UpdateDataFromEbirdApi():
 
 
 if __name__ == '__main__':
-    UpdateDataFromEbirdApi()
+    while True:
+        now = datetime.datetime.now()
+        if now.minute == 0:
+            if now.hour %3 == 0:
+                UpdateDataFromEbirdApi(datetime.date.today())
+            if now.hour == 6:
+                logger.info('start to rescrape 3 days data')
+                if now.date == datetime.date(2020,10,1):
+                    pass
+                elif now.date == datetime.date(2020,10,2):
+                    UpdateDataFromEbirdApi(datetime.date.today() - datetime.timedelta(days=1))
+                else:
+                    UpdateDataFromEbirdApi(datetime.date.today() - datetime.timedelta(days=1))
+                    UpdateDataFromEbirdApi(datetime.date.today() - datetime.timedelta(days=1))
+                if now.weekday() == 6:
+                    logger.info('start to rescrape all data from 10/01 to now')
+                    for i in range(1, now.day - 2):
+                        UpdateDataFromEbirdApi(datetime.date(2020,10,i))
+        time.sleep(60)
+
     # while True:
     #     if datetime.datetime.now().minute == 0:
     #         UpdateDataFromEbirdApi()

@@ -154,10 +154,14 @@ class AutumnChallengePage(Page):
 
         recent_data20 = AutumnChanllengeData.objects.all().order_by('-survey_datetime')[:20]
         df = pd.DataFrame.from_records(recent_data20.values('creator','county','survey_datetime'))[::-1]        
-
-        peoples = df['creator'].tolist()
-        towns = df['county'].tolist()
-        upload_time = [datetime.datetime.strftime(t, '%Y-%m-%d %H:%M:%S') for t in df['survey_datetime'].tolist()]
+        if len(df) > 0:
+            peoples = df['creator'].tolist()
+            towns = df['county'].tolist()
+            upload_time = [datetime.datetime.strftime(t, '%Y-%m-%d %H:%M:%S') for t in df['survey_datetime'].tolist()]
+        else:
+            peoples = []
+            towns = []
+            upload_time = []
         render_data = locals()
         render_data['page'] = self
         return render(request, 'fall/autumn_challenge_page.html', render_data)

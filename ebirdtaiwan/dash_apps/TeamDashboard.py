@@ -71,39 +71,43 @@ def team_datatable(team, w):
     else:
         records = SurveyObs.objects.filter(survey__team = teams[team], survey__is_valid=True).values('survey__checklist_id','species_name', 'amount')    
     df = pd.DataFrame.from_records(records)
-    NameValidTable = pd.read_csv('../helper_files/NameValid.csv').fillna('缺值')
-    CNAME = NameValidTable.CNAME.tolist()
 
-    re_spe = []
-    for s in df.species_name:
-        ns = re.sub(' ?\(.*?\)','',s)
-        if s in CNAME:
-            re_spe.append(s)
-        elif ns in CNAME:
-            re_spe.append(ns)
-        else:
-            re_spe.append('not valid')
+    if len(df) == 0:
+        odf = pd.DataFrame({})
+    else:
+        NameValidTable = pd.read_csv('../helper_files/NameValid.csv').fillna('缺值')
+        CNAME = NameValidTable.CNAME.tolist()
 
-    df['ValidSpecies'] = re_spe
-    spe = list(set(re_spe))
-    counts = []
-    samples = []
-    tname = []
-    for s in spe:
-        if s == 'not valid': continue
-        counts.append(sum(df[df.ValidSpecies==s].amount))
-        samples.append(len(df[df.ValidSpecies==s]))
-        tname.append(s)
+        re_spe = []
+        for s in df.species_name:
+            ns = re.sub(r' ?\(.*?\)','',s)
+            if s in CNAME:
+                re_spe.append(s)
+            elif ns in CNAME:
+                re_spe.append(ns)
+            else:
+                re_spe.append('not valid')
 
-    odf = pd.DataFrame(dict(物種=tname,總數量=counts,清單數=samples))
-    NTD = []
-    TO = NameValidTable.TAXON_ORDER
-    for n in tname:
-        NTD.append(TO[CNAME.index(n)])
-    
-    odf['TO'] = NTD
-    odf.sort_values(by=['TO'],inplace=True)
-    odf = odf[['物種','總數量','清單數']].reset_index(drop=True)
+        df['ValidSpecies'] = re_spe
+        spe = list(set(re_spe))
+        counts = []
+        samples = []
+        tname = []
+        for s in spe:
+            if s == 'not valid': continue
+            counts.append(sum(df[df.ValidSpecies==s].amount))
+            samples.append(len(df[df.ValidSpecies==s]))
+            tname.append(s)
+
+        odf = pd.DataFrame(dict(物種=tname,總數量=counts,清單數=samples))
+        NTD = []
+        TO = NameValidTable.TAXON_ORDER
+        for n in tname:
+            NTD.append(TO[CNAME.index(n)])
+        
+        odf['TO'] = NTD
+        odf.sort_values(by=['TO'],inplace=True)
+        odf = odf[['物種','總數量','清單數']].reset_index(drop=True)
 
     final_table = dash_table.DataTable(
         data = odf.to_dict('records'),
@@ -165,6 +169,7 @@ def team_map(team, w):
         data['NC'] = np.random.randint(0, 40, len(data))
     else:
         towns = Survey.objects.filter(team=teams[team], is_valid=True).values_list('county',flat=True)
+        if len(towns) == 0: return empty_map()
         county_counts = Counter(towns)
         nc = [''] * len(RN)
         for t in county_counts:
@@ -420,7 +425,6 @@ app.clientside_callback(
     [Input('empty', 'children')], prevent_initial_call = True
 )
 def on_page_load(init_info):
-    print(init_info)
     path = init_info.split(',')[0]
     w = int(init_info.split(',')[1])
     h = int(init_info.split(',')[2])
