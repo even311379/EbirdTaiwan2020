@@ -132,6 +132,7 @@ class SignupPage(Page):
             return render(request, 'fall/thankyou.html', render_data)
         else:
             render_data = locals()
+            render_data['page'] = self
             return render(request, 'fall/signup.html', render_data)
 
 

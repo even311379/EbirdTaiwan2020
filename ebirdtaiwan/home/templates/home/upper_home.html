@@ -71,13 +71,13 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
         <li class="nav-item active pl-5">
-            <a class="nav-link nav_text" href="{{ page.event1_page.slug }}">{{ page.event1_title }}</a>
+            <a class="nav-link nav_text" href="{{ page.event1_page.url }}">{{ page.event1_title }}</a>
         </li>
         <li class="nav-item active pl-5">
             <a class="nav-link nav_text" href="{{ page.event2_url }}">{{ page.event2_title }}</a>
         </li>
         <li class="nav-item active pl-5">
-            <a class="nav-link nav_text" href="{{ page.event3_page.slug }}">{{ page.event3_title }}</a>
+            <a class="nav-link nav_text" href="{{ page.event3_page.url }}">{{ page.event3_title }}</a>
         </li>     
         </ul>
     </div>
@@ -150,6 +150,19 @@
     <div id='rect3'>
     <div id='logos'>主辦單位 ｜ <img src={% static 'img/home/corporation_logos.png' %}> &nbsp;&nbsp;&nbsp;&nbsp; 活動贊助 ｜ <img src={% static 'img/home/supporter_logos.png' %}>  </div>
     </div>
+
+
+{% comment %} <script type="text/python">
+from browser import document
+
+def toggleNav(ev):
+if document['navbarNav']
+
+
+document['navbarNav'].bind('click', toggleNav)
+
+onclick="$('#navbarNav').toggleClass('collapse')
+</script> {% endcomment %}
 
 
   </body>
