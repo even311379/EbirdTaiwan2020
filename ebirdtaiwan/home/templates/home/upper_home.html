@@ -91,7 +91,6 @@
         <div class='title_right'>秋季月挑戰賽</div>
     </div>
 
-
 <div class="wrap">
   <ul class="circles">
     <li></li>
@@ -107,7 +106,6 @@
   </ul>
 </div>
 
-
     <div class='bird_silhouette'><img src={% static 'img/home/bird_silhouette.png' %}></div>
     <div id='rect1'></div>
     <div id='rect2'></div>
@@ -120,7 +118,7 @@
             <div class="mycard_body">
                 <h5>{{ page.event1_title }}</h5>
                 <p>{{ page.event1_description|safe }}</p>
-                <p class='text-muted'>{{ page.event1_period }}</p>
+                <p class='text-muted card_time'>{{ page.event1_period }}</p>
                 <a class='card_button' href='{{ page.event1_page.slug }}'>詳細活動說明</a>
             </div>
         </div>
@@ -130,7 +128,7 @@
             <div class="mycard_body">
                 <h5>{{ page.event2_title }}</h5>
                 <p>{{ page.event2_description|safe }}</p>
-                <p class='text-muted'>{{ page.event2_period }}</p>
+                <p class='text-muted card_time'>{{ page.event2_period }}</p>
                 <a class='card_button' href='{{ page.event2_url }}'>詳細活動說明</a>
             </div>
         </div>
@@ -140,7 +138,7 @@
             <div class="mycard_body">
                 <h5>{{ page.event3_title }}</h5>
                 <p>{{ page.event3_description|safe }}</p>
-                <p class='text-muted'>{{ page.event3_period }}</p>
+                <p class='text-muted card_time'>{{ page.event3_period }}</p>
                 <a class='card_button' href='{{ page.event3_page.slug }}'>詳細活動說明</a>
             </div>
         </div>
@@ -151,18 +149,6 @@
     <div id='logos'>主辦單位 ｜ <img src={% static 'img/home/corporation_logos.png' %}> &nbsp;&nbsp;&nbsp;&nbsp; 活動贊助 ｜ <img src={% static 'img/home/supporter_logos.png' %}>  </div>
     </div>
 
-
-{% comment %} <script type="text/python">
-from browser import document
-
-def toggleNav(ev):
-if document['navbarNav']
-
-
-document['navbarNav'].bind('click', toggleNav)
-
-onclick="$('#navbarNav').toggleClass('collapse')
-</script> {% endcomment %}
 
 
   </body>
