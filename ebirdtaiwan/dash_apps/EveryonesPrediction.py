@@ -192,7 +192,7 @@ app.layout = html.Div([
             html.Div(id='predict_table'),
         ], lg=6)
     ], className='h-100'),
-    html.A('我要猜',className='fall_btn teams_btn prediction_btn', href='/make_prediction'),        
+    html.A('我要猜',className='fall_btn teams_btn prediction_btn', href='/north_taiwan_competition/make_prediction'),        
     dcc.Location(id='url'),
     html.Div('',id='empty',style={'display':'none'}),  
 ], className='dashboard_container')
