@@ -35,7 +35,7 @@ if window.innerWidth >= 768:
 if window.innerWidth < 768:    
     document['minfo_region'].style.display = 'block'    
     element = document["minfo_region"].get(selector="div.minfo_content")[0]    
-    element.insertBefore(html.A('我要選隊', Class='minfo_btn', href='/{{ page.choose_team_page.slug }}'), \
+    element.insertBefore(html.A('我要選隊', Class='minfo_btn', href='{{ page.choose_team_page.url }}'), \
     document["minfo_region"].get(selector="h4")[1])
 
 
