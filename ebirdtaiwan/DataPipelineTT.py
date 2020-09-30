@@ -111,7 +111,7 @@ def GetCountyByCoord(lat, lon):
 
 def ScrapDataFromAccount(team_name, account, password):
 
-    logger.info('Scraper started!')
+    logger.info(f'Scraper started! ({team_name})')
 
     driver.get('https://secure.birds.cornell.edu/cassso/login?')
     ele_submit = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.ID, "form-submit")))
@@ -172,7 +172,7 @@ def ScrapDataFromAccount(team_name, account, password):
                 valid = -1 not in N and api_data['durationHrs'] > 0.084
             NewSurvey = Survey(
                 scrape_date = datetime.date.today(),
-                team = '黑面琵鷺隊',
+                team = team_name,
                 checklist_id=i,
                 creator=c,
                 survey_datetime = datetime.datetime.strptime(api_data['obsDt'], '%Y-%m-%d %H:%M'),
