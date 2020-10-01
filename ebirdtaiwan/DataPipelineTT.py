@@ -13,12 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import re 
 
-profile = webdriver.FirefoxProfile()
-options = Options()
-options.headless = True
-profile.set_preference("dom.webnotifications.enabled", False)  # Finally, turned off webnotifications...
-profile.set_preference("intl.accept_languages","zh-tw")
-profile.update_preferences()    
+
 
 # setup ebird api
 import eb_passwords
@@ -111,6 +106,12 @@ def GetCountyByCoord(lat, lon):
 def ScrapDataFromAccount(team_name, account, password):
 
     logger.info(f'Scraper started! ({team_name})')
+    profile = webdriver.FirefoxProfile()
+    options = Options()
+    options.headless = True
+    profile.set_preference("dom.webnotifications.enabled", False)  # Finally, turned off webnotifications...
+    profile.set_preference("intl.accept_languages","zh-tw")
+    profile.update_preferences()    
     driver = webdriver.Firefox(firefox_profile=profile, options=options)
     driver.get('https://secure.birds.cornell.edu/cassso/login?')
     ele_submit = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.ID, "form-submit")))
@@ -189,7 +190,7 @@ def ScrapDataFromAccount(team_name, account, password):
             new += 1
             # fix some special case?
             if 'eBird' in S[0]:
-                S = S[2:]
+                S = S[2:]後開始撈
             if 'Checklist flagged' in S:  
                 S.remove('Checklist flagged')
 
