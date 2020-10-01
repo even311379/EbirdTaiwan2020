@@ -190,7 +190,7 @@ def ScrapDataFromAccount(team_name, account, password):
             new += 1
             # fix some special case?
             if 'eBird' in S[0]:
-                S = S[2:]後開始撈
+                S = S[2:]
             if 'Checklist flagged' in S:  
                 S.remove('Checklist flagged')
 
