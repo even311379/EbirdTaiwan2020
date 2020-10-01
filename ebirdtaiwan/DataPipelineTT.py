@@ -19,7 +19,6 @@ options.headless = True
 profile.set_preference("dom.webnotifications.enabled", False)  # Finally, turned off webnotifications...
 profile.set_preference("intl.accept_languages","zh-tw")
 profile.update_preferences()    
-driver = webdriver.Firefox(firefox_profile=profile, options=options)
 
 # setup ebird api
 import eb_passwords
@@ -112,7 +111,7 @@ def GetCountyByCoord(lat, lon):
 def ScrapDataFromAccount(team_name, account, password):
 
     logger.info(f'Scraper started! ({team_name})')
-
+    driver = webdriver.Firefox(firefox_profile=profile, options=options)
     driver.get('https://secure.birds.cornell.edu/cassso/login?')
     ele_submit = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.ID, "form-submit")))
     ele_n = driver.find_element_by_name('username')
