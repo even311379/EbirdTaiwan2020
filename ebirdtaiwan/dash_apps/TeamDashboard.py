@@ -171,7 +171,7 @@ def team_map(team, w):
         towns = Survey.objects.filter(team=teams[team], is_valid=True).values_list('county',flat=True)
         if len(towns) == 0: return empty_map()
         county_counts = Counter(towns)
-        nc = [''] * len(RN)
+        nc = [0] * len(RN)
         for t in county_counts:
             nc[RN.index(t)] = county_counts[t]        
         data['NC'] = nc

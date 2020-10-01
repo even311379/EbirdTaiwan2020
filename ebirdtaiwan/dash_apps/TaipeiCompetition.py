@@ -76,10 +76,10 @@ def draw_area_map():
         for t in ['彩鷸隊', '家燕隊', '大冠鷲隊']:
             towns = Survey.objects.filter(team=t, is_valid=True).values_list('county',flat=True)
             county_counts = Counter(towns)
-            nc = [''] * len(RN)
-            for t in county_counts:
-                nc[RN.index(t)] = county_counts[t]        
-            data[t] = nc    
+            nc = [0] * len(RN)
+            for k in county_counts:
+                nc[RN.index(k)] = county_counts[k]        
+            data[t] = nc
 
     winner = data[['彩鷸隊', '家燕隊', '大冠鷲隊']].idxmax(axis=1).tolist()
     
