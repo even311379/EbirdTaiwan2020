@@ -77,16 +77,26 @@ def team_datatable(team, w):
     else:
         NameValidTable = pd.read_csv('../helper_files/NameValid.csv').fillna('缺值')
         CNAME = NameValidTable.CNAME.tolist()
+        ENAME = NameValidTable.ENAME.tolist()
 
         re_spe = []
         for s in df.species_name:
-            ns = re.sub(r' ?\(.*?\)','',s)
-            if s in CNAME:
-                re_spe.append(s)
-            elif ns in CNAME:
-                re_spe.append(ns)
+                ns = re.sub(r' ?\(.*?\)','',s)            
+            if s[0].isupper():
+                if s in ENAME:
+                    re_spe.append(CNAME[ENAME.index(s)])
+                elif ns in ENAME:
+                    re_spe.append(CNAME[ENAME.index(ns)])
+                else:
+                    re_spe.append('not valid')
             else:
-                re_spe.append('not valid')
+                if s in CNAME:
+                    re_spe.append(s)
+                elif ns in CNAME:
+                    re_spe.append(ns)
+                else:
+                    re_spe.append('not valid')
+
 
         df['ValidSpecies'] = re_spe
         spe = list(set(re_spe))
