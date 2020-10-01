@@ -65,7 +65,7 @@ def empty_map():
 def create_score_df():
 
     df = pd.DataFrame.from_records(
-        AutumnChanllengeData.objects.filter(is_valid=True).values(
+        AutumnChanllengeData.objects.filter(is_valid=True, survey_datetime__date__gte=datetime.date(2020,10,1)).values(
             'creator','survey_datetime','latitude','longitude','county',))
 
     if len(df) == 0:
@@ -87,7 +87,7 @@ def create_score_df():
             first_counties[unique_creator.index(c)] += county+','
 
     first_counties = [s[:-1] if s else '' for s in first_counties]
-    first_county_numbers = [len(s.split(',')) for s in first_counties]
+    first_county_numbers = [len(s.split(',')) if s else 0 for s in first_counties]
             
     special_score = ['']*len(unique_creator)
 
@@ -127,7 +127,7 @@ def draw_ac_map(score_df):
     with open('../helper_files/TaiwanCounties_simple.geojson') as f:
         geoj = json.load(f)
 
-    all_county = AutumnChanllengeData.objects.values_list('county', flat=True)
+    all_county = AutumnChanllengeData.objects.filter(is_valid=True, survey_datetime__date__gte=datetime.date(2020,10,1)).values_list('county', flat=True)
 
     if not all_county: 
         return empty_map()
