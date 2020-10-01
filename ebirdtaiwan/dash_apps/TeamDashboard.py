@@ -81,7 +81,7 @@ def team_datatable(team, w):
 
         re_spe = []
         for s in df.species_name:
-                ns = re.sub(r' ?\(.*?\)','',s)            
+            ns = re.sub(r' ?\(.*?\)','',s)            
             if s[0].isupper():
                 if s in ENAME:
                     re_spe.append(CNAME[ENAME.index(s)])
