@@ -168,7 +168,7 @@ def ScrapDataFromAccount(team_name, account, password):
             gps_loc = re.findall('"https://www.google.com/maps/search.*query=(.*?)"', htmltext)[0]
 
             if valid:
-                valid = -1 not in N and api_data['durationHrs'] > 0.084
+                valid = -1 not in N and api_data['durationHrs'] >= 0.084
             NewSurvey = Survey(
                 scrape_date = datetime.date.today(),
                 team = team_name,
