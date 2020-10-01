@@ -153,7 +153,7 @@ class AutumnChallengePage(Page):
     def serve(self, request):
 
         recent_data20 = AutumnChanllengeData.objects.all().order_by('-survey_datetime')[:20]
-        df = pd.DataFrame.from_records(recent_data20.values('creator','county','survey_datetime'))[::-1]        
+        df = pd.DataFrame.from_records(recent_data20.values('creator','county','survey_datetime'))[::-1]
         if len(df) > 0:
             peoples = df['creator'].tolist()
             towns = df['county'].tolist()

@@ -132,7 +132,8 @@ def UpdateDataFromEbirdApi(target_date):
 
 
 if __name__ == '__main__':
-    while True:
+    UpdateDataFromEbirdApi(datetime.date.today())
+    while True:        
         now = datetime.datetime.now()
         if now.minute == 0:
             if now.hour %3 == 0:

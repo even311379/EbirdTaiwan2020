@@ -212,11 +212,13 @@ def ScrapDataFromAccount(team_name, account, password):
 
 if __name__ == '__main__':
     team_names = ['彩鷸隊', '家燕隊', '大冠鷲隊']
-    acounts = [eb_passwords.team_left_account, eb_passwords.team_middle_account, eb_passwords.team_right_account]
+    accounts = [eb_passwords.team_left_account, eb_passwords.team_middle_account, eb_passwords.team_right_account]
     passes = [eb_passwords.team_left_password, eb_passwords.team_middle_password, eb_passwords.team_right_password]
+    for name, account, password in zip(team_names, accounts, passes):
+        ScrapDataFromAccount(name, account, password)  
     while True:
         if datetime.datetime.now().minute == 20 and datetime.datetime.now().hour % 3 == 1:            
-            for name, account, password in zip(team_names, acounts, passes):
+            for name, account, password in zip(team_names, accounts, passes):
                 ScrapDataFromAccount(name, account, password)                    
 
         time.sleep(60)

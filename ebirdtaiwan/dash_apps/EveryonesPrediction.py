@@ -43,6 +43,7 @@ def init_df():
         ).sort_values(by=['prediction_datetime'])
         ns_Guess = df.guess_n_species.tolist()
         nc_Guess = df.guess_total_individual.tolist()
+        prediction_df = pd.DataFrame({})
         prediction_df['名稱'] = df.participant_name        
         prediction_df['預測鳥種數'] = ns_Guess
         prediction_df['預測總隻數'] = nc_Guess
