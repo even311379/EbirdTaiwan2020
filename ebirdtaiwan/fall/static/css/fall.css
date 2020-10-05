@@ -209,7 +209,7 @@ img {
 .thankyou_text{
     color: white;
     font-weight: 600;
-    font-size: 3vw;
+    font-size: 2.3vw;
     position: absolute;
     left: 52vw;
     width: 25vw;
@@ -266,7 +266,7 @@ img {
         top: 60vh;
         width: 80vw;
         left: 10vw;
-        font-size: 8vw;
+        font-size: 6vw;
     }
 }
 

@@ -173,6 +173,7 @@ For all dashboard setting
 
 .prediction_btn {
     bottom: 0 !important;
+    transform: translateY(3vh);
 }
 
 .dashfig_title{
@@ -183,6 +184,11 @@ For all dashboard setting
     padding-bottom: 3vh;
 }
 
+
+.ext1{
+    font-size:1.5vw;
+}
+
 #predict_table{
     border: 1px solid #000;
     box-sizing: border-box;
@@ -190,7 +196,7 @@ For all dashboard setting
     border-radius: 2vh;
     background: #fff;
     overflow: hidden;
-    height:50vh;
+    height:45vh;
     width:45vw;
 }
 
@@ -205,7 +211,11 @@ For all dashboard setting
     .dashfig_title{
         font-size: 5vw;
     }
-
+    .ext1{
+        text-align: center;
+        font-size: 5vw;
+        margin-top: 5vh;
+    }
     .prediction_btn {
         bottom: -70vh !important;
         transform: translateX(-5vw);

@@ -87,7 +87,7 @@ def ViewportSizedHist2d(width, height):
     global prediction_df
 
     vw = width*45/100
-    vh = height*50/100
+    vh = height*45/100
     tw = width*0.6/100
     if width < 768:
         vw = width*80/100
@@ -192,7 +192,8 @@ app.layout = html.Div([
             html.H4('大家的預測', className='dashfig_title'),
             html.Div(id='predict_table'),
         ], lg=6)
-    ], className='h-100'),
+    ]),
+    html.H4('猜鳥活動期間: 10/1 0:00 ~ 10/10 24:00', className='ext1'),    
     html.A('我要猜',className='fall_btn teams_btn prediction_btn', href='/north_taiwan_competition/make_prediction'),        
     dcc.Location(id='url'),
     html.Div('',id='empty',style={'display':'none'}),  

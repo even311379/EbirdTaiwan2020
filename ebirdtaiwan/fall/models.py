@@ -246,7 +246,7 @@ class AutumnChanllengeData(models.Model):
     latitude = models.FloatField(default=23.5,verbose_name='緯度')
     longitude = models.FloatField(default=120.5,verbose_name='經度')
     county = models.CharField(default='天國市地獄鎮',max_length=15,verbose_name='鄉鎮名稱')
-    is_valid = models.BooleanField(editable=False,verbose_name='有鳥才算數')
+    is_valid = models.BooleanField(editable=True,verbose_name='有鳥才算數')
 
 
 
