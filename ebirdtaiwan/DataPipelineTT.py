@@ -12,7 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import re 
-
+import requests
 
 
 # setup ebird api
@@ -122,10 +122,40 @@ def ScrapDataFromAccount(team_name, account, password):
     ele_submit.click()
     driver.get('https://ebird.org/shared')
     time.sleep(5)
+
+    max_allowed_click_times = 60
+    '''
+    handle '取代'
+    '''
+    r_btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == '取代']
+    n_r_btns = 0
+    while r_btns:
+        htmltext = driver.page_source
+        preview_cid = re.findall('<a target="_blank" href="checklist/(.*?)">Preview</a>', htmltext)[0]
+        api_data = client.get_checklist(preview_cid)
+        preview_htmltext = requests.get('https://ebird.org/checklist/'+preview_cid).text
+        st = datetime.datetime.strptime(api_data['obsDt'], '%Y-%m-%d %H:%M')
+        gps_loc = re.findall('"https://www.google.com/maps/search.*query=(.*?)"', preview_htmltext)[0]        
+        old = Survey.objects.filter(survey_datetime = st, latitude=float(gps_loc.split(',')[0]), longitude=float(gps_loc.split(',')[1]))
+        if len(old) == 1:
+            old.delete()
+        elif len(old) == 0:
+            logger.info(f'No matched checklist to delete, am I rescraping everything now?')
+        else:
+            logger.error(f'Should have only one match for replaced checklist! GOT ({len(old)})')
+
+        r_btns[0].click()
+        time.sleep(3)
+        r_btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == '取代']        
+        n_r_btns += 1
+        if n_r_btns > max_allowed_click_times:
+            logger.error('Reached maxed allowed btn clicked times, break to prevent infinite loop')
+            break
+                
+
     btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == '接受' or b.text == '保留']
 
     n_btn_clicked = 0
-    max_allowed_click_times = 200
     while btns:
         btns[0].click()
         time.sleep(3)
@@ -139,8 +169,6 @@ def ScrapDataFromAccount(team_name, account, password):
         logger.info(f'{account} accept {n_btn_clicked} new checklist!')
 
     # get all checklist url and add new ones to database
-
-    htmltext = driver.page_source
 
     # only take five for test purpose
     all_checklist_id = re.findall('/checklist/(.*?)"', htmltext)
