@@ -219,14 +219,14 @@ def reload_refresh(helper_string):
         t3nc = 1301
     
     else:
-        t1nl = len(Survey.objects.filter(team='彩鷸隊'))
-        t1ns = len(set(SurveyObs.objects.filter(survey__team = '彩鷸隊').values_list('species_name', flat=True)))
-        t1nc = sum(SurveyObs.objects.filter(survey__team = '彩鷸隊').values_list('amount', flat=True))
-        t2nl = len(Survey.objects.filter(team='家燕隊'))
-        t2ns = len(set(SurveyObs.objects.filter(survey__team = '家燕隊').values_list('species_name', flat=True)))
-        t2nc = sum(SurveyObs.objects.filter(survey__team = '家燕隊').values_list('amount', flat=True))
-        t3nl = len(Survey.objects.filter(team='大冠鷲隊'))
-        t3ns = len(set(SurveyObs.objects.filter(survey__team = '大冠鷲隊').values_list('species_name', flat=True)))
-        t3nc = sum(SurveyObs.objects.filter(survey__team = '大冠鷲隊').values_list('amount', flat=True))
+        t1nl = len(Survey.objects.filter(team='彩鷸隊', is_valid=True))
+        t1ns = len(set(SurveyObs.objects.filter(survey__team = '彩鷸隊', survey__is_valid=True).values_list('species_name', flat=True)))
+        t1nc = sum(SurveyObs.objects.filter(survey__team = '彩鷸隊', survey__is_valid=True).values_list('amount', flat=True))
+        t2nl = len(Survey.objects.filter(team='家燕隊', is_valid=True))
+        t2ns = len(set(SurveyObs.objects.filter(survey__team = '家燕隊', survey__is_valid=True).values_list('species_name', flat=True)))
+        t2nc = sum(SurveyObs.objects.filter(survey__team = '家燕隊', survey__is_valid=True).values_list('amount', flat=True))
+        t3nl = len(Survey.objects.filter(team='大冠鷲隊', is_valid=True))
+        t3ns = len(set(SurveyObs.objects.filter(survey__team = '大冠鷲隊', survey__is_valid=True).values_list('species_name', flat=True)))
+        t3nc = sum(SurveyObs.objects.filter(survey__team = '大冠鷲隊', survey__is_valid=True).values_list('amount', flat=True))
 
     return t1np, t1nl, t1ns, t1nc, t2np, t2nl, t2ns, t2nc, t3np, t3nl, t3ns, t3nc, draw_area_map()
