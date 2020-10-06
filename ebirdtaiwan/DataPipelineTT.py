@@ -168,9 +168,8 @@ def ScrapDataFromAccount(team_name, account, password):
     if n_btn_clicked > 0: 
         logger.info(f'{account} accept {n_btn_clicked} new checklist!')
 
-    # get all checklist url and add new ones to database
-
-    # only take five for test purpose
+    # get all checklist url and add new ones to database    
+    htmltext = driver.page_source
     all_checklist_id = re.findall('/checklist/(.*?)"', htmltext)
     all_creators = re.findall('"owner" class="dataCell">(.*?)</td>', htmltext)
     db_checklists = Survey.objects.values_list('checklist_id', flat=True)
