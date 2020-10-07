@@ -95,7 +95,7 @@ def GetCountyByCoord(lat, lon):
     return '不在台灣啦!'
 
 def UpdateDataFromEbirdApi(target_date):
-    logger.info(f'Start to collect new data!')
+    logger.info(f'Start to collect new data! 10/{target_date.day}')
     scraped_Ids = AutumnChanllengeData.objects.values_list('checklist_id', flat=True)
     checklists = client.get_visits('TW', date = target_date)
     N = 0
@@ -128,11 +128,17 @@ def UpdateDataFromEbirdApi(target_date):
     logger.info(f'Add {N} new checklists!')
 
 
-
+def RescrapeFromFirstDay():
+    logger.info('start to rescrap all data from 10/1 to now!')
+    now = datetime.datetime.now()
+    for d in range(1, now.day):
+        UpdateDataFromEbirdApi(datetime.date(2020,10,d))
+        time.sleep(3)
 
 
 if __name__ == '__main__':
-    UpdateDataFromEbirdApi(datetime.date.today())
+    #UpdateDataFromEbirdApi(datetime.date.today())
+    RescrapeFromFirstDay()
     while True:        
         now = datetime.datetime.now()
         if now.minute == 0:
@@ -147,10 +153,9 @@ if __name__ == '__main__':
                 else:
                     UpdateDataFromEbirdApi(datetime.date.today() - datetime.timedelta(days=1))
                     UpdateDataFromEbirdApi(datetime.date.today() - datetime.timedelta(days=1))
-                if now.weekday() == 6:
-                    logger.info('start to rescrape all data from 10/01 to now')
-                    for i in range(1, now.day - 2):
-                        UpdateDataFromEbirdApi(datetime.date(2020,10,i))
+                if now.day % 3 == 0:
+                    RescrapeFromFirstDay()
+
         time.sleep(60)
 
     # while True:
