@@ -43,7 +43,7 @@ from shapely.geometry.polygon import Polygon
 from shapely.ops import nearest_points
 
 towns_polygons = {}
-with open('../helper_files/TaiwanCounties_simple.geojson') as f:
+with open('../helper_files/TaiwanCounties.geojson') as f:
     raw_json = json.load(f)
 
 for i in raw_json['features']:

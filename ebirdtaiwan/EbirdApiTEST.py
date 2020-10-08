@@ -80,7 +80,7 @@ maybe use smaller region unit and repeat can fix the issue...
 #################### TEST 2 #############################
 ##########################################################
 
-'''
+
 
 region_codes = {
     'TW-TPE' : '台北',
@@ -105,7 +105,7 @@ region_codes = {
     'TW-CYI' : '嘉義市',
     'TW-KEE' : '基隆',
 }
-
+'''
 nd = 0
 for k in region_codes:
     data = client.get_visits(k, date = datetime.date(2018,10,1))
@@ -117,7 +117,7 @@ records = get_visits(api_key, 'TW', '2018-10-01', max_results=200)
 print(f'another way to get TW data: {len(records)}')
 
 '''
-
+'''
 
 records = get_visits(api_key, 'TW', '2018-10-01', max_results=200)
 print(f'2018-10-01: {len(records)}')
@@ -164,3 +164,21 @@ print(f'2018-8-04: {len(records)}')
 
 records = get_visits(api_key, 'TW', '2018-8-05', max_results=200)
 print(f'2018-8-05: {len(records)}')
+'''
+
+def CompareCountySep():
+    for y in [2018,2019,2020]:
+        for m in [8,9,10]:
+            for d in [1,2,3,4,5]:
+                D = datetime.date(y,m,d)
+                print('*********************')
+                print(D)
+                nd = 0
+                for k in region_codes:
+                    data = client.get_visits(k, date = D)
+                    nd += len(data)
+                all_nd = len(client.get_visits('TW', date = D))
+                print(f'sep combine {nd} : no sep {all_nd}')
+
+if __name__ == '__main__' :
+    CompareCountySep()
