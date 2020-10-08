@@ -68,6 +68,33 @@ def great_circle_distance_on_earth(point1, point2):
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
     return R * c
 
+
+region_codes = {
+    'TW-TPE' : '台北',
+    'TW-KEE' : '基隆',
+    'TW-TPQ' : '新北',
+    'TW-TAO' : '桃園',
+    'TW-HSQ' : '新竹',
+    'TW-HSZ' : '新竹市',
+    'TW-MIA' : '苗栗',
+    'TW-TXG' : '台中',
+    'TW-CHA' : '彰化',
+    'TW-NAN' : '南投',
+    'TW-YUN' : '雲林',
+    'TW-CYQ' : '嘉義縣',
+    'TW-CYI' : '嘉義市',
+    'TW-TNN' : '台南',
+    'TW-KHH' : '高雄',
+    'TW-PIF' : '屏東',
+    'TW-TTT' : '台東',
+    'TW-HUA' : '花蓮',
+    'TW-ILA' : '宜蘭',
+    'TW-PEN' : '澎湖',
+    'TW-KIN' : '金門',
+    'TW-LIE' : '連江',
+}
+
+
 def GetCountyByCoord(lat, lon):
     point = Point(lon, lat)
     for town in towns_polygons:        
@@ -97,9 +124,16 @@ def GetCountyByCoord(lat, lon):
 def UpdateDataFromEbirdApi(target_date):
     logger.info(f'Start to collect new data! 10/{target_date.day}')
     scraped_Ids = AutumnChanllengeData.objects.values_list('checklist_id', flat=True)
-    checklists = client.get_visits('TW', date = target_date)
+    api_data = []
+    for k in region_codes:
+        temp = client.get_visits(k, date = target_date)
+        api_data += temp
+        time.sleep(0.5)
+        if len(temp) > 190:
+            logger.warning(f'{target_date}/{region_codes[k]} could have more than 200 records!')
+    print(len(api_data))
     N = 0
-    for l in checklists:
+    for l in api_data:
         cid = l['subId']
         if cid not in scraped_Ids:
             N+=1
@@ -137,7 +171,6 @@ def RescrapeFromFirstDay():
 
 
 if __name__ == '__main__':
-    #UpdateDataFromEbirdApi(datetime.date.today())
     RescrapeFromFirstDay()
     while True:        
         now = datetime.datetime.now()
@@ -158,17 +191,6 @@ if __name__ == '__main__':
 
         time.sleep(60)
 
-    # while True:
-    #     if datetime.datetime.now().minute == 0:
-    #         UpdateDataFromEbirdApi()
-    #     time.sleep(60)
-
-
-    # print(GetCountyByCoord(24.669527, 121.725319))
-    # print(GetCountyByCoord(24.996413, 119.447619))
-    # print(GetCountyByCoord(25.118471, 119.373589))
-    # print(GetCountyByCoord(23.205872, 120.813756))
-    
     
 
 '''

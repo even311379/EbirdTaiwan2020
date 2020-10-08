@@ -26,26 +26,27 @@ import datetime
 
 region_codes = {
     'TW-TPE' : '台北',
+    'TW-KEE' : '基隆',
     'TW-TPQ' : '新北',
     'TW-TAO' : '桃園',
     'TW-HSQ' : '新竹',
+    'TW-HSZ' : '新竹市',
     'TW-MIA' : '苗栗',
     'TW-TXG' : '台中',
     'TW-CHA' : '彰化',
     'TW-NAN' : '南投',
     'TW-YUN' : '雲林',
     'TW-CYQ' : '嘉義縣',
+    'TW-CYI' : '嘉義市',
     'TW-TNN' : '台南',
     'TW-KHH' : '高雄',
     'TW-PIF' : '屏東',
     'TW-TTT' : '台東',
-    'TW-HUA' : '雲林',
+    'TW-HUA' : '花蓮',
     'TW-ILA' : '宜蘭',
     'TW-PEN' : '澎湖',
     'TW-KIN' : '金門',
     'TW-LIE' : '連江',
-    'TW-CYI' : '嘉義市',
-    'TW-KEE' : '基隆',
 }
 
 '''
