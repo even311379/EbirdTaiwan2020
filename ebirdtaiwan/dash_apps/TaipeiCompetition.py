@@ -13,6 +13,7 @@ import numpy as np
 import datetime
 from fall.models import SignupData, Survey, SurveyObs
 import plotly.express as px
+import re
 
 import eb_passwords
 from collections import Counter
@@ -220,13 +221,16 @@ def reload_refresh(helper_string):
     
     else:
         t1nl = len(Survey.objects.filter(team='彩鷸隊', is_valid=True))
-        t1ns = len(set(SurveyObs.objects.filter(survey__team = '彩鷸隊', survey__is_valid=True).values_list('species_name', flat=True)))
+        t1_rns = SurveyObs.objects.filter(survey__team = '彩鷸隊', survey__is_valid=True).values_list('species_name', flat=True)
+        t1ns = len(set([re.sub(r' ?\(.*?\)','',s) for s in t1_rns]))
         t1nc = sum(SurveyObs.objects.filter(survey__team = '彩鷸隊', survey__is_valid=True).values_list('amount', flat=True))
         t2nl = len(Survey.objects.filter(team='家燕隊', is_valid=True))
-        t2ns = len(set(SurveyObs.objects.filter(survey__team = '家燕隊', survey__is_valid=True).values_list('species_name', flat=True)))
+        t2_rns = SurveyObs.objects.filter(survey__team = '家燕隊', survey__is_valid=True).values_list('species_name', flat=True)
+        t2ns = len(set([re.sub(r' ?\(.*?\)','',s) for s in t2_rns]))
         t2nc = sum(SurveyObs.objects.filter(survey__team = '家燕隊', survey__is_valid=True).values_list('amount', flat=True))
         t3nl = len(Survey.objects.filter(team='大冠鷲隊', is_valid=True))
-        t3ns = len(set(SurveyObs.objects.filter(survey__team = '大冠鷲隊', survey__is_valid=True).values_list('species_name', flat=True)))
+        t3_rns = SurveyObs.objects.filter(survey__team = '大冠鷲隊', survey__is_valid=True).values_list('species_name', flat=True)
+        t3ns = len(set([re.sub(r' ?\(.*?\)','',s) for s in t3_rns]))
         t3nc = sum(SurveyObs.objects.filter(survey__team = '大冠鷲隊', survey__is_valid=True).values_list('amount', flat=True))
 
     return t1np, t1nl, t1ns, t1nc, t2np, t2nl, t2ns, t2nc, t3np, t3nl, t3ns, t3nc, draw_area_map()

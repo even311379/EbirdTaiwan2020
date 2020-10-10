@@ -125,19 +125,44 @@ def UpdateDataFromEbirdApi(target_date):
     logger.info(f'Start to collect new data! 10/{target_date.day}')
     scraped_Ids = AutumnChanllengeData.objects.values_list('checklist_id', flat=True)
     api_data = []
+    max_retry = 10
     for k in region_codes:
-        temp = client.get_visits(k, date = target_date)
+        api_requesting = True
+        api_retry = 0
+        while api_requesting:
+            try:
+                temp = client.get_visits(k, date = target_date)
+                api_requesting = False
+            except Exception as e:
+                if api_retry > max_retry:
+                    logger.error(f'Reached max api retry!!, cancel scraping {target_date}')
+                    return
+                api_retry += 1
+                logger.error(f'ebird api faced error {e} ({k})({target_date}) Retry: {api_retry}')
+                time.sleep(5)
+            
         api_data += temp
         time.sleep(0.5)
         if len(temp) > 190:
             logger.warning(f'{target_date}/{region_codes[k]} could have more than 200 records!')
-    print(len(api_data))
     N = 0
     for l in api_data:
         cid = l['subId']
         if cid not in scraped_Ids:
             N+=1
-            obs = client.get_checklist(l['subId'])
+            api_requesting = True
+            api_retry = 0
+            while api_requesting:
+                try:
+                    obs = client.get_checklist(l['subId'])
+                    api_requesting = False
+                except Exception as e:
+                    api_retry += 1
+                    logger.error(f"ebird api faced error {e} {l['subId']} Retry: {api_retry}")
+                    time.sleep(5)
+                    if api_retry > max_retry:
+                        logger.error(f'Reached max retry!! cancel scraping {target_date}')
+                        return
             
             '''
             handle known issues

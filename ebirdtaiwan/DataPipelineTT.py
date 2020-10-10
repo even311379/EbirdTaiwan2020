@@ -105,6 +105,8 @@ def GetCountyByCoord(lat, lon):
 
 def ScrapDataFromAccount(team_name, account, password):
 
+    max_retry = 10
+
     logger.info(f'Scraper started! ({team_name})')
     profile = webdriver.FirefoxProfile()
     options = Options()
@@ -132,7 +134,21 @@ def ScrapDataFromAccount(team_name, account, password):
     while r_btns:
         htmltext = driver.page_source
         preview_cid = re.findall('<a target="_blank" href="checklist/(.*?)">Preview</a>', htmltext)[0]
-        api_data = client.get_checklist(preview_cid)
+        api_scraping = True
+        retry = 0
+        while api_scraping:
+            try:
+                api_data = client.get_checklist(preview_cid)
+                api_scraping = False                
+            except Exception as e:
+                retry += 1
+                logger.error(f'ebird api error {e} {preview_cid} retry: {retry}')
+                time.sleep(5)
+                if retry > max_retry:
+                    logger.error(f'Reached max retry, canceling whole scraping process {tean_name}')
+                    driver.close()
+                    return
+
         preview_htmltext = requests.get('https://ebird.org/checklist/'+preview_cid).text
         st = datetime.datetime.strptime(api_data['obsDt'], '%Y-%m-%d %H:%M')
         gps_loc = re.findall('"https://www.google.com/maps/search.*query=(.*?)"', preview_htmltext)[0]        
@@ -144,6 +160,7 @@ def ScrapDataFromAccount(team_name, account, password):
         else:
             logger.error(f'Should have only one match for replaced checklist! GOT ({len(old)})')
 
+        time.sleep(5)
         r_btns[0].click()
         time.sleep(3)
         r_btns = [b for b in driver.find_elements_by_tag_name('button') if b.text == '取代']        
@@ -174,12 +191,25 @@ def ScrapDataFromAccount(team_name, account, password):
     all_creators = re.findall('"owner" class="dataCell">(.*?)</td>', htmltext)
     db_checklists = Survey.objects.values_list('checklist_id', flat=True)
 
-    new = 0
-    
+    new = 0    
     for i, c in zip(all_checklist_id, all_creators):
         if i not in db_checklists:
-            valid = True            
-            api_data = client.get_checklist(i)            
+            valid = True
+            api_scraping = True
+            retry = 0
+            while api_scraping:
+                try:
+                    api_data = client.get_checklist(i)            
+                    api_scraping = False
+                except Exception as e:
+                    retry += 1
+                    logger.error(f'ebird_api error {e} {i} retry: {retry}')
+                    time.sleep(5)
+                    if retry > max_retry:
+                        logger.error(f'Reached max retry, Cancel the whole scraping process {team_name}')
+                        driver.close()
+                        return
+                
             if api_data['subnational1Code'] not in ['TW-TPE', 'TW-TPQ']:
                 logger.warning(f'{c} shared a list({i}) not inside competition area!, save it as invalid data')
                 valid = False                
@@ -212,6 +242,9 @@ def ScrapDataFromAccount(team_name, account, password):
 
             if not valid:
                 time.sleep(1)
+                continue
+
+            if not S:
                 continue
 
             new += 1

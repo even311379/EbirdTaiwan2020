@@ -335,7 +335,8 @@ def bar1_content(team, w):
     ucreators = list(set(creators))
     ns = [] #number of species
     for c in ucreators:
-        ns.append(len(set(SurveyObs.objects.filter(survey__creator=c, survey__is_valid=True).values_list('species_name', flat=True))))
+        raw_species_list = SurveyObs.objects.filter(survey__creator=c, survey__is_valid=True).values_list('species_name', flat=True)
+        ns.append(len(set([re.sub(r' ?\(.*?\)', '', s) for s in raw_species_list])))
     ns_c = sorted(zip(ns,ucreators))[::-1] #tuple of (number of species, creator)    
 
     return html.Div([
