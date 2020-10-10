@@ -193,8 +193,8 @@ app.layout = html.Div([
             html.Div(id='predict_table'),
         ], lg=6)
     ]),
-    html.H4('猜鳥活動期間: 10/1 0:00 ~ 10/10 24:00', className='ext1'),    
-    html.A('我要猜',className='fall_btn teams_btn prediction_btn', href='/north_taiwan_competition/make_prediction'),        
+    # html.H4('猜鳥活動期間: 10/1 0:00 ~ 10/10 24:00', className='ext1'),    
+    # html.A('我要猜',className='fall_btn teams_btn prediction_btn', href='/north_taiwan_competition/make_prediction'),        
     dcc.Location(id='url'),
     html.Div('',id='empty',style={'display':'none'}),  
 ], className='dashboard_container')

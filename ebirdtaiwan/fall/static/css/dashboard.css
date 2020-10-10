@@ -83,7 +83,7 @@ For all dashboard setting
 
 @media only screen and (max-width: 768px) {
     .dbottom_rect {
-        bottom: -80vh;
+        bottom: -40vh;
     }
 
     .prgression_map {
