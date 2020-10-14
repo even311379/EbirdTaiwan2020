@@ -16,14 +16,16 @@ import numpy as np
 import random
 import json
 import datetime
-# from django.utils import timezone
 from collections import Counter
 
 from fall.models import AutumnChanllengeData
-
 from eb_passwords import map_box_api_key
 
 
+'''
+Query outside django... 
+The time zone is just wrong!!
+'''
 
 
 '''
@@ -88,8 +90,12 @@ def create_score_df():
     special_score[unique_creator.index(south_person)] += f'極南 (緯度：{round(df.latitude.min(), 3)})'
     special_score[unique_creator.index(east_person)] += f'極東 (經度：{round(df.longitude.max(), 3)})'
     special_score[unique_creator.index(west_person)] += f'極西 (經度：{round(df.longitude.min(), 3)})'
-
-    big_day_persons =  list(set(AutumnChanllengeData.objects.filter(is_valid=True, survey_datetime__date=datetime.date(2020,10,17)).values_list('creator', flat=True)))
+    
+    '''
+    The time zone is just wrong!! I must query manually.
+    '''
+    big_day_persons =  list(set(AutumnChanllengeData.objects.filter(is_valid=True, survey_datetime__gte=datetime.datetime(2020,10,17,8,0),survey_datetime__lte=datetime.datetime(2020,10,18,8,0)).values_list('creator', flat=True)))
+    # big_day_persons =  list(set(AutumnChanllengeData.objects.filter(is_valid=True, survey_datetime__date=datetime.date(2020,10,17)).values_list('creator', flat=True)))
     for p in big_day_persons:
         if special_score[unique_creator.index(p)]:
             special_score[unique_creator.index(p)] += f' ,觀鳥大日'
@@ -98,8 +104,10 @@ def create_score_df():
 
     total_score = [i + j for i,j in zip(number_of_occupied, first_county_numbers)]
 
-    for i,p in enumerate(unique_creator):
-        if p:
+    for i,p in enumerate(special_score):
+        if '極' in p:
+            total_score[i] += 5    
+        if '觀鳥大日' in p:
             total_score[i] += 5    
 
     return pd.DataFrame(
