@@ -272,29 +272,29 @@ def init_pages(h):
 
 
 
-@app.callback(
-    [Output('page0','style'),
-    Output('page1','style'),
-    Output('page2','style'),
-    Output('page3','style'),
-    Output('page4','style'),],
-    [Input('Bg_btn','n_clicks')], 
-    prevent_initial_call = True
-)
-def Update_Page(nc):
-    global page_index    
-    all_none = [{'display':'none'}, {'display':'none'}, {'display':'none'}, {'display':'none'}, {'display':'none'}]
-    '''
-    if works like a fucking idiot in server...
-    so I code this silly way, if I can fix it up?
-    '''
-    if page_index == 0:
-        page_index = 1
-    elif page_index == 1:
-        page_index = 2
-    elif page_index == 2:
-        page_index = 3
-    elif page_index == 3:
-        page_index = 4        
-    all_none[page_index] = {'display':'block'}
-    return all_none
+# @app.callback(
+#     [Output('page0','style'),
+#     Output('page1','style'),
+#     Output('page2','style'),
+#     Output('page3','style'),
+#     Output('page4','style'),],
+#     [Input('Bg_btn','n_clicks')], 
+#     prevent_initial_call = True
+# )
+# def Update_Page(nc):
+#     global page_index    
+#     all_none = [{'display':'none'}, {'display':'none'}, {'display':'none'}, {'display':'none'}, {'display':'none'}]
+#     '''
+#     if works like a fucking idiot in server...
+#     so I code this silly way, if I can fix it up?
+#     '''
+#     if page_index == 0:
+#         page_index = 1
+#     elif page_index == 1:
+#         page_index = 2
+#     elif page_index == 2:
+#         page_index = 3
+#     elif page_index == 3:
+#         page_index = 4        
+#     all_none[page_index] = {'display':'block'}
+#     return all_none
