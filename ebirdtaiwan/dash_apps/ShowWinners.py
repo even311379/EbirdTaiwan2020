@@ -282,12 +282,22 @@ def init_pages(h):
     prevent_initial_call = True
 )
 def Update_Page(nc):
-    global page_index
-    print('updatepage is called!?')
+    global page_index    
     all_none = [{'display':'none'}, {'display':'none'}, {'display':'none'}, {'display':'none'}, {'display':'none'}]
     if page_index >= len(pages) -1:
         all_none[4] = {'display':'block'}
         return all_none
-    page_index += 1
+    '''
+    if works like a fucking idiot in server...
+    so I code this silly way, if I can fix it up?
+    '''
+    if page_index == 0:
+        page_index = 1
+    if page_index == 1:
+        page_index = 2
+    if page_index == 2:
+        page_index = 3
+    if page_index == 3:
+        page_index = 4        
     all_none[page_index] = {'display':'block'}
     return all_none
