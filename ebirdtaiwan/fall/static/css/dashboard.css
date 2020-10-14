@@ -531,3 +531,84 @@ add animation here
     }
 
 }
+
+
+/* Additional apps */
+
+/* show winners*/
+
+#Bg_btn{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0);
+    border: 0;
+    outline: 0;
+    z-index: 3;
+}    
+
+.winner_bg_img{
+    z-index: -10;
+    position: absolute;
+    width: auto;
+    height: 75vh;
+    top: 10vh;
+    right: 10vw;
+}
+
+.winner_title{
+    font-size: 3vw;
+    color: #fff;
+    font-weight: 999;
+    width: 70vw;
+    left: 15vw;
+    position: relative;
+    background: #A4D386;;
+    border-radius: 5vw;
+}
+
+.winner_stitle{
+    font-size: 2.5vw;
+    color: #fff;
+    font-weight: 999;
+    width: 50vw;
+    left: 25vw;
+    position: absolute;
+    background: #A4D386;
+    border-radius: 5vw;
+    top: 8vw;
+}
+
+.winner_card_img{
+    position: relative;
+    width: 25vw !important;
+    height: 25vh;
+    left: 4.5vw;
+    margin-top: 10%;
+}
+
+.winner_table, .winner_table2{
+    position: relative;
+    width: 60%;
+    left: 20%;
+    font-size: 1.5vw;
+}
+
+.winner_table2
+{
+    width: 50%;
+    left: 25%;
+    font-size: 2.5vw;
+    font-weight: 999;
+}
+
+.fff
+{
+    position: absolute;
+    top: 27vh;
+    left: 1vw;
+    right: 1vw;
+}
+/* #Bg_btn::-moz-focus-inner {
+    border:0 !important;
+} */
