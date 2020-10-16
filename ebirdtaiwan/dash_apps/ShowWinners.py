@@ -223,7 +223,7 @@ def init_pages(h):
     df = pd.DataFrame.from_records(PredictionData.objects.all().values('participant_name','guess_n_species','guess_total_individual'))
     df['tsrd'] = (df.guess_n_species - total_species).tolist()
     df['abs_tsrd'] = [abs(i) for i in df.tsrd]
-    df['tcrd'] = (df.guess_total_individual - total_species).tolist()
+    df['tcrd'] = (df.guess_total_individual - total_count).tolist()
     df['abs_tcrd'] = [abs(i) for i in df.tcrd]
     ts = df.sort_values(by=['abs_tsrd']).participant_name.tolist()[:10]
     tsd = [f'+{i}' if i > 0 else f'-{i}' for i in df.sort_values(by=['abs_tsrd']).tsrd.tolist()[:10]]

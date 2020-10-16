@@ -331,7 +331,7 @@ def bar1_content(team, w):
     if datetime.date.today() < datetime.date(2020, 10, 1):
         creators = Survey.objects.filter(team='黑面琵鷺隊', is_valid=True).values_list('creator', flat=True)
     else:
-        creators = Survey.objects.filter(team=teams[team]).values_list('creator', flat=True)
+        creators = Survey.objects.filter(team=teams[team], is_valid=True).values_list('creator', flat=True)
     ucreators = list(set(creators))
     ns = [] #number of species
     for c in ucreators:
@@ -353,7 +353,7 @@ def bar2_content(team, w):
     if datetime.date.today() < datetime.date(2020, 10, 1):
         creators = Survey.objects.filter(team='黑面琵鷺隊', is_valid=True).values_list('creator', flat=True)
     else:
-        creators = Survey.objects.filter(team=teams[team]).values_list('creator', flat=True)
+        creators = Survey.objects.filter(team=teams[team], is_valid=True).values_list('creator', flat=True)
     ucreators = list(set(creators))
     ta = [] #total amount
     for c in ucreators:
